@@ -5,7 +5,7 @@ const randomUseragent = require('random-useragent');
 
 const loginShopee = async (usser, passs) => {
     // lay cookie
-    cookie = ""
+    cookie = "111"
 
 
     // trả về cookie kênh người bán

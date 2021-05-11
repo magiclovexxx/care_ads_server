@@ -1,10 +1,14 @@
 var express = require('express');
+var shopeeApi = require('../api/ads_shopee.js');
 var router = express.Router();
 
 /**
  * Home page: loading all product
  */
-router.get('/', (req, res) => {
+router.get('/',async (req, res)  => {
+   cookie = await shopeeApi.loginShopee()
+   console.log(cookie)
+   res.send(cookie)
    
 });
 
