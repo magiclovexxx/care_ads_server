@@ -38,7 +38,7 @@ const api_post_login = async (SPC_CDS, UserAgent, username, password, vcode) => 
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        console.log(response);
+        //console.log(response);
         return { status: response.status, data: response.data, cookie: cookieParse(response.headers['set-cookie']) };
     }).catch(function(error) {
         if (error.response) {
