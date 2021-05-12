@@ -18,10 +18,16 @@ function cookieParse(cookie)
 const axiosInstance = createAxios();
 
 //API FUNCTION
-const api_post_login = async (SPC_CDS, username, phone, password, vcode) => {
+const api_post_login = async (SPC_CDS, username, password, vcode) => {
     const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
-    var data = (username != null ? 'username=' + encodeURI(username) : 'phone=' + encodeURI(phone));
+    var data = '';
+    var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    if (vnf_regex.test(username) == false) {
+        data += '&username=' + encodeURI(username);
+    } else {        
+        data += '&phone=' + encodeURI('84' + username.substring(1, 10));
+    }
     data += '&password_hash=' + password_hash;
     data += '&remember=true';
     if(vcode != null)
