@@ -1,6 +1,5 @@
 const md5 = require('md5');
 const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
 
 function createAxios() {
     const axios = require('axios');
@@ -34,7 +33,12 @@ const api_post_login = async (SPC_CDS, username, password, vcode) => {
     {
         data += '&vcode=' + vcode;
     }
-    const result = await axiosInstance.post(Url, data).then(function(response) {  
+    const result = await axiosInstance.post(Url, data, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
+        }
+    }).then(function(response) {  
+        console.log(response);
         return { status: response.status, data: response.data, cookie: cookieParse(response.headers['set-cookie']) };
     }).catch(function(error) {
         if (error.response) {
@@ -52,6 +56,7 @@ const api_get_all_category_list = async (SPC_CDS, cookie) => {
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -71,6 +76,7 @@ const api_get_second_category_list = async (SPC_CDS, cookie) => {
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -79,7 +85,7 @@ const api_get_second_category_list = async (SPC_CDS, cookie) => {
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -93,6 +99,7 @@ const api_get_shopcategory = async (SPC_CDS, cookie, page_number, page_size) => 
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -101,7 +108,7 @@ const api_get_shopcategory = async (SPC_CDS, cookie, page_number, page_size) => 
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -122,6 +129,7 @@ const api_get_product_selector = async (SPC_CDS, cookie, offset, limit, is_ads, 
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -130,7 +138,7 @@ const api_get_product_selector = async (SPC_CDS, cookie, offset, limit, is_ads, 
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -141,6 +149,7 @@ const api_get_item_status = async (SPC_CDS, cookie, item_id_list) => {
     const result = await axiosInstance.post(Url, item_id_list, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -149,7 +158,7 @@ const api_get_item_status = async (SPC_CDS, cookie, item_id_list) => {
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -167,6 +176,7 @@ const api_get_shop_report_by_time = async (SPC_CDS, cookie, start_time, end_time
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -175,7 +185,7 @@ const api_get_shop_report_by_time = async (SPC_CDS, cookie, start_time, end_time
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -197,6 +207,7 @@ const api_get_campaign_statistics = async (SPC_CDS, cookie, campaign_type, filte
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -205,7 +216,7 @@ const api_get_campaign_statistics = async (SPC_CDS, cookie, campaign_type, filte
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -222,6 +233,7 @@ const api_get_suggest_keyword = async (SPC_CDS, cookie, keyword, count, placemen
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -230,18 +242,18 @@ const api_get_suggest_keyword = async (SPC_CDS, cookie, keyword, count, placemen
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
 }
-
 
 const api_post_marketing_campaign = async (SPC_CDS, cookie, campaign_ads_list) => {
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, campaign_ads_list, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -250,7 +262,7 @@ const api_post_marketing_campaign = async (SPC_CDS, cookie, campaign_ads_list) =
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -262,6 +274,7 @@ const api_put_marketing_campaign = async (SPC_CDS, cookie, campaign_ads_list) =>
     const result = await axiosInstance.put(Url, campaign_ads_list, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -270,7 +283,7 @@ const api_put_marketing_campaign = async (SPC_CDS, cookie, campaign_ads_list) =>
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
@@ -284,6 +297,7 @@ const api_get_marketing_campaign = async (SPC_CDS, cookie, campaignid) => {
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36'
         }
     }).then(function(response) {  
         return { status: response.status, data: response.data };
@@ -292,11 +306,12 @@ const api_get_marketing_campaign = async (SPC_CDS, cookie, campaignid) => {
             return { status: error.response.status, data: error.response.data };
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return { status: -1, data: null };
         }
     });
     return result;
 }
+
 
 module.exports = {
     api_post_login,
