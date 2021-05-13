@@ -479,18 +479,6 @@ const api_get_campaign_list = async (SPC_CDS, UserAgent, cookie, placement_list)
     return result;
 }
 
-function b64toBlob(dataURI) {
-
-    var byteString = atob(dataURI.split(',')[1]);
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: 'image/jpeg' });
-}
-
 module.exports = {
     
     api_post_login, //Đăng nhập
