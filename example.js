@@ -298,7 +298,6 @@ var shopeeApi = require('./api/ads_shopee.js');
                       shop_customisation: {
                         display_title: 'Khẩu hiệu quảng cáo', //Khẩu hiệu quảng cáo
                         collection_id: 0, //0: Trang chủ shop mặc định (Hoặc mã danh mục của shop)
-                        //image_url: 'eb8a5e87e1c45e8bb366abac4f2b5f82'
                       }
                     }
                   }
