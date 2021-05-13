@@ -398,7 +398,7 @@ var shopeeApi = require('./api/ads_shopee.js');
 
 
         //#region Quảng cáo khám phá: Thêm/Sửa quảng cáo  
-        /*
+        
         //Khởi tạo danh sách mã sản phẩm
         var item_id_list = {
             item_id_list: [6260862101]
@@ -521,7 +521,7 @@ var shopeeApi = require('./api/ads_shopee.js');
         else {
             console.log(JSON.stringify(result));
         }
-        */
+        
         //#endregion Quảng cáo khám phá: Thêm/Sửa quảng cáo 
 
         //#region Quảng cáo khám phá: Lấy số liệu thống kê chung
