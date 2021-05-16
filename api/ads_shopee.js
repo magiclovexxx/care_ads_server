@@ -22,8 +22,14 @@ const api_post_login = async (SPC_CDS, UserAgent, username, password, vcode) => 
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     var data = '';
     var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    var email_regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  
     if (vnf_regex.test(username) == false) {
-        data += '&username=' + encodeURI(username);
+        if(email_regex.test(username) == false) {
+            data += '&username=' + encodeURI(username);
+        } else {
+            data += '&email=' + encodeURI(username);
+        }
     } else {        
         data += '&phone=' + encodeURI('84' + username.substring(1, 10));
     }
