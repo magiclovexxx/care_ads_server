@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const prompt = require('prompt');
 var shopeeApi = require('./api/ads_shopee.js');
 //Example Shopee
+
 (async()=>{
 
     //Khởi tạo thông tin đăng nhập
