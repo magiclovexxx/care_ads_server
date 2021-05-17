@@ -3,93 +3,216 @@ var shopeeApi = require('../api/ads_shopee.js');
 var router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 
-/**
- * Home page: loading all product
- */
-router.get('/', async (req, res) => {
-    username = "lozita.official"
-    password = "Longgiang96137"
-    vcode = ""
-    //UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36 Edg/90.0.818.56"
-    UserAgent = ""
-    start_time = 1620752400 //Thời gian bắt đầu (format Unix Timestamp)
-    end_time = 1620838799 //Thời gian kết thúc (format Unix Timestamp) (0: Không giới hạn thời gian)
-    agg_interval = 96
-    placement_list = [0, 4]
 
-    //cookie = await shopeeApi.api_post_login(SPC_CDS_key,UserAgent,username,password,vcode)
-    SPC_CDS_key = uuidv4()
+router.use(express.json({ limit: "5000mb", extended: true }));
 
-    SPC_CDS = "79e62f9e-cdec-4a8c-8001-b6f4f8a7ab3f"
-    cookie = 'SPC_SC_UD=328813267; SC_SSO_U=-; SPC_SC_SA_UD=; SPC_STK="OBP9VCTLtqWIZi3anGwer3kv3N/gtsl7ZG+/XcyeUKi5AkJaXNNpqFsDH6QgR+wYqMvUa60kfjrG/7wtN/6375bFaJkSj40Crqb5+RmXgzwjzpaHTRny3nHaBsUbdXNUhDO5W9iGyXvna3d0nQEloYfniOoYh8leI4vxlcBCdi277t5O9912Rc3ybBmdDUJH"; SPC_U=328813267; SPC_SC_SA_TK=; SPC_F=EQtS0EQ2YQmSPqfuzpgGC1pJ0mH5t28E; SPC_EC="85aSu+tAHgbHyCp0NkPz5wexZjkqiMfXnUNCc/281FbmARyc7svqSMpfKxO6xGR8w7b5ehikU5iOjRsogKhtN08w9+WtBArC+E5MP6/xmzQHYCKtzUqMeiMskurEpCqKQiQaAInfA4qRuZEX592nfhvrlX1R1KN1Uq09aJENPA0="; SC_SSO=-; SPC_SC_TK=39cc1ac6c62ae4324e3138464847c10b; SPC_WST="85aSu+tAHgbHyCp0NkPz5wexZjkqiMfXnUNCc/281FbmARyc7svqSMpfKxO6xGR8w7b5ehikU5iOjRsogKhtN08w9+WtBArC+E5MP6/xmzQHYCKtzUqMeiMskurEpCqKQiQaAInfA4qRuZEX592nfhvrlX1R1KN1Uq09aJENPA0="; SC_DFP=jq8TPJNTyLARHTnjIzLDRBd8IUvWeMqh'
-
-    var filter_content = 'all'
-    var sort_key = 'impression'
-    var campaign_type = 'keyword'
-    var sort_direction = 1; //1: Sắp xếp giảm dần, 2: Sắp xếp tăng dần
-    var search_content = ''; //Từ khóa tìm kiếm
-    var start_time = 1618246800; //Thời gian bắt đầu (format Unix Timestamp)
-    var end_time = 1620838799; //Thời gian kết thúc (format Unix Timestamp)
-    var offset = 0; //Bắt đầu sản phẩm thứ n (Phân trang)
-    var limit = 50; //Giới hạn số lượng dòng (Phân trang)
-
-    //console.log(SPC_CDS_key)
-    //console.log(cookie)
-
-    //api_get_shop_report_by_time = await shopeeApi.api_get_shop_report_by_time(SPC_CDS_key, UserAgent, cookie, start_time, end_time, placement_list, agg_interval)
-    result = await shopeeApi.api_get_campaign_statistics(SPC_CDS, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit)
-
-    console.log(result)
-
-    res.send(result)
-
+router.post("/api_post_login", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var username = req.body.username;
+    var password = req.body.password;
+    var vcode = req.body.vcode;
+    var result = await shopeeApi.api_post_login(SPC_CDS, UserAgent, username, password, vcode);
+    res.send(result);
 });
 
-/**
- * Go to Add Product page
- */
-router.get('/login', (req, res) => {
-    res.render('add-product');
+router.get("/api_get_all_category_list", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var result = await shopeeApi.api_get_all_category_list(SPC_CDS, UserAgent, cookie);
+    res.send(result);
 });
 
-/**
- * Add new Product
- */
-router.post('/', (req, res) => {
-    console.log("Add product")
-    d = new Date()
-    d = d.toString()
-    let newProduct = new Product({
-        name: req.body.productName,
-        type: req.body.productType,
-        created: d,
-        shop_id: "1902231"
-    });
-
-
+router.get("/api_get_second_category_list", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var result = await shopeeApi.api_get_second_category_list(SPC_CDS, UserAgent, cookie);
+    res.send(result);
 });
 
-/**
- * Go to Update Product page
- */
-router.get('/loginShopee', (req, res) => {
+router.get("/api_get_shopcategory", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var page_number = req.body.page_number;
+    var page_size = req.body.page_size;
 
+    var result = await shopeeApi.api_get_shopcategory(SPC_CDS, UserAgent, cookie, page_number, page_size);
+    res.send(result);
 });
 
-/**
- * Delete product
- */
-router.delete('/:productId', (req, res) => {
-    let productId = req.params.productId;
-
+router.get("/api_get_product_selector", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var offset = req.body.offset;
+    var limit = req.body.limit;
+    var is_ads = req.body.is_ads;
+    var need_brand = req.body.need_brand;
+    var need_item_model = req.body.need_item_model;
+    var search_type = req.body.search_type;
+    var search_content = req.body.search_content;
+    var result = await shopeeApi.api_get_product_selector(SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content);
+    res.send(result);
 });
 
-/**
- * Update product
- */
-router.post('/:productId', (req, res) => {
-    let productId = req.params.productId;
+router.post("/api_get_item_status", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var item_id_list = req.body.item_id_list;
+    var result = await shopeeApi.api_get_item_status(SPC_CDS, UserAgent, cookie, item_id_list);
+    res.send(result);
+});
 
+router.get("/api_get_shop_report_by_time", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var start_time = req.body.start_time;
+    var end_time = req.body.end_time;
+    var placement_list = req.body.placement_list;
+    var agg_interval = req.body.agg_interval;
+    var result = await shopeeApi.api_get_shop_report_by_time(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval);
+    res.send(result);
+});
+
+router.get("/api_get_campaign_statistics", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var campaign_type = req.body.campaign_type;
+    var filter_content = req.body.filter_content;
+    var sort_key = req.body.sort_key;
+    var sort_direction = req.body.sort_direction;
+    var search_content = req.body.search_content;
+    var start_time = req.body.start_time;
+    var end_time = req.body.end_time;    
+    var offset = req.body.offset;
+    var limit = req.body.limit;
+    var result = await shopeeApi.api_get_campaign_statistics(SPC_CDS, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
+    res.send(result);
+});
+
+
+router.get("/api_get_suggest_keyword", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var keyword = req.body.keyword;
+    var count = req.body.count;
+    var placement = req.body.placement;
+    var itemid = req.body.itemid;
+    var result = await shopeeApi.api_get_suggest_keyword(SPC_CDS, UserAgent, cookie, keyword, count, placement, itemid);
+    res.send(result);
+});
+
+router.post("/api_post_marketing_campaign", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var campaign_ads_list = req.body.campaign_ads_list;
+    var result = await shopeeApi.api_post_marketing_campaign(SPC_CDS, UserAgent, cookie, campaign_ads_list);
+    res.send(result);
+});
+
+router.put("/api_put_marketing_campaign", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var campaign_ads_list = req.body.campaign_ads_list;
+    var result = await shopeeApi.api_put_marketing_campaign(SPC_CDS, UserAgent, cookie, campaign_ads_list);
+    res.send(result);
+});
+
+router.get("/api_get_marketing_campaign", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var campaignid = req.body.campaignid;
+    var result = await shopeeApi.api_get_marketing_campaign(SPC_CDS, UserAgent, cookie, campaignid);
+    res.send(result);
+});
+
+router.get("/api_get_detail_report_by_time", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var start_time = req.body.start_time;
+    var end_time = req.body.end_time;
+    var placement_list = req.body.placement_list;
+    var agg_interval = req.body.agg_interval;
+    var itemid = req.body.itemid;
+    var adsid = req.body.adsid;
+    
+    var result = await shopeeApi.api_get_detail_report_by_time(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid);
+    res.send(result);
+});
+
+router.get("/api_get_detail_report_by_keyword", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var start_time = req.body.start_time;
+    var end_time = req.body.end_time;
+    var placement_list = req.body.placement_list;
+    var agg_interval = req.body.agg_interval;
+    var need_detail = req.body.need_detail;    
+    var itemid = req.body.itemid;
+    var adsid = req.body.adsid;
+    
+    var result = await shopeeApi.api_get_detail_report_by_keyword(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid);
+    res.send(result);
+});
+
+router.get("/api_get_item_report_by_time", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var start_time = req.body.start_time;
+    var end_time = req.body.end_time;
+    var placement_list = req.body.placement_list;
+    var agg_interval = req.body.agg_interval;  
+    var itemid = req.body.itemid;
+    
+    var result = await shopeeApi.api_get_item_report_by_time(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid);
+    res.send(result);
+});
+
+router.get("/api_get_item_report_by_placement", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var start_time = req.body.start_time;
+    var end_time = req.body.end_time;
+    var placement_list = req.body.placement_list;
+    var itemid = req.body.itemid;
+    
+    var result = await shopeeApi.api_get_item_report_by_placement(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, itemid);
+    res.send(result);
+});
+
+
+router.post("/api_get_suggest_price", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var data = req.body.data;
+    
+    var result = await shopeeApi.api_get_suggest_price(SPC_CDS, UserAgent, cookie, data);
+    res.send(result);
+});
+
+router.get("/api_get_campaign_list", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var placement_list = req.body.placement_list;
+    
+    var result = await shopeeApi.api_get_campaign_list(SPC_CDS, UserAgent, cookie, placement_list);
+    res.send(result);
 });
 
 module.exports = router;
