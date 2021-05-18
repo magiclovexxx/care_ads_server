@@ -96,6 +96,26 @@ const api_get_second_category_list = async (SPC_CDS, UserAgent, cookie) => {
     return result;
 }
 
+const api_get_shop_info = async (SPC_CDS, UserAgent, cookie) => {        
+    const Url = 'https://banhang.shopee.vn/api/selleraccount/shop_info/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent
+        }
+    }).then(function(response) {  
+        return { status: response.status, data: response.data };
+    }).catch(function(error) {
+        if (error.response) {
+            return { status: error.response.status, data: error.response.data };
+        }
+        else {
+            return { status: -1, data: null };
+        }
+    });
+    return result;
+}
+
 const api_get_shopcategory = async (SPC_CDS, UserAgent, cookie, page_number, page_size) => {        
     var Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/page_active_collection_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&page_number=' + page_number;
@@ -511,5 +531,6 @@ module.exports = {
     api_get_campaign_list, //Lấy danh sách quảng cáo
 
     api_get_item_report_by_time, //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
-    api_get_item_report_by_placement //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
+    api_get_item_report_by_placement, //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
+    api_get_shop_info
 }
