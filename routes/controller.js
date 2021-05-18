@@ -215,13 +215,4 @@ router.get("/api_get_campaign_list", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_shop_info", async (req, res) => {
-    var SPC_CDS = req.body.SPC_CDS;
-    var UserAgent = req.body.UserAgent;
-    var cookie = req.body.cookie;
-    
-    var result = await shopeeApi.api_get_shop_info(SPC_CDS, UserAgent, cookie);
-    res.send(result);
-});
-
 module.exports = router;

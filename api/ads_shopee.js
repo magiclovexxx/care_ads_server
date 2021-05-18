@@ -43,14 +43,15 @@ const api_post_login = async (SPC_CDS, UserAgent, username, password, vcode) => 
         headers: {
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
-        return { status: response.status, data: response.data, cookie: cookieParse(response.headers['set-cookie']) };
+    }).then(function(response) {
+        response.data.cookie = cookieParse(response.headers['set-cookie']);
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data, cookie: null };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null, cookie: null };
+            return null;
         }
     });
     return result;
@@ -64,13 +65,13 @@ const api_get_all_category_list = async (SPC_CDS, UserAgent, cookie) => {
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -84,13 +85,13 @@ const api_get_second_category_list = async (SPC_CDS, UserAgent, cookie) => {
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -104,13 +105,13 @@ const api_get_shop_info = async (SPC_CDS, UserAgent, cookie) => {
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -127,13 +128,13 @@ const api_get_shopcategory = async (SPC_CDS, UserAgent, cookie, page_number, pag
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -157,13 +158,13 @@ const api_get_product_selector = async (SPC_CDS, UserAgent, cookie, offset, limi
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -177,13 +178,13 @@ const api_get_item_status = async (SPC_CDS, UserAgent, cookie, item_id_list) => 
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -204,13 +205,13 @@ const api_get_shop_report_by_time = async (SPC_CDS, UserAgent, cookie, start_tim
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -235,13 +236,13 @@ const api_get_campaign_statistics = async (SPC_CDS, UserAgent, cookie, campaign_
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -263,13 +264,13 @@ const api_get_suggest_keyword = async (SPC_CDS, UserAgent, cookie, keyword, coun
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -283,13 +284,13 @@ const api_post_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaign_
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -304,13 +305,13 @@ const api_put_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaign_a
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -327,13 +328,13 @@ const api_get_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaignid
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -359,13 +360,13 @@ const api_get_detail_report_by_time = async (SPC_CDS, UserAgent, cookie, start_t
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -392,13 +393,13 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, UserAgent, cookie, star
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -420,13 +421,13 @@ const api_get_item_report_by_time = async (SPC_CDS, UserAgent, cookie, start_tim
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -447,13 +448,13 @@ const api_get_item_report_by_placement = async (SPC_CDS, UserAgent, cookie, star
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -469,13 +470,13 @@ const api_get_suggest_price = async (SPC_CDS, UserAgent, cookie, data) => {
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
@@ -493,13 +494,13 @@ const api_get_campaign_list = async (SPC_CDS, UserAgent, cookie, placement_list)
             'User-Agent': UserAgent
         }
     }).then(function(response) {  
-        return { status: response.status, data: response.data };
+        return response.data;
     }).catch(function(error) {
         if (error.response) {
-            return { status: error.response.status, data: error.response.data };
+            return error.response.data;
         }
         else {
-            return { status: -1, data: null };
+            return null;
         }
     });
     return result;
