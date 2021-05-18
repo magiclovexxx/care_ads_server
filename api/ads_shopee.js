@@ -104,7 +104,7 @@ const api_get_second_category_list = async (SPC_CDS, UserAgent, cookie) => {
 }
 
 const api_get_shop_info = async (SPC_CDS, UserAgent, cookie) => {        
-    const Url = 'https://banhang.shopee.vn/api/selleraccount/shop_info/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
+    const Url = 'https://banhang.shopee.vn/api/selleraccount/shop_info/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
