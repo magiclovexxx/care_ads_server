@@ -266,6 +266,38 @@ const api_get_campaign_statistics = async (SPC_CDS, UserAgent, cookie, campaign_
     return result;
 }
 
+const api_get_search_ads = async (SPC_CDS, UserAgent, cookie, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {        
+    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign_statistics/';
+    Url += '?SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    Url += '&campaign_state=' + campaign_state;
+    Url += '&sort_key=' + sort_key;
+    Url += '&sort_direction=' + sort_direction;
+    Url += '&search_content=' + encodeURI(search_content);
+    Url += '&start_time=' + start_time;
+    Url += '&end_time=' + end_time;
+    Url += '&offset=' + offset;
+    Url += '&limit=' + limit;
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent
+        }
+    }).then(function(response) {  
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function(error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        }
+        else {
+            return null;
+        }
+    });
+    return result;
+}
+
 const api_get_suggest_keyword = async (SPC_CDS, UserAgent, cookie, keyword, count, placement, itemid) => {        
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/suggest/keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
