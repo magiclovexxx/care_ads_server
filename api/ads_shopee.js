@@ -267,7 +267,7 @@ const api_get_campaign_statistics = async (SPC_CDS, UserAgent, cookie, campaign_
 }
 
 const api_get_search_ads = async (SPC_CDS, UserAgent, cookie, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {        
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign_statistics/';
+    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/list/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&campaign_state=' + campaign_state;
@@ -603,5 +603,6 @@ module.exports = {
 
     api_get_item_report_by_time, //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
     api_get_item_report_by_placement, //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
-    api_get_shop_info
+    api_get_shop_info,
+    api_get_search_ads
 }
