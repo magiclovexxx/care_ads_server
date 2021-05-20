@@ -175,6 +175,19 @@ router.get("/api_get_detail_report_by_time", async (req, res) => {
     res.send(result);
 });
 
+
+router.get("/api_get_search_report_by_time", async (req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var start_time = req.body.start_time;
+    var end_time = req.body.end_time;
+    var agg_interval = req.body.agg_interval;
+    
+    var result = await shopeeApi.api_get_search_report_by_time(SPC_CDS, UserAgent, cookie, start_time, end_time, agg_interval);
+    res.send(result);
+});
+
 router.get("/api_get_detail_report_by_keyword", async (req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
