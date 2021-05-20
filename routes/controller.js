@@ -108,6 +108,7 @@ router.get("/api_get_search_ads", async (req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
+    var campaign_type = req.body.campaign_type;
     var campaign_state = req.body.campaign_state;
     var sort_key = req.body.sort_key;
     var sort_direction = req.body.sort_direction;
@@ -116,7 +117,7 @@ router.get("/api_get_search_ads", async (req, res) => {
     var end_time = req.body.end_time;    
     var offset = req.body.offset;
     var limit = req.body.limit;
-    var result = await shopeeApi.api_get_search_ads(SPC_CDS, UserAgent, cookie, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
+    var result = await shopeeApi.api_get_search_ads(SPC_CDS, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
     res.send(result);
 });
 

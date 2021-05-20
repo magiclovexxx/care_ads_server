@@ -266,10 +266,12 @@ const api_get_campaign_statistics = async (SPC_CDS, UserAgent, cookie, campaign_
     return result;
 }
 
-const api_get_search_ads = async (SPC_CDS, UserAgent, cookie, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {        
+const api_get_search_ads = async (SPC_CDS, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {        
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/list/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
+    if(campaign_type == 'keyword' || campaign_type == 'shop')
+        Url += '&campaign_type=' + campaign_type;
     Url += '&campaign_state=' + campaign_state;
     Url += '&sort_key=' + sort_key;
     Url += '&sort_direction=' + sort_direction;
