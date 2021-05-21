@@ -442,7 +442,6 @@ const api_get_search_report_by_time = async (SPC_CDS, UserAgent, cookie, start_t
     Url += '&end_time=' + end_time;
     Url += '&agg_interval=' + agg_interval;
     
-    console.log(Url);
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
@@ -460,7 +459,6 @@ const api_get_search_report_by_time = async (SPC_CDS, UserAgent, cookie, start_t
             return null;
         }
     });
-    console.log(result);
     return result;
 }
 
