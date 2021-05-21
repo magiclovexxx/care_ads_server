@@ -35,6 +35,7 @@ const api_get_login = async (SPC_CDS, UserAgent, cookie) => {
             'User-Agent': UserAgent
         }
     }).then(function(response) {
+        console.log(response.headers['set-cookie']);
         response.data.cookie = cookieParse(response.headers['set-cookie']) + '; ' + cookie;
         response.data.status = response.status;
         return response.data;
@@ -182,28 +183,6 @@ const api_get_shopcategory = async (SPC_CDS, UserAgent, cookie, page_number, pag
         }
     });
     return result;
-}
-
-const api_get_shopcategory_async = (name, SPC_CDS, UserAgent, cookie, page_number, page_size) => {        
-    var Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/page_active_collection_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
-    Url += '&page_number=' + page_number;
-    Url += '&page_size=' + page_size;
-
-   axiosInstance.get(Url, {
-        headers: {
-            cookie: cookie,
-            'User-Agent': UserAgent
-        }
-    }).then(function(response) {  
-        console.log('[' + new Date().toISOString() + '] (' + name + ') => ' + JSON.stringify({ status: response.status, data: response.data }));
-    }).catch(function(error) {
-        if (error.response) {
-            console.log('[' + new Date().toISOString() + '] (' + name + ') => ' + JSON.stringify({ status: error.response.status, data: error.response.data }));
-        }
-        else {
-            console.log('[' + new Date().toISOString() + '] (' + name + ') => ' + JSON.stringify({ status: -1, data: null }));
-        }
-    });
 }
 
 const api_get_product_selector = async (SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content) => {        
@@ -665,7 +644,7 @@ const api_get_campaign_list = async (SPC_CDS, UserAgent, cookie, placement_list)
 }
 
 module.exports = {
-    api_get_login,
+    api_get_login, //renew cookie
     api_post_login, //Đăng nhập
     api_get_all_category_list, //Lấy danh mục của shopee
     api_get_second_category_list, //Lấy danh mục cấp độ 2 của shopee 
@@ -693,6 +672,5 @@ module.exports = {
     api_get_item_report_by_placement, //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
     api_get_shop_info,
     api_get_search_ads,
-    api_get_search_report_by_time,
-    api_get_shopcategory_async
+    api_get_search_report_by_time
 }
