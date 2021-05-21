@@ -2,7 +2,7 @@
   "name": "2fa",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "test.js",
   "dependencies": {
     "axios": "^0.21.0",
     "body-parser": "^1.19.0",
@@ -18,7 +18,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon test.js"
   },
   "author": "",
   "license": "ISC"
