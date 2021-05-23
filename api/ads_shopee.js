@@ -6,10 +6,9 @@ function createAxios() {
     return axios.create({ withCredentials: true });
 }
 
-function cookieParse(cookie)
-{
+function cookieParse(cookie) {
     var result = [];
-    for(var i = 0; i < cookie.length; i++)
+    for (var i = 0; i < cookie.length; i++)
         result.push(cookie[i].split(';')[0]);
     return result.join('; ');
 }
@@ -18,13 +17,11 @@ const axiosInstance = createAxios();
 
 //Api shopee
 
-const api_get_login = async (SPC_CDS, UserAgent, cookie) => {
+const api_get_login = async(SPC_CDS, UserAgent, cookie) => {
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     cookie = cookie.split('; ')
-    for(var i = 0; i < cookie.length; i++)
-    {
-        if(cookie[i].indexOf('SPC_EC=') != -1)
-        {
+    for (var i = 0; i < cookie.length; i++) {
+        if (cookie[i].indexOf('SPC_EC=') != -1) {
             cookie = cookie[i];
             break;
         }
@@ -42,34 +39,32 @@ const api_get_login = async (SPC_CDS, UserAgent, cookie) => {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_post_login = async (SPC_CDS, UserAgent, username, password, vcode) => {
+const api_post_login = async(SPC_CDS, UserAgent, username, password, vcode) => {
     const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     var data = '';
     var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
     var email_regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  
+
     if (vnf_regex.test(username) == false) {
-        if(email_regex.test(username) == false) {
+        if (email_regex.test(username) == false) {
             data += '&username=' + encodeURI(username);
         } else {
             data += '&email=' + encodeURI(username);
         }
-    } else {        
+    } else {
         data += '&phone=' + encodeURI('84' + username.substring(1, 10));
     }
     data += '&password_hash=' + password_hash;
     data += '&remember=true';
-    if(vcode != null)
-    {
+    if (vcode != null) {
         data += '&vcode=' + vcode;
     }
     const result = await axiosInstance.post(Url, data, {
@@ -84,8 +79,7 @@ const api_post_login = async (SPC_CDS, UserAgent, username, password, vcode) => 
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
@@ -93,73 +87,70 @@ const api_post_login = async (SPC_CDS, UserAgent, username, password, vcode) => 
 }
 
 
-const api_get_all_category_list = async (SPC_CDS, UserAgent, cookie) => {        
+const api_get_all_category_list = async(SPC_CDS, UserAgent, cookie) => {
     const Url = 'https://banhang.shopee.vn/api/v3/category/get_all_category_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_second_category_list = async (SPC_CDS, UserAgent, cookie) => {        
+const api_get_second_category_list = async(SPC_CDS, UserAgent, cookie) => {
     const Url = 'https://banhang.shopee.vn/api/v3/category/get_second_category_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_shop_info = async (SPC_CDS, UserAgent, cookie) => {        
+const api_get_shop_info = async(SPC_CDS, UserAgent, cookie) => {
     const Url = 'https://banhang.shopee.vn/api/selleraccount/shop_info/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_shopcategory = async (SPC_CDS, UserAgent, cookie, page_number, page_size) => {        
+const api_get_shopcategory = async(SPC_CDS, UserAgent, cookie, page_number, page_size) => {
     var Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/page_active_collection_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&page_number=' + page_number;
     Url += '&page_size=' + page_size;
@@ -169,22 +160,21 @@ const api_get_shopcategory = async (SPC_CDS, UserAgent, cookie, page_number, pag
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_product_selector = async (SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by) => {        
+const api_get_product_selector = async(SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/public/product_selector/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&offset=' + offset;
     Url += '&limit=' + limit;
@@ -193,55 +183,52 @@ const api_get_product_selector = async (SPC_CDS, UserAgent, cookie, offset, limi
     Url += '&need_item_model=' + need_item_model;
     if (search_type != null) {
         Url += '&search_type=' + search_type;
-        Url += '&search_content=' + encodeURI(search_content);        
+        Url += '&search_content=' + encodeURI(search_content);
     }
     if (sort_by != null) {
         Url += '&sort_by=' + sort_by;
     }
-
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_item_status = async (SPC_CDS, UserAgent, cookie, item_id_list) => {
+const api_get_item_status = async(SPC_CDS, UserAgent, cookie, item_id_list) => {
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_item_status/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, item_id_list, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_shop_report_by_time = async (SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval) => {        
+const api_get_shop_report_by_time = async(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/shop_report_by_time/';
     Url += '?start_time=' + start_time;
     Url += '&end_time=' + end_time;
@@ -255,22 +242,21 @@ const api_get_shop_report_by_time = async (SPC_CDS, UserAgent, cookie, start_tim
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_campaign_statistics = async (SPC_CDS, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {        
+const api_get_campaign_statistics = async(SPC_CDS, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign_statistics/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -288,26 +274,25 @@ const api_get_campaign_statistics = async (SPC_CDS, UserAgent, cookie, campaign_
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_search_ads = async (SPC_CDS, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {        
+const api_get_search_ads = async(SPC_CDS, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/list/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
-    if(campaign_type == 'keyword' || campaign_type == 'shop')
+    if (campaign_type == 'keyword' || campaign_type == 'shop')
         Url += '&campaign_type=' + campaign_type;
     Url += '&campaign_state=' + campaign_state;
     Url += '&sort_key=' + sort_key;
@@ -322,22 +307,21 @@ const api_get_search_ads = async (SPC_CDS, UserAgent, cookie, campaign_type, cam
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_suggest_keyword = async (SPC_CDS, UserAgent, cookie, keyword, count, placement, itemid) => {        
+const api_get_suggest_keyword = async(SPC_CDS, UserAgent, cookie, keyword, count, placement, itemid) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/suggest/keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -352,37 +336,35 @@ const api_get_suggest_keyword = async (SPC_CDS, UserAgent, cookie, keyword, coun
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_post_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaign_ads_list) => {
+const api_post_marketing_campaign = async(SPC_CDS, UserAgent, cookie, campaign_ads_list) => {
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, campaign_ads_list, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
@@ -390,29 +372,28 @@ const api_post_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaign_
 }
 
 
-const api_put_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaign_ads_list) => {
+const api_put_marketing_campaign = async(SPC_CDS, UserAgent, cookie, campaign_ads_list) => {
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.put(Url, campaign_ads_list, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaignid) => {        
+const api_get_marketing_campaign = async(SPC_CDS, UserAgent, cookie, campaignid) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -422,50 +403,48 @@ const api_get_marketing_campaign = async (SPC_CDS, UserAgent, cookie, campaignid
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_search_report_by_time = async (SPC_CDS, UserAgent, cookie, start_time, end_time, agg_interval) => {
+const api_get_search_report_by_time = async(SPC_CDS, UserAgent, cookie, start_time, end_time, agg_interval) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/search_report_by_time/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&start_time=' + start_time;
     Url += '&end_time=' + end_time;
     Url += '&agg_interval=' + agg_interval;
-    
+
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_detail_report_by_time = async (SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid) => {        
+const api_get_detail_report_by_time = async(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_time/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -478,28 +457,27 @@ const api_get_detail_report_by_time = async (SPC_CDS, UserAgent, cookie, start_t
     } else {
         Url += '&adsid=' + adsid;
     }
-    
+
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_detail_report_by_keyword = async (SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid) => {        
+const api_get_detail_report_by_keyword = async(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -513,28 +491,27 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, UserAgent, cookie, star
     } else {
         Url += '&adsid=' + adsid;
     }
-    
+
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_item_report_by_time = async (SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid) => {        
+const api_get_item_report_by_time = async(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/item_report_by_time/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -543,28 +520,27 @@ const api_get_item_report_by_time = async (SPC_CDS, UserAgent, cookie, start_tim
     Url += '&placement_list=' + encodeURI(JSON.stringify(placement_list));
     Url += '&agg_interval=' + agg_interval;
     Url += '&itemid=' + itemid;
-    
+
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_item_report_by_placement = async (SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, itemid) => {        
+const api_get_item_report_by_placement = async(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, itemid) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -572,28 +548,27 @@ const api_get_item_report_by_placement = async (SPC_CDS, UserAgent, cookie, star
     Url += '&end_time=' + end_time;
     Url += '&placement_list=' + encodeURI(JSON.stringify(placement_list));
     Url += '&itemid=' + itemid;
-    
+
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_suggest_price = async (SPC_CDS, UserAgent, cookie, data) => {        
+const api_get_suggest_price = async(SPC_CDS, UserAgent, cookie, data) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_suggest_price/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
@@ -602,41 +577,39 @@ const api_get_suggest_price = async (SPC_CDS, UserAgent, cookie, data) => {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
     return result;
 }
 
-const api_get_campaign_list = async (SPC_CDS, UserAgent, cookie, placement_list) => {        
+const api_get_campaign_list = async(SPC_CDS, UserAgent, cookie, placement_list) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/list/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&placement_list=' + encodeURI(JSON.stringify(placement_list));
-    
+
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent
         }
-    }).then(function(response) {  
+    }).then(function(response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function(error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
-        }
-        else {
+        } else {
             return null;
         }
     });
@@ -665,7 +638,7 @@ module.exports = {
 
     api_get_detail_report_by_time, //Lấy dữ liệu thống kê chi tiết của quảng cáo đấu thầu từ khóa theo mã sản phẩm
     api_get_detail_report_by_keyword, //Lấy dữ liệu thống kê chi tiết của quảng cáo đấu thầu từ khóa theo mã sản phẩm
-    
+
     api_get_campaign_list, //Lấy danh sách quảng cáo
 
     api_get_item_report_by_time, //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
