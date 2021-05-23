@@ -62,7 +62,8 @@ router.get("/api_get_product_selector", async (req, res) => {
     var need_item_model = req.body.need_item_model;
     var search_type = req.body.search_type;
     var search_content = req.body.search_content;
-    var result = await shopeeApi.api_get_product_selector(SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content);
+    var sort_by = req.body.sort_by;
+    var result = await shopeeApi.api_get_product_selector(SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by);
     res.send(result);
 });
 

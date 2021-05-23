@@ -184,7 +184,7 @@ const api_get_shopcategory = async (SPC_CDS, UserAgent, cookie, page_number, pag
     return result;
 }
 
-const api_get_product_selector = async (SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content) => {        
+const api_get_product_selector = async (SPC_CDS, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by) => {        
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/public/product_selector/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&offset=' + offset;
     Url += '&limit=' + limit;
@@ -194,6 +194,9 @@ const api_get_product_selector = async (SPC_CDS, UserAgent, cookie, offset, limi
     if (search_type != null) {
         Url += '&search_type=' + search_type;
         Url += '&search_content=' + encodeURI(search_content);        
+    }
+    if (sort_by != null) {
+        Url += '&sort_by=' + sort_by;
     }
 
     const result = await axiosInstance.get(Url, {
