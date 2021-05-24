@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 
 router.use(express.json({ limit: "5000mb", extended: true }));
 
-router.post("/api_post_login", async (req, res) => {
+router.post("/api_post_login", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var username = req.body.username;
@@ -16,7 +16,7 @@ router.post("/api_post_login", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_all_category_list", async (req, res) => {
+router.get("/api_get_all_category_list", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -24,7 +24,7 @@ router.get("/api_get_all_category_list", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_second_category_list", async (req, res) => {
+router.get("/api_get_second_category_list", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -32,7 +32,7 @@ router.get("/api_get_second_category_list", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_shop_info", async (req, res) => {
+router.get("/api_get_shop_info", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -40,7 +40,7 @@ router.get("/api_get_shop_info", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_shopcategory", async (req, res) => {
+router.get("/api_get_shopcategory", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -51,7 +51,7 @@ router.get("/api_get_shopcategory", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_product_selector", async (req, res) => {
+router.get("/api_get_product_selector", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -67,7 +67,7 @@ router.get("/api_get_product_selector", async (req, res) => {
     res.send(result);
 });
 
-router.post("/api_get_item_status", async (req, res) => {
+router.post("/api_get_item_status", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -76,7 +76,7 @@ router.post("/api_get_item_status", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_shop_report_by_time", async (req, res) => {
+router.get("/api_get_shop_report_by_time", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -88,7 +88,7 @@ router.get("/api_get_shop_report_by_time", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_campaign_statistics", async (req, res) => {
+router.get("/api_get_campaign_statistics", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -98,14 +98,14 @@ router.get("/api_get_campaign_statistics", async (req, res) => {
     var sort_direction = req.body.sort_direction;
     var search_content = req.body.search_content;
     var start_time = req.body.start_time;
-    var end_time = req.body.end_time;    
+    var end_time = req.body.end_time;
     var offset = req.body.offset;
     var limit = req.body.limit;
     var result = await shopeeApi.api_get_campaign_statistics(SPC_CDS, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
     res.send(result);
 });
 
-router.get("/api_get_search_ads", async (req, res) => {    
+router.get("/api_get_search_ads", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -115,14 +115,14 @@ router.get("/api_get_search_ads", async (req, res) => {
     var sort_direction = req.body.sort_direction;
     var search_content = req.body.search_content;
     var start_time = req.body.start_time;
-    var end_time = req.body.end_time;    
+    var end_time = req.body.end_time;
     var offset = req.body.offset;
     var limit = req.body.limit;
     var result = await shopeeApi.api_get_search_ads(SPC_CDS, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
     res.send(result);
 });
 
-router.get("/api_get_suggest_keyword", async (req, res) => {
+router.get("/api_get_suggest_keyword", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -134,7 +134,7 @@ router.get("/api_get_suggest_keyword", async (req, res) => {
     res.send(result);
 });
 
-router.post("/api_post_marketing_campaign", async (req, res) => {
+router.post("/api_post_marketing_campaign", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -143,7 +143,7 @@ router.post("/api_post_marketing_campaign", async (req, res) => {
     res.send(result);
 });
 
-router.put("/api_put_marketing_campaign", async (req, res) => {
+router.put("/api_put_marketing_campaign", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -152,7 +152,7 @@ router.put("/api_put_marketing_campaign", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_marketing_campaign", async (req, res) => {
+router.get("/api_get_marketing_campaign", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -161,7 +161,7 @@ router.get("/api_get_marketing_campaign", async (req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_detail_report_by_time", async (req, res) => {
+router.get("/api_get_detail_report_by_time", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -171,25 +171,25 @@ router.get("/api_get_detail_report_by_time", async (req, res) => {
     var agg_interval = req.body.agg_interval;
     var itemid = req.body.itemid;
     var adsid = req.body.adsid;
-    
+
     var result = await shopeeApi.api_get_detail_report_by_time(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid);
     res.send(result);
 });
 
 
-router.get("/api_get_search_report_by_time", async (req, res) => {
+router.get("/api_get_search_report_by_time", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var start_time = req.body.start_time;
     var end_time = req.body.end_time;
     var agg_interval = req.body.agg_interval;
-    
+
     var result = await shopeeApi.api_get_search_report_by_time(SPC_CDS, UserAgent, cookie, start_time, end_time, agg_interval);
     res.send(result);
 });
 
-router.get("/api_get_detail_report_by_keyword", async (req, res) => {
+router.get("/api_get_detail_report_by_keyword", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -197,29 +197,29 @@ router.get("/api_get_detail_report_by_keyword", async (req, res) => {
     var end_time = req.body.end_time;
     var placement_list = req.body.placement_list;
     var agg_interval = req.body.agg_interval;
-    var need_detail = req.body.need_detail;    
+    var need_detail = req.body.need_detail;
     var itemid = req.body.itemid;
     var adsid = req.body.adsid;
-    
+
     var result = await shopeeApi.api_get_detail_report_by_keyword(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid);
     res.send(result);
 });
 
-router.get("/api_get_item_report_by_time", async (req, res) => {
+router.get("/api_get_item_report_by_time", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var start_time = req.body.start_time;
     var end_time = req.body.end_time;
     var placement_list = req.body.placement_list;
-    var agg_interval = req.body.agg_interval;  
+    var agg_interval = req.body.agg_interval;
     var itemid = req.body.itemid;
-    
+
     var result = await shopeeApi.api_get_item_report_by_time(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid);
     res.send(result);
 });
 
-router.get("/api_get_item_report_by_placement", async (req, res) => {
+router.get("/api_get_item_report_by_placement", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
@@ -227,28 +227,28 @@ router.get("/api_get_item_report_by_placement", async (req, res) => {
     var end_time = req.body.end_time;
     var placement_list = req.body.placement_list;
     var itemid = req.body.itemid;
-    
+
     var result = await shopeeApi.api_get_item_report_by_placement(SPC_CDS, UserAgent, cookie, start_time, end_time, placement_list, itemid);
     res.send(result);
 });
 
 
-router.post("/api_get_suggest_price", async (req, res) => {
+router.post("/api_get_suggest_price", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var data = req.body.data;
-    
+
     var result = await shopeeApi.api_get_suggest_price(SPC_CDS, UserAgent, cookie, data);
     res.send(result);
 });
 
-router.get("/api_get_campaign_list", async (req, res) => {
+router.get("/api_get_campaign_list", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var placement_list = req.body.placement_list;
-    
+
     var result = await shopeeApi.api_get_campaign_list(SPC_CDS, UserAgent, cookie, placement_list);
     res.send(result);
 });
