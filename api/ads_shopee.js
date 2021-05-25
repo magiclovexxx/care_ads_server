@@ -150,7 +150,7 @@ const api_get_shop_info = async(SPC_CDS, UserAgent, cookie) => {
     return result;
 }
 
-const api_get_shopcategory = async(SPC_CDS, UserAgent, cookie, page_number, page_size) => {
+const api_get_page_active_collection_list = async(SPC_CDS, UserAgent, cookie, page_number, page_size) => {
     var Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/page_active_collection_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&page_number=' + page_number;
     Url += '&page_size=' + page_size;
@@ -616,12 +616,38 @@ const api_get_campaign_list = async(SPC_CDS, UserAgent, cookie, placement_list) 
     return result;
 }
 
+const api_get_query_collection_list = async(SPC_CDS, UserAgent, cookie) => {
+    var Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/query_collection_list/';
+    Url += '?SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent
+        }
+    }).then(function(response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function(error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return null;
+        }
+    });
+    return result;
+}
+
+
 module.exports = {
     api_get_login, //renew cookie
     api_post_login, //Đăng nhập
     api_get_all_category_list, //Lấy danh mục của shopee
     api_get_second_category_list, //Lấy danh mục cấp độ 2 của shopee 
-    api_get_shopcategory, //Lấy danh mục shop đang sử dụng
+    api_get_page_active_collection_list, //Lấy danh mục shop đang sử dụng
+    api_get_query_collection_list,
     api_get_product_selector, //Lấy danh sách sản phẩm
     api_get_item_status, //Lấy danh sách quảng cáo của sản phẩm
 

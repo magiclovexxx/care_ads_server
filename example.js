@@ -52,7 +52,7 @@ var shopeeApi = require('./api/ads_shopee.js');
         //Khởi tạo danh sách mã sản phẩm
         var item_id_list = {
             item_id_list: [6760786744]
-        }; 
+        };
 
         //Lấy danh sách quảng cáo của sản phẩm
         result = await shopeeApi.api_get_item_status(SPC_CDS, UserAgent, cookie, item_id_list);

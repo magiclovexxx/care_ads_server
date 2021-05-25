@@ -40,14 +40,22 @@ router.get("/api_get_shop_info", async(req, res) => {
     res.send(result);
 });
 
-router.get("/api_get_shopcategory", async(req, res) => {
+router.get("/api_get_page_active_collection_list", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var page_number = req.body.page_number;
     var page_size = req.body.page_size;
 
-    var result = await shopeeApi.api_get_shopcategory(SPC_CDS, UserAgent, cookie, page_number, page_size);
+    var result = await shopeeApi.api_get_page_active_collection_list(SPC_CDS, UserAgent, cookie, page_number, page_size);
+    res.send(result);
+});
+
+router.get("/api_get_query_collection_list", async(req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var result = await shopeeApi.api_get_query_collection_list(SPC_CDS, UserAgent, cookie);
     res.send(result);
 });
 
