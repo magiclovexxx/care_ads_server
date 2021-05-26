@@ -29,7 +29,7 @@ var shopeeApi = require('./api/ads_shopee.js');
         //1: Quảng cáo khám phá: Sản phẩm tương tự
         //2: Quảng cáo khám phá: Gợi ý hôm nay
         //5: Quảng cáo khám phá: Có thể bạn cũng thích
-
+        //2
         //0: Quảng cáo đấu thầu từ khóa: Thủ công
         //4: Quảng cáo đấu thầu từ khóa: Tự động
         
