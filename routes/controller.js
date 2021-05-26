@@ -6,6 +6,11 @@ const { v4: uuidv4 } = require('uuid');
 
 router.use(express.json({ limit: "5000mb", extended: true }));
 
+router.get("/", async(req, res) => {
+    
+    res.send("----------- OK -----------");
+});
+
 router.post("/api_post_login", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var proxy = req.body.proxy;
