@@ -2,6 +2,9 @@ var cron = require('node-cron');
 const publicIp = require('public-ip');
 require('dotenv').config();
 var shopee = require('./api/shopee.js');
+var fs = require('fs');
+const axiosInstance = createAxios();
+const exec = require('child_process').exec;
 
 function createAxios() {
     const axios = require('axios');
@@ -16,23 +19,19 @@ if(mode == "DEV"){
 }
 
 slave = process.env.SLAVE
-if(!slave){
-    slave =  await publicIp.v4()
-    console.log("slave : "+ slave);
-}
+
 
 check_all = async () => {
     console.log("------- Start cron check all -------")
 
     // Lấy dữ diệu các shopee thuôc slave
-  
-        const Url = api_url+'/getdatashops';
-        const result = await axiosInstance.get(Url, {
-            headers: {
-                cookie: cookie,
-                'User-Agent': UserAgent
-            },
-            proxy: proxy
+    if(!slave){
+        slave =  await publicIp.v4()
+        console.log("slave : "+ slave);
+    }
+        const Url = api_url+'/getdatashops?slave='+slave;
+        const data = await axiosInstance.get(Url, {
+           
         }).then(function (response) {
             response.data.status = response.status;
             return response.data;
@@ -45,8 +44,41 @@ check_all = async () => {
             }
         });
         
+        // Dữ liệu của các shop
+        let data_shops = data.shops
+
+        // check version từ server
+        let version = data.version
+
+        // check version từ local
+        var checkVersion = fs.readFileSync("version.txt", { flag: "as+" });
+
+        // Kiểm tra version và tự động update nếu có version mới
+        if(checkVersion != version) {
+            console.log("---------- Cập nhật phiên bản ----------")
+            if (mode !== "DEV") {
+                const myShellScript = exec('update.sh /');
+                myShellScript.stdout.on('data', (data) => {
+                    // do whatever you want here with data
+                });
+                myShellScript.stderr.on('data', (data) => {
+                    console.error(data);
+                });
+            }
+        }
+        
+        data_shops.forEach(shop => {
+            console.log(shop)
+            // lấy dữ liệu chiến dịch quảng cáo hiện tại
+            
+            // So sánh dữ liệu chiến dịch và điều chỉnh giá thầu
+
+
+            // Cập nhật chiến dịch
+
+        })
     
-    // lấy dữ liệu chiến dịch quảng cáo hiện tại
+    
 
      
    }
