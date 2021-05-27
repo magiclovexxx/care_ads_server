@@ -97,6 +97,18 @@ router.post("/api_get_item_status", async(req, res) => {
     res.send(result);
 });
 
+router.post("/api_post_marketing_graphql", async(req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var proxy = req.body.proxy;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var data = JSON.parse('{"query":"query Products($productIds: [String], $statusType: Int) {      products(productIds: $productIds, statusType: $statusType)     {      items { itemid, name, originPrice, images, status, stock, flag      }    }      }","variables":{"productIds":["5060839796"],"statusType":0}}');
+    console.log(req.body.data);
+    console.log(data);
+    var result = await shopeeApi.api_post_marketing_graphql(SPC_CDS, proxy, UserAgent, cookie, data);
+    res.send(result);
+});
+
 router.get("/api_get_shop_report_by_time", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var proxy = req.body.proxy;

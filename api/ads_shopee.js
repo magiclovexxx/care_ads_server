@@ -214,6 +214,30 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
     return result;
 }
 
+
+
+const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+    const Url = 'https://banhang.shopee.vn/api/n/marketing/graphql/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+    const result = await axiosInstance.post(Url, data, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return null;
+        }
+    });
+    return result;
+}
+
 const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_list) => {
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_item_status/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, item_id_list, {
@@ -694,5 +718,6 @@ module.exports = {
     api_get_item_report_by_placement, //Lấy dữ liệu thống kê chi tiết của quảng cáo khám phá theo mã sản phẩm
     api_get_shop_info,
     api_get_search_ads,
-    api_get_search_report_by_time
+    api_get_search_report_by_time,
+    api_post_marketing_graphql
 }
