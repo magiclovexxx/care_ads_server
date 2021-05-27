@@ -102,7 +102,9 @@ router.post("/api_post_marketing_graphql", async(req, res) => {
     var proxy = req.body.proxy;
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
-    var data = req.body.data;
+    var data = JSON.parse('{"query":"query Products($productIds: [String], $statusType: Int) {      products(productIds: $productIds, statusType: $statusType)     {      items { itemid, name, originPrice, images, status, stock, flag      }    }      }","variables":{"productIds":["5060839796"],"statusType":0}}');
+    console.log(req.body.data);
+    console.log(data);
     var result = await shopeeApi.api_post_marketing_graphql(SPC_CDS, proxy, UserAgent, cookie, data);
     res.send(result);
 });
