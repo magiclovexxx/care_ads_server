@@ -6,6 +6,7 @@ var shopeeApi = require('./api/ads_shopee.js');
 
 (async()=>{
 
+    /*
     //Khởi tạo thông tin đăng nhập
     const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36';
     const SPC_CDS = uuidv4();
@@ -638,9 +639,9 @@ var shopeeApi = require('./api/ads_shopee.js');
         console.log(JSON.stringify(result));
         */
         //#endregion Lấy danh sách sản phẩm
-    }
+    /*}
     else {
         console.log(JSON.stringify(result));
-    }
+    }*/
 
  })();

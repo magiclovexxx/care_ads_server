@@ -19,7 +19,7 @@ const axiosInstance = createAxios();
 
 const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
-    cookie = cookie.split('; ')
+    cookie = cookie.split('; ');
     for (var i = 0; i < cookie.length; i++) {
         if (cookie[i].indexOf('SPC_EC=') != -1) {
             cookie = cookie[i];
