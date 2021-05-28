@@ -200,6 +200,15 @@ router.get("/api_get_marketing_campaign", async(req, res) => {
     res.send(result);
 });
 
+router.get("/api_get_marketing_meta", async(req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var proxy = req.body.proxy;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var result = await shopeeApi.api_get_marketing_meta(SPC_CDS, proxy, UserAgent, cookie);
+    res.send(result);
+});
+
 router.get("/api_get_detail_report_by_time", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var proxy = req.body.proxy;

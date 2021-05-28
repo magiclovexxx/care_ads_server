@@ -456,6 +456,31 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
     return result;
 }
 
+
+const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
+    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/meta/';
+    Url += '?SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return null;
+        }
+    });
+    return result;
+}
+
 const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, agg_interval) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/search_report_by_time/';
     Url += '?SPC_CDS=' + SPC_CDS;
@@ -719,5 +744,6 @@ module.exports = {
     api_get_shop_info,
     api_get_search_ads,
     api_get_search_report_by_time,
-    api_post_marketing_graphql
+    api_post_marketing_graphql,
+    api_get_marketing_meta
 }
