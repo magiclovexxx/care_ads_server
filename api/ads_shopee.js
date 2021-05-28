@@ -214,7 +214,27 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
     return result;
 }
 
-
+const api_post_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+    const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/mass_edit/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+    const result = await axiosInstance.post(Url, data, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return null;
+        }
+    });
+    return result;
+}
 
 const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
     const Url = 'https://banhang.shopee.vn/api/n/marketing/graphql/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
@@ -363,7 +383,7 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
     Url += '&keyword=' + encodeURI(keyword);
     Url += '&count=' + count;
     Url += '&placement=' + placement;
-    if (itemid != null) {
+    if (itemid != null && itemid != '') {
         Url += '&itemid=' + itemid;
     }
     const result = await axiosInstance.get(Url, {
@@ -517,11 +537,13 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
     Url += '&end_time=' + end_time;
     Url += '&placement_list=' + encodeURI(JSON.stringify(placement_list));
     Url += '&agg_interval=' + agg_interval;
-    if (itemid != null) {
+    if (itemid != null && itemid != '') {
         Url += '&itemid=' + itemid;
     } else {
         Url += '&adsid=' + adsid;
     }
+
+    console.log(Url);
 
     const result = await axiosInstance.get(Url, {
         headers: {
@@ -552,7 +574,7 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
     Url += '&placement_list=' + encodeURI(JSON.stringify(placement_list));
     Url += '&agg_interval=' + agg_interval;
     Url += '&need_detail=' + need_detail;
-    if (itemid != null) {
+    if (itemid != null && itemid != '') {
         Url += '&itemid=' + itemid;
     } else {
         Url += '&adsid=' + adsid;
@@ -745,5 +767,6 @@ module.exports = {
     api_get_search_ads,
     api_get_search_report_by_time,
     api_post_marketing_graphql,
-    api_get_marketing_meta
+    api_get_marketing_meta,
+    api_post_marketing_mass_edit
 }
