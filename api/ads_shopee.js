@@ -543,8 +543,6 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
         Url += '&adsid=' + adsid;
     }
 
-    console.log(Url);
-
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
