@@ -303,8 +303,17 @@ router.post("/api_get_suggest_price", async(req, res) => {
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var data = req.body.data;
-
     var result = await shopeeApi.api_get_suggest_price(SPC_CDS, proxy, UserAgent, cookie, data);
+    res.send(result);
+});
+
+router.post("/api_get_segment_suggest_price", async(req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var proxy = req.body.proxy;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var data = req.body.data;
+    var result = await shopeeApi.api_get_segment_suggest_price(SPC_CDS, proxy, UserAgent, cookie, data);
     res.send(result);
 });
 

@@ -681,6 +681,31 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
     return result;
 }
 
+
+const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_segment_suggest_price/';
+    Url += '?SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    const result = await axiosInstance.post(Url, data, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return null;
+        }
+    });
+    return result;
+}
+
 const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placement_list) => {
     var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/list/';
     Url += '?SPC_CDS=' + SPC_CDS;
@@ -766,5 +791,6 @@ module.exports = {
     api_get_search_report_by_time,
     api_post_marketing_graphql,
     api_get_marketing_meta,
-    api_post_marketing_mass_edit
+    api_post_marketing_mass_edit,
+    api_get_segment_suggest_price
 }
