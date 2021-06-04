@@ -2,6 +2,7 @@ var express = require('express');
 var shopeeApi = require('../api/ads_shopee.js');
 var router = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const { json } = require('body-parser');
 
 
 router.use(express.json({ limit: "5000mb", extended: true }));
@@ -187,6 +188,9 @@ router.post("/api_post_marketing_campaign", async(req, res) => {
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var campaign_ads_list = req.body.campaign_ads_list;
+    delete campaign_ads_list.campaign_ads_list[0].campaign.x;
+    delete campaign_ads_list.campaign_ads_list[0].campaign.cost_percent;
+    delete campaign_ads_list.campaign_ads_list[0].campaign.total_cost;
     var result = await shopeeApi.api_post_marketing_campaign(SPC_CDS, proxy, UserAgent, cookie, campaign_ads_list);
     res.send(result);
 });
@@ -197,6 +201,9 @@ router.put("/api_put_marketing_campaign", async(req, res) => {
     var UserAgent = req.body.UserAgent;
     var cookie = req.body.cookie;
     var campaign_ads_list = req.body.campaign_ads_list;
+    delete campaign_ads_list.campaign_ads_list[0].campaign.x;
+    delete campaign_ads_list.campaign_ads_list[0].campaign.cost_percent;
+    delete campaign_ads_list.campaign_ads_list[0].campaign.total_cost;
     var result = await shopeeApi.api_put_marketing_campaign(SPC_CDS, proxy, UserAgent, cookie, campaign_ads_list);
     res.send(result);
 });

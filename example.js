@@ -458,7 +458,7 @@ var shopeeApi = require('./api/ads_shopee.js');
                         } else { //Chưa tồn tại quảng cáo khám phá sản phẩm tương tự => Thêm mới
                             campaign_ads_list.campaign_ads_list[0].advertisements.push({
                                 itemid: item_id_list.item_id_list[0],
-                                status: 1, //Trạng thái quảng cáo (0: Đã xóa, 1: Hoạt động, 2: Tạm dừng, 3: Kết thúc)
+                                status: 1, //1: Bật quảng cáog, 2: Tắt quảng cáo
                                 placement: 1, //Loại quảng cáo khám phá (1: Sản phẩm tương tự, 2: Gợi ý hôm nay, 5: Có thể bạn cũng thích, 8: Tự động)
                                 campaignid: campaign_ads_list.campaign_ads_list[0].campaign.campaignid, //Mã quảng cáo đấu thầu từ khóa
                                 extinfo: {  //(Bỏ object này nếu là quảng cáo khám phá tự động)
