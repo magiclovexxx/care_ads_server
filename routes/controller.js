@@ -314,6 +314,7 @@ router.post("/api_get_suggest_price", async(req, res) => {
     res.send(result);
 });
 
+
 router.post("/api_get_segment_suggest_price", async(req, res) => {
     var SPC_CDS = req.body.SPC_CDS;
     var proxy = req.body.proxy;
@@ -334,5 +335,19 @@ router.get("/api_get_campaign_list", async(req, res) => {
     var result = await shopeeApi.api_get_campaign_list(SPC_CDS, proxy, UserAgent, cookie, placement_list);
     res.send(result);
 });
+
+router.get("/api_get_search_hint", async(req, res) => {
+    var SPC_CDS = req.body.SPC_CDS;
+    var proxy = req.body.proxy;
+    var UserAgent = req.body.UserAgent;
+    var cookie = req.body.cookie;
+    var keyword = req.body.keyword;    
+    var type = req.body.type;
+    var result = await shopeeApi.api_get_search_hint(SPC_CDS, proxy, UserAgent, cookie, keyword, type);
+    res.send(result);
+});
+
+
+
 
 module.exports = router;
