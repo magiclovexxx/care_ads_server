@@ -65,16 +65,10 @@ check_all = async () => {
         }
     }
 
-    data_shops.forEach(shop => {
+    data_shops.forEach((shop) => {
         console.log(shop)
-        // lấy dữ liệu chiến dịch quảng cáo hiện tại
 
-        // So sánh dữ liệu chiến dịch và điều chỉnh giá thầu
-
-
-        // Cập nhật chiến dịch
-
-    })
+    });
 }
 
 (async () => {
