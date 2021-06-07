@@ -80,8 +80,3 @@ check_all = async () => {
 (async () => {
     await check_all()
 })();
-
-// cron 5p/ lần
-//cron.schedule('*/5 * * * *', async () => {
-//    await check_all()
-//  })
