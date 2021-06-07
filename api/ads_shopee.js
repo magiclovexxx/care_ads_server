@@ -36,7 +36,7 @@ const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
         response.data.cookie = cookieParse(response.headers['set-cookie']) + '; ' + cookie;
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }).catch(function (error) {        
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
