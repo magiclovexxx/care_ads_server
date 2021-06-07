@@ -1,8 +1,6 @@
 var express = require('express');
 var shopeeApi = require('../api/ads_shopee.js');
 var router = express.Router();
-const { v4: uuidv4 } = require('uuid');
-const { json } = require('body-parser');
 
 
 router.use(express.json({ limit: "5000mb", extended: true }));
