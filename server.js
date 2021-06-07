@@ -25,8 +25,6 @@ app.set('views', './views');
 // Website routes
 app.use('/', routes);
 
-
 app.listen(port, function () {
-
     console.log("Starting at port: " + port);
 });
