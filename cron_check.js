@@ -303,11 +303,20 @@ check_all = async () => {
                             var total_broad_gmv = Math.round(result.data.reduce((a, { broad_gmv }) => a + broad_gmv, 0));
                             //Số lượng sản phẩm
                             var total_broad_order_amount = Math.round(result.data.reduce((a, { broad_order_amount }) => a + broad_order_amount, 0));
+                            if (campaign.campaign_type == 'shop')
+                                total_broad_order_amount = 1;
                             //Lượt click
                             var total_click = Math.round(result.data.reduce((a, { click }) => a + click, 0));
-                            
 
-                            console.log(total_click);
+                            var ros = total_broad_gmv - ((total_broad_gmv * campaign.fix_cost) / 100) - (total_broad_order_amount * campaign.product_cost);
+                            if (total_cost <= ros * campaign.profit_num) {
+                                //Quảng cáo lãi tăng giá thầu
+                                console.log('Quảng cáo lãi tăng giá thầu');
+                            }
+                            else {
+                                //Quảng cáo lỗ giảm giá thầu
+                                console.log('Quảng cáo lỗ giảm giá thầu');
+                            }
                         }
                         else {
 
