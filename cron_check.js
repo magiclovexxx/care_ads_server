@@ -7,6 +7,8 @@ const axiosInstance = createAxios();
 const exec = require('child_process').exec;
 var moment = require('moment');
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
+const { v4: uuidv4 } = require('uuid');
+const { json } = require('body-parser');
 
 function createAxios() {
     const axios = require('axios');
@@ -104,9 +106,10 @@ check_all = async () => {
                 var spc_cds = shop.shop_info.spc_cds;
                 var proxy = JSON.parse(shop.shop_info.proxy);
                 var user_agent = shop.shop_info.user_agent;
+                var username = shop.shop_info.username;
+                var password = shop.shop_info.password;
                 var cookie = shop.shop_info.cookie;
                 var is_need_login = false;
-
                 //Kiểm tra gia hạn token
                 if (moment(shop.shop_info.update_time).add(1, 'days') < moment()) {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Bắt đầu gia hạn cookie');
@@ -122,11 +125,10 @@ check_all = async () => {
                     else {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Gia hạn cookie thành công');
                         cookie = result.cookie;
-                        var data = {
+                        result = await api_put_shopee_accounts({
                             id: shop.shop_info.id,
                             cookie: cookie
-                        };
-                        result = await api_put_shopee_accounts(data);
+                        });
                         if (result.code == null) {
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Cập nhật cookie thất bại');
                             return;
@@ -139,26 +141,53 @@ check_all = async () => {
                     }
 
                 }
-
                 //Kiểm tra thông tin shop
                 result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 if (result == null) {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Lỗi kết nối function api_get_shop_info');
                     return;
                 }
-
                 if (result.code != 0) {
                     //Không lấy được thông tin. Kiểm tra lại đăng nhập
                     is_need_login = true;
-                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Không lấy được thông tin shop');
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Không lấy được thông tin shop <' + result.message + '>');
                 }
-
                 if (is_need_login) {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Tiến hành đăng nhập');
-
+                    spc_cds = uuidv4();
+                    result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, username, password, null);
+                    if (result == null) {
+                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Lỗi kết nối function api_post_login');                        
+                        return;
+                    }
+                    if(result.status != 200)
+                    {
+                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Đăng nhập thất bại <' + result.status + '>');
+                        result = await api_put_shopee_accounts({
+                            id: shop.shop_info.id,
+                            status: 0
+                        });
+                        return;
+                    }
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Đăng nhập thành công');
+                    cookie = result.cookie;
+                    result = await api_put_shopee_accounts({
+                        id: shop.shop_info.id,
+                        spc_cds: spc_cds,
+                        cookie: cookie
+                    });
+                    if (result.code == null) {
+                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Cập nhật cookie thất bại');
+                        return;
+                    }
+                    if (result.code == 0) {
+                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Cập nhật cookie thất bại <' + result.message + '>');
+                        return;
+                    }
                 }
-
-
+                shop.campaigns.forEach(async (campaign) => {
+                    console.log(JSON.stringify(campaign));
+                });
             }
             catch (ex) {
                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
