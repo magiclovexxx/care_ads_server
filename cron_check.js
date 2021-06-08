@@ -22,14 +22,10 @@ slave = process.env.SLAVE
 
 check_all = async () => {
     console.log("------- Start cron check all -------")
-
     if (!slave) {
         slave = await publicIp.v4()
-        console.log("slave : " + slave);
     }
-
     const Url = api_url + '/getdatashops?slave=' + slave;
-
     const result = await axiosInstance.get(Url).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -41,7 +37,6 @@ check_all = async () => {
             return null;
         }
     });
-
     console.log(result);
 
     /*
