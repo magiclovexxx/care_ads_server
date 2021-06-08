@@ -66,12 +66,12 @@ check_all = async () => {
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ');
         var result = await api_get_shopee_accounts(slave);
 
-        if (result.code == null) {
+        if (result == null) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thất bại');
             return;
         }
 
-        if (result.code == 0) {
+        if (result.code != 0) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thất bại <' + result.message + '>');
             return;
         }
@@ -129,12 +129,12 @@ check_all = async () => {
                             id: shop.shop_info.id,
                             cookie: cookie
                         });
-                        if (result.code == null) {
+                        if (result == null) {
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Cập nhật cookie thất bại');
                             return;
                         }
 
-                        if (result.code == 0) {
+                        if (result.code != 0) {
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Cập nhật cookie thất bại <' + result.message + '>');
                             return;
                         }
@@ -157,11 +157,10 @@ check_all = async () => {
                     spc_cds = uuidv4();
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, username, password, null);
                     if (result == null) {
-                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Lỗi kết nối function api_post_login');                        
+                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Lỗi kết nối function api_post_login');
                         return;
                     }
-                    if(result.status != 200)
-                    {
+                    if (result.status != 200) {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Đăng nhập thất bại <' + result.status + '>');
                         result = await api_put_shopee_accounts({
                             id: shop.shop_info.id,
@@ -180,13 +179,31 @@ check_all = async () => {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Cập nhật cookie thất bại');
                         return;
                     }
-                    if (result.code == 0) {
+                    if (result.code != 0) {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Cập nhật cookie thất bại <' + result.message + '>');
                         return;
                     }
                 }
+
+                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Số lượng quảng cáo: ' + shop.campaigns.length);
                 shop.campaigns.forEach(async (campaign) => {
-                    console.log(JSON.stringify(campaign));
+                    try {
+                        //Lấy thông tin chiến dịch
+                        result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
+                        if (result == null) {
+                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Lỗi kết nối function api_get_marketing_campaign');
+                            return;
+                        }
+                        if (result.code != 0) {
+                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ') Không lấy được thông tin chiến dịch <' + result.message + '>');
+                            return;
+                        }
+                        
+
+                    }
+                    catch (ex) {
+                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
+                    }
                 });
             }
             catch (ex) {
