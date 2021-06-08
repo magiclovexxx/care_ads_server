@@ -1,13 +1,13 @@
 var cron = require('node-cron');
 const publicIp = require('public-ip');
 require('dotenv').config();
-var shopeeApi = require('../api/ads_shopee.js');
+var shopeeApi = require('./api/ads_shopee.js');
 var fs = require('fs');
 const axiosInstance = createAxios();
 const exec = require('child_process').exec;
 function createAxios() {
     const axios = require('axios');
-    return axios.create();
+    return axios.create({ timeout: 30000 });
 }
 
 mode = process.env.MODE
