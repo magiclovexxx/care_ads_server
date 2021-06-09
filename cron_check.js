@@ -311,11 +311,11 @@ check_all = async () => {
                             var ros = total_broad_gmv - ((total_broad_gmv * campaign.fix_cost) / 100) - (total_broad_order_amount * campaign.product_cost);
                             if (total_cost <= ros * campaign.profit_num) {
                                 //Quảng cáo lãi tăng giá thầu
-                                console.log('Quảng cáo lãi tăng giá thầu');
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ' -> ' + campaign.campaignid + ') Quảng cáo lãi tăng giá thầu');
                             }
                             else {
                                 //Quảng cáo lỗ giảm giá thầu
-                                console.log('Quảng cáo lỗ giảm giá thầu');
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ' -> ' + campaign.campaignid + ') Quảng cáo lỗ giảm giá thầu');
                             }
                         }
                         else {
