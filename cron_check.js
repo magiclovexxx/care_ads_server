@@ -307,15 +307,16 @@ check_all = async () => {
                                 total_broad_order_amount = 1;
                             //Lượt click
                             var total_click = Math.round(result.data.reduce((a, { click }) => a + click, 0));
-
                             var ros = total_broad_gmv - ((total_broad_gmv * campaign.fix_cost) / 100) - (total_broad_order_amount * campaign.product_cost);
                             if (total_cost <= ros * campaign.profit_num) {
                                 //Quảng cáo lãi tăng giá thầu
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ' -> ' + campaign.campaignid + ') Quảng cáo lãi tăng giá thầu');
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ' -> ' + campaign.campaignid + ') Quảng cáo lãi tăng giá thầu ' + total_click);
+
                             }
                             else {
                                 //Quảng cáo lỗ giảm giá thầu
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ' -> ' + campaign.campaignid + ') Quảng cáo lỗ giảm giá thầu');
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.shop_info.name + ' -> ' + campaign.campaignid + ') Quảng cáo lỗ giảm giá thầu ' + total_click);
+
                             }
                         }
                         else {
