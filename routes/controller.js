@@ -270,13 +270,7 @@ router.post("/api_post_marketing_campaign", async (req, res) => {
         var proxy = req.body.proxy;
         var UserAgent = req.body.UserAgent;
         var cookie = req.body.cookie;
-        var campaign_ads_list = req.body.campaign_ads_list;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.product_cost;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.fix_cost;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.ads_max_cost;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.min_price;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.max_price;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.profit_num;
+        var campaign_ads_list = req.body.campaign_ads_list;     
         var result = await shopeeApi.api_post_marketing_campaign(SPC_CDS, proxy, UserAgent, cookie, campaign_ads_list);
         res.send(result);
     }
@@ -293,12 +287,6 @@ router.put("/api_put_marketing_campaign", async (req, res) => {
         var UserAgent = req.body.UserAgent;
         var cookie = req.body.cookie;
         var campaign_ads_list = req.body.campaign_ads_list;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.product_cost;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.fix_cost;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.ads_max_cost;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.min_price;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.max_price;
-        delete campaign_ads_list.campaign_ads_list[0].campaign.profit_num;
         var result = await shopeeApi.api_put_marketing_campaign(SPC_CDS, proxy, UserAgent, cookie, campaign_ads_list);
         res.send(result);
     }
