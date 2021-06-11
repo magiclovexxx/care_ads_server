@@ -216,8 +216,9 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
 
 const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, type) => {
     var Url = 'https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
-    Url += '&keyword=' + keyword;
+    Url += '&keyword=' + encodeURI(keyword);
     Url += '&type=' + type;
+    
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
