@@ -345,7 +345,6 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
     Url += '?region=VN';
     Url += '&SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
-    console.log(Url);
     const result = await axiosInstance.get(Url, {
         headers: {
             'User-Agent': UserAgent
