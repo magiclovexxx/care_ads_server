@@ -18,7 +18,23 @@ router.post("/api_post_login", async (req, res) => {
         var username = req.body.username;
         var password = req.body.password;
         var vcode = req.body.vcode;
-        var result = await shopeeApi.api_post_login(SPC_CDS, proxy, UserAgent, username, password, vcode);
+        var captcha = req.body.captcha;
+        var captcha_id = req.body.captcha_id;
+        var result = await shopeeApi.api_post_login(SPC_CDS, proxy, UserAgent, username, password, vcode, captcha, captcha_id);
+        res.send(result);
+    }
+    catch (ex) {
+        console.log(ex);
+        res.send(null);
+    }
+});
+
+router.get("/api_get_captcha_info", async (req, res) => {
+    try {
+        var SPC_CDS = req.body.SPC_CDS;
+        var proxy = req.body.proxy;
+        var UserAgent = req.body.UserAgent;
+        var result = await shopeeApi.api_get_captcha_info(SPC_CDS, proxy, UserAgent);
         res.send(result);
     }
     catch (ex) {

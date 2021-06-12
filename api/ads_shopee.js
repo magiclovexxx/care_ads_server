@@ -36,7 +36,7 @@ const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
         response.data.cookie = cookieParse(response.headers['set-cookie']) + '; ' + cookie;
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {        
+    }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
@@ -47,7 +47,7 @@ const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
     return result;
 }
 
-const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vcode) => {
+const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vcode, captcha, captcha_id) => {
     const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     var data = '';
@@ -67,6 +67,12 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vco
     data += '&remember=true';
     if (vcode != null) {
         data += '&vcode=' + vcode;
+    }
+    if (captcha != null) {
+        data += '&captcha=' + captcha;
+    }
+    if (captcha_id != null) {
+        data += '&captcha_id=' + captcha_id;
     }
     const result = await axiosInstance.post(Url, data, {
         headers: {
@@ -218,7 +224,7 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
     var Url = 'https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&keyword=' + encodeURI(keyword);
     Url += '&type=' + type;
-    
+
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
@@ -317,6 +323,31 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
+            'User-Agent': UserAgent
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return null;
+        }
+    });
+    return result;
+}
+
+const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
+    var Url = 'https://banhang.shopee.vn/api/selleraccount/v2/get_captcha_info/';
+    Url += '?region=VN';
+    Url += '&SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    console.log(Url);
+    const result = await axiosInstance.get(Url, {
+        headers: {
             'User-Agent': UserAgent
         },
         proxy: proxy
@@ -842,5 +873,6 @@ module.exports = {
     api_post_marketing_mass_edit,
     api_get_segment_suggest_price,
     api_get_search_hint,
-    api_get_suggest_keyword_price
+    api_get_suggest_keyword_price,
+    api_get_captcha_info
 }
