@@ -142,7 +142,7 @@ check_all = async () => {
                 var cookie = shop.cookie;
                 var is_need_login = false;
                 //Kiểm tra gia hạn token
-                if (moment(shop.update_time).add(1, 'days') < moment()) {
+                if (moment(shop.update_time).add(6, 'hours') < moment()) {
                     result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
                     if (result == null) {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_login');
@@ -386,7 +386,7 @@ check_all = async () => {
                                             });
                                             is_down_price = true;
                                         } else {
-                                            if (moment(care_keyword.last_update_loss).add(max_hour + 7, 'hours') > moment()) {
+                                            if (moment(care_keyword.last_update_loss).add(max_hour, 'hours') > moment()) {
                                                 is_down_price = true;
                                             } else {
                                                 //Tắt từ khóa không hiệu quả
