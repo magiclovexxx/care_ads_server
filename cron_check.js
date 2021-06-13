@@ -92,7 +92,7 @@ check_all = async () => {
         if (!slave) {
             slave = await publicIp.v4();
         }
-        
+
         var result = await api_get_shopee_accounts(slave);
 
         if (result == null) {
@@ -294,7 +294,7 @@ check_all = async () => {
                                         if (result.code != 0) {
                                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Tắt care quảng cáo tự động thất bại');
                                         }
-                                        
+
                                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Tắt care quảng cáo tự động thành công');
                                         return;
                                     }
@@ -347,9 +347,9 @@ check_all = async () => {
                                     var product_cost = 0;
                                     if (campaign.campaign_type == 'keyword') {
                                         product_cost = campaign.product_cost * broad_order_amount;
-                                     } else {
+                                    } else {
                                         product_cost = (campaign.product_cost * broad_gmv) / 100;
-                                     }
+                                    }
 
                                     var ros = broad_gmv - ((broad_gmv * campaign.fix_cost) / 100) - product_cost - cost;
                                     if (ros * campaign.profit_num >= cost) {
