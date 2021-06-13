@@ -347,9 +347,8 @@ check_all = async () => {
                                     if (campaign.campaign_type == 'shop')
                                         broad_order_amount = 1;
                                     var ros = broad_gmv - ((broad_gmv * campaign.fix_cost) / 100) - (broad_order_amount * campaign.product_cost) - cost;
-                                    if (ros * campaign.profit_num >= 0) {
+                                    if (ros * campaign.profit_num >= cost) {
                                         //Quảng cáo lãi/hòa
-                                        //console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + keyword.keyword + ') Từ khóa lãi');
                                         if (keyword.price < max_price) {
                                             if (click == last_click) {
                                                 //Không có click
@@ -373,7 +372,6 @@ check_all = async () => {
                                         }
                                     } else {
                                         //Từ khóa cáo lỗ
-                                        //console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + keyword.keyword + ') Từ khóa lỗ');
                                         var is_down_price = false;
                                         if (care_keyword.last_update_loss == null) {
                                             update_placements.push({
