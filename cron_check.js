@@ -344,9 +344,14 @@ check_all = async () => {
                                         cost = filter_keyword_reports[0].cost;
                                         click = filter_keyword_reports[0].click;
                                     }
-                                    if (campaign.campaign_type == 'shop')
-                                        broad_order_amount = 1;
-                                    var ros = broad_gmv - ((broad_gmv * campaign.fix_cost) / 100) - (broad_order_amount * campaign.product_cost) - cost;
+                                    var product_cost = 0;
+                                    if (campaign.campaign_type == 'keyword') {
+                                        product_cost = campaign.product_cost * broad_order_amount;
+                                     } else {
+                                        product_cost = (campaign.product_cost * broad_gmv) / 100;
+                                     }
+
+                                    var ros = broad_gmv - ((broad_gmv * campaign.fix_cost) / 100) - product_cost - cost;
                                     if (ros * campaign.profit_num >= cost) {
                                         //Quảng cáo lãi/hòa
                                         if (keyword.price < max_price) {
@@ -359,7 +364,8 @@ check_all = async () => {
                                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + keyword.keyword + ') Tăng giá thầu: ', keyword.price);
                                                 update_placements.push({
                                                     id: care_keyword.id,
-                                                    price: keyword.price
+                                                    price: keyword.price,
+                                                    last_update_loss: null
                                                 });
                                             } else {
                                                 update_placements.push({
