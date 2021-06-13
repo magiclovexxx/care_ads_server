@@ -21,7 +21,7 @@ var is_running = false;
 
 if (mode == "DEV") {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    var api_url = "http://localhost/api_user"
+    var api_url = "http://careads.hotaso.vn/api_user"
 } else {
     var api_url = "http://sacuco.com/api_user"
 }
