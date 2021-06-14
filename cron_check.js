@@ -330,8 +330,8 @@ check_all = async () => {
                                     var care_keyword = filter_keyword_configs[0];
                                     var filter_keyword_reports = keyword_reports.filter(x => x.keyword == keyword.keyword);
                                     var cost = 0;
-                                    var broad_gmv = 0;
-                                    var broad_order_amount = 0;
+                                    var direct_gmv = 0;
+                                    var direct_order_amount = 0;
                                     var click = 0;
                                     var last_click = parseInt(care_keyword.last_click);
                                     var max_price = parseFloat(care_keyword.max_price);
@@ -339,20 +339,20 @@ check_all = async () => {
                                     var min_price = (campaign.campaign_type == 'keyword' ? (keyword.match_type == 0 ? 400 : 480) : (keyword.match_type == 0 ? 500 : 600));
                                     if (filter_keyword_reports.length > 0) {
                                         cost = filter_keyword_reports[0].cost;
-                                        broad_gmv = filter_keyword_reports[0].broad_gmv;
-                                        broad_order_amount = filter_keyword_reports[0].broad_order_amount;
+                                        direct_gmv = filter_keyword_reports[0].direct_gmv;
+                                        direct_order_amount = filter_keyword_reports[0].direct_order_amount;
                                         cost = filter_keyword_reports[0].cost;
                                         click = filter_keyword_reports[0].click;
                                     }
                                     var product_cost = 0;
                                     if (campaign.campaign_type == 'keyword') {
-                                        product_cost = campaign.product_cost * broad_order_amount;
+                                        product_cost = campaign.product_cost * direct_order_amount;
                                     } else {
-                                        product_cost = (campaign.product_cost * broad_gmv) / 100;
+                                        product_cost = (campaign.product_cost * direct_gmv) / 100;
                                     }
 
-                                    var ros = broad_gmv - ((broad_gmv * campaign.fix_cost) / 100) - product_cost - cost;
-                                    if (ros * campaign.profit_num >= cost) {
+                                    var ros = direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost - cost;
+                                    if (ros * campaign.profit_num >= 0) {
                                         //Quảng cáo lãi/hòa
                                         if (keyword.price < max_price) {
                                             if (click == last_click) {
