@@ -7,15 +7,7 @@ var cron = require('node-cron');
 
 require('dotenv').config();
 
-mode = process.env.MODE
-
-slave = process.env.SLAVE
-
-if(slave == "localhost"){
-    var port = 4000;
-}else{
-    var port = 3000;
-}
+var port = process.env.PORT
 
 app.use(bodyParser.urlencoded({ extended: true }));
 

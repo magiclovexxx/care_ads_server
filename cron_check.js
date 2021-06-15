@@ -15,19 +15,19 @@ function createAxios() {
     return axios.create({ timeout: 30000 });
 }
 
-mode = process.env.MODE
-slave = process.env.SLAVE
+var mode = process.env.MODE;
+var port = process.env.PORT;
 var is_running = false;
 
 if (mode == "DEV") {
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     var api_url = "http://careads.hotaso.vn/api_user"
 } else {
     var api_url = "http://sacuco.com/api_user"
 }
 
-function api_get_shopee_accounts(slave) {
-    const Url = api_url + '/shopee_accounts?slave=' + slave;
+function api_get_shopee_accounts(slave_ip, slave_port) {
+    const Url = api_url + '/shopee_accounts?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.get(Url).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -89,11 +89,9 @@ function api_put_shopee_placements(data) {
 check_all = async () => {
     is_running = true;
     try {
-        if (!slave) {
-            slave = await publicIp.v4();
-        }
+        var slave_ip = await publicIp.v4();
 
-        var result = await api_get_shopee_accounts(slave);
+        var result = await api_get_shopee_accounts(slave_ip, port);
 
         if (result == null) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thất bại');
@@ -135,7 +133,7 @@ check_all = async () => {
         data_shops.forEach(async (shop) => {
             try {
                 var spc_cds = shop.spc_cds;
-                var proxy = JSON.parse(shop.proxy);
+                var proxy = shop.proxy;
                 var user_agent = shop.user_agent;
                 var username = shop.username;
                 var password = shop.password;
