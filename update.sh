@@ -2,5 +2,5 @@
 git stash
 git pull origin master
 npm install
-pm2 start shopee.js --watch
-pm2 save
+pm2 restart server
+pm2 restart cron_check
