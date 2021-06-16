@@ -90,18 +90,17 @@ check_all = async () => {
     is_running = true;
     try {
         var slave_ip = await publicIp.v4();
-        console.log(slave_ip, port);
+        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Thông tin máy chủ', slave_ip, port);
         var result = await api_get_shopee_accounts(slave_ip, port);
-        console.log(result);
         if (result.code != 0) {
-            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thất bại');
+            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thất bại', result.message);
             return;
         }
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thành công');
 
         //check version từ server
         let version = result.data.version
-        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Phiên bản hiện tại: ' + version);
+        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Phiên bản hiện tại:', version);
 
         //check version từ local
         var checkVersion = fs.readFileSync("version.txt", { flag: "as+" });
