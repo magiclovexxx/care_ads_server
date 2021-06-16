@@ -46,7 +46,7 @@ const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -99,7 +99,7 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vco
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -128,7 +128,7 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -156,7 +156,7 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -184,7 +184,7 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -215,7 +215,7 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -255,7 +255,7 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -286,7 +286,7 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -314,7 +314,7 @@ const api_post_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, d
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -342,7 +342,7 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -370,7 +370,7 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -405,7 +405,7 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -435,7 +435,7 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -474,7 +474,7 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -514,7 +514,7 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -550,7 +550,7 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -578,7 +578,7 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -607,7 +607,7 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -638,7 +638,7 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -669,7 +669,7 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -703,7 +703,7 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -743,7 +743,7 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -784,7 +784,7 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -820,7 +820,7 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -855,7 +855,7 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -885,7 +885,7 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -915,7 +915,7 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -945,7 +945,7 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -977,7 +977,7 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
@@ -1008,7 +1008,7 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
                 error.response.data.code = 999;
             return error.response.data;
         } else {
-            console.error(error.code, error.message, proxy.host, proxy.port);
+            console.error(error.code, error.message);
             return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
