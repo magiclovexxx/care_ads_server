@@ -92,12 +92,7 @@ check_all = async () => {
         var slave_ip = await publicIp.v4();
 
         var result = await api_get_shopee_accounts(slave_ip, port);
-
-        if (result == null) {
-            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thất bại');
-            return;
-        }
-
+        console.log(result);
         if (result.code != 0) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Kết nối máy chủ thất bại');
             return;
@@ -142,10 +137,6 @@ check_all = async () => {
                 //Kiểm tra gia hạn token
                 if (moment(shop.update_time).add(6, 'hours') < moment()) {
                     result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
-                    if (result == null) {
-                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_login');
-                        return;
-                    }
                     if (result.status != 200) {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Gia hạn cookie thất bại');
                         is_need_login = true;
@@ -157,11 +148,6 @@ check_all = async () => {
                             id: shop.id,
                             cookie: cookie
                         });
-                        if (result == null) {
-                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Cập nhật cookie lên server thất bại');
-                            return;
-                        }
-
                         if (result.code != 0) {
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Cập nhật cookie lên server thất bại');
                             return;
@@ -172,10 +158,6 @@ check_all = async () => {
                 }
                 //Kiểm tra thông tin shop
                 result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
-                if (result == null) {
-                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_shop_info');
-                    return;
-                }
                 if (result.code != 0) {
                     //Không lấy được thông tin. Kiểm tra lại đăng nhập
                     is_need_login = true;
@@ -185,10 +167,6 @@ check_all = async () => {
                 if (is_need_login) {
                     spc_cds = uuidv4();
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, username, password, null);
-                    if (result == null) {
-                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_post_login');
-                        return;
-                    }
                     if (result.status != 200) {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thất bại <' + result.status + '>');
                         result = await api_put_shopee_accounts({
@@ -220,10 +198,6 @@ check_all = async () => {
                     try {
                         //Lấy thông tin chiến dịch
                         result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
-                        if (result == null) {
-                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_marketing_campaign');
-                            return;
-                        }
                         if (result.code != 0) {
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Không lấy được thông tin chiến dịch');
                             return;
@@ -309,11 +283,6 @@ check_all = async () => {
                             result = await shopeeApi.api_get_detail_report_by_keyword(spc_cds, proxy, user_agent, cookie,
                                 campaign_ads_list.campaign_ads_list[0].campaign.start_time,
                                 moment().unix(), placement_list, 1, 0, itemid, adsid);
-
-                            if (result == null) {
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_detail_report_by_time');
-                                return;
-                            }
                             if (result.code != 0) {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Không lấy được dữ liệu báo cáo chiến dịch');
                                 return;
@@ -459,11 +428,6 @@ check_all = async () => {
                             result = await shopeeApi.api_get_item_report_by_placement(spc_cds, proxy, user_agent, cookie,
                                 campaign_ads_list.campaign_ads_list[0].campaign.start_time,
                                 moment().unix(), [1, 2, 5, 8], itemid);
-
-                            if (result == null) {
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_detail_report_by_time');
-                                return;
-                            }
                             if (result.code != 0) {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Không lấy được dữ liệu báo cáo chiến dịch');
                                 return;
@@ -579,10 +543,6 @@ check_all = async () => {
 
                         if (is_update_campaign) {
                             result = await shopeeApi.api_put_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign_ads_list);
-                            if (result == null) {
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_put_marketing_campaign');
-                                return;
-                            }
                             if (result.code != 0) {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_put_marketing_campaign');
                                 return;

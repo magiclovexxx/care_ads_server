@@ -36,14 +36,18 @@ const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
     }).then(function (response) {
         response.data.cookie = cookieParse(response.headers['set-cookie']) + '; ' + cookie;
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -85,14 +89,18 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vco
     }).then(function (response) {
         response.data.cookie = cookieParse(response.headers['set-cookie']);
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -110,14 +118,18 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -134,14 +146,18 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -158,14 +174,18 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -185,14 +205,18 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -221,14 +245,18 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -248,14 +276,18 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -272,14 +304,18 @@ const api_post_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, d
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -296,14 +332,18 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -320,14 +360,18 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -351,14 +395,18 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -377,14 +425,18 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -412,14 +464,18 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -448,14 +504,18 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -480,14 +540,18 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -504,14 +568,18 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -529,14 +597,18 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -556,14 +628,18 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -583,14 +659,18 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -613,14 +693,18 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -649,14 +733,18 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -686,14 +774,18 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -718,14 +810,18 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -749,14 +845,18 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -775,14 +875,18 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -801,14 +905,18 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -827,13 +935,18 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            console.error(error.code, error.message, proxy.host, proxy.port);
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -854,14 +967,18 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
@@ -881,14 +998,18 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
         proxy: proxy
     }).then(function (response) {
         response.data.status = response.status;
+        if (response.data.code == null)
+            response.data.code = 0;
         return response.data;
     }).catch(function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
+            if (error.response.data.code == null)
+                error.response.data.code = 999;
             return error.response.data;
         } else {
             console.error(error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port };
+            return { code: 1000, message: error.code + ' ' + error.message, host: proxy.host, port: proxy.port, status: 1000 };
         }
     });
     return result;
