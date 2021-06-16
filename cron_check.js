@@ -90,7 +90,7 @@ check_all = async () => {
     is_running = true;
     try {
         var slave_ip = await publicIp.v4();
-
+        console.log(slave_ip, port);
         var result = await api_get_shopee_accounts(slave_ip, port);
         console.log(result);
         if (result.code != 0) {
