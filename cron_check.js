@@ -12,7 +12,7 @@ const { json } = require('body-parser');
 
 function createAxios() {
     const axios = require('axios');
-    return axios.create({ timeout: 30000 });
+    return axios.create({ timeout: 60000 });
 }
 
 var mode = process.env.MODE;
