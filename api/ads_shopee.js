@@ -278,7 +278,6 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
         response.data.status = response.status;
         if (response.data.code == null)
             response.data.code = 0;
-        console.log(response.data);
         return response.data;
     }).catch(function (error) {
         if (error.response) {
