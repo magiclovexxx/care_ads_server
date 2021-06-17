@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 function createAxios() {
     const axios = require('axios');
-    return axios.create({ withCredentials: true, timeout: 30000 });
+    return axios.create({ withCredentials: true, timeout: 5000 });
 }
 
 function cookieParse(cookie) {
