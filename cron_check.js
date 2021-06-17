@@ -145,7 +145,7 @@ check_all = async () => {
                     }
                     else {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Gia hạn cookie thành công');
-                        cookie = result.cookie;
+                        cookie = result.data.cookie;
                         result = await api_put_shopee_accounts({
                             id: shop.id,
                             cookie: cookie
@@ -163,6 +163,10 @@ check_all = async () => {
                 result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 if (result.code != 0) {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_shop_info', result);
+                    return;
+                }
+                if (result.data.code != 0) {
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_shop_info', result.data);
                     if (result.code == 999)
                         is_need_login = true;
                     else
@@ -172,7 +176,7 @@ check_all = async () => {
                     spc_cds = uuidv4();
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, username, password, null);
                     if (result.status != 200) {
-                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thất bại <' + result.status + '>');
+                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thất bại', result);
                         if (result.code == 999)
                             result = await api_put_shopee_accounts({
                                 id: shop.id,
@@ -181,7 +185,7 @@ check_all = async () => {
                         return;
                     }
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thành công');
-                    cookie = result.cookie;
+                    cookie = result.data.cookie;
                     result = await api_put_shopee_accounts({
                         id: shop.id,
                         spc_cds: spc_cds,
@@ -202,10 +206,14 @@ check_all = async () => {
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_marketing_campaign', result);
                             return;
                         }
+                        if (result.data.code != 0) {
+                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_marketing_campaign', result.data);
+                            return;
+                        }
                         var campaign_ads_list = {
                             campaign_ads_list: [{
-                                advertisements: result.data.advertisements,
-                                campaign: result.data.campaign
+                                advertisements: result.data.data.advertisements,
+                                campaign: result.data.data.campaign
                             }]
                         };
                         campaign_ads_list.ads_audit_event = 6;
@@ -222,9 +230,9 @@ check_all = async () => {
                             });
                             if (result.code != 0) {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Tắt care quảng cáo không hoạt động thất bại', result);
+                                return;
                             }
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Tắt care quảng cáo không hoạt động thành công');
-
                             return;
                         }
 
@@ -281,7 +289,11 @@ check_all = async () => {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_detail_report_by_keyword', result);
                                 return;
                             }
-                            var keyword_reports = result.data;
+                            if (result.data.code != 0) {
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_detail_report_by_keyword', result.data);
+                                return;
+                            }
+                            var keyword_reports = result.data.data;
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Số lượng từ khóa đang care: ' + campaign.placements.length + '/' + advertisement_keyword.extinfo.keywords.length);
                             //Duyệt từ khóa kiểm tra lãi lỗ
                             advertisement_keyword.extinfo.keywords.forEach(async (keyword) => {
@@ -304,15 +316,23 @@ check_all = async () => {
                                         cost = filter_keyword_reports[0].cost;
                                         click = filter_keyword_reports[0].click;
                                     }
-                                    var product_cost = 0;
-                                    if (campaign.campaign_type == 'keyword') {
-                                        product_cost = campaign.product_cost * direct_order_amount;
-                                    } else {
-                                        product_cost = (campaign.product_cost * direct_gmv) / 100;
-                                    }
+                                    var check_win = false;
 
-                                    var ros = direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost - cost;
-                                    if (ros * campaign.profit_num >= 0) {
+                                    if (campaign.campaign_type == 'keyword') {
+                                        var product_cost = campaign.product_cost * direct_order_amount;
+                                        var check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
+                                        if (check_profit >= 0)
+                                            check_win = true;
+                                    } else {
+                                        if (cost == 0)
+                                            check_win = true;
+                                        else {
+                                            var check_profit = (direct_gmv * (campaign.product_cost / 100)) / cost;
+                                            if (check_profit >= 1)
+                                                check_win = true;
+                                        }
+                                    }
+                                    if (check_win) {
                                         //Quảng cáo lãi/hòa
                                         if (keyword.price < max_price) {
                                             if (click == last_click) {
@@ -420,7 +440,11 @@ check_all = async () => {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_item_report_by_placement', result);
                                 return;
                             }
-                            var placement_reports = result.data;
+                            if (result.data.code != 0) {
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_get_item_report_by_placement', result.data);
+                                return;
+                            }
+                            var placement_reports = result.data.data;
                             //Duyệt từ khóa kiểm tra lãi lỗ
                             ads_placements.forEach(async (placement) => {
                                 var filter_placement_configs = campaign.placements.filter(x => x.placement == placement.placement);
@@ -442,8 +466,8 @@ check_all = async () => {
                                     }
 
                                     var product_cost = campaign.product_cost * direct_order_amount;
-                                    var ros = direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost - cost;
-                                    if (ros * campaign.profit_num >= 0) {
+                                    var check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
+                                    if (check_profit >= 0) {
                                         //Quảng cáo lãi/hòa
                                         if (placement.extinfo.target.premium_rate < 300) {
                                             if (click == last_click) {
@@ -520,6 +544,10 @@ check_all = async () => {
                             result = await shopeeApi.api_put_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign_ads_list);
                             if (result.code != 0) {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_put_marketing_campaign', result);
+                                return;
+                            }
+                            if (result.data.code != 0) {
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Lỗi kết nối function api_put_marketing_campaign', result.data);
                                 return;
                             }
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Cập nhật dữ liệu quảng cáo lên máy chủ Shopee thành công');

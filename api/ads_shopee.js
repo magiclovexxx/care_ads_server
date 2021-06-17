@@ -37,19 +37,26 @@ const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
         timeout: 5000
     }).then(function (response) {
         response.data.cookie = cookieParse(response.headers['set-cookie']) + '; ' + cookie;
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
-            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_login', error.code, error.message, proxy.host, proxy.port);
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+            } else {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+            }
         }
     });
     return result;
@@ -90,24 +97,25 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vco
         proxy: proxy
     }).then(function (response) {
         response.data.cookie = cookieParse(response.headers['set-cookie']);
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
-        } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_login', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
             }
             else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_login', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
+        } else {
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+            } else {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -125,23 +133,25 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_all_category_list', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_all_category_list', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -158,23 +168,25 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_second_category_list', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_second_category_list', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -191,23 +203,25 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_shop_info', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_shop_info', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -227,23 +241,25 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_page_active_collection_list', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_page_active_collection_list', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -272,23 +288,25 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_product_selector', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_product_selector', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -308,23 +326,25 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_search_hint', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_search_hint', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -341,23 +361,25 @@ const api_post_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, d
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_mass_edit', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_mass_edit', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -374,23 +396,25 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_graphql', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_graphql', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -407,23 +431,25 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_item_status', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_item_status', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -448,23 +474,25 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
         proxy: proxy,
         timeout: 30000
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_shop_report_by_time', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_shop_report_by_time', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -483,23 +511,25 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_captcha_info', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_captcha_info', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -527,23 +557,25 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_campaign_statistics', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_campaign_statistics', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -572,23 +604,25 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_search_ads', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_search_ads', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -614,23 +648,25 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
         proxy: proxy,
         timeout: 5000
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_keyword', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_keyword', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -647,23 +683,25 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_campaign', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_campaign', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -681,23 +719,25 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_campaign', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_campaign', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -717,23 +757,25 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_marketing_campaign', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_marketing_campaign', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -753,23 +795,25 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_marketing_meta', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_marketing_meta', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -793,23 +837,25 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
         proxy: proxy,
         timeout: 30000
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_search_report_by_time', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_search_report_by_time', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -839,23 +885,25 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
         proxy: proxy,
         timeout: 30000
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_detail_report_by_time', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_detail_report_by_time', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -886,23 +934,25 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
         proxy: proxy,
         timeout: 30000
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_detail_report_by_keyword', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_detail_report_by_keyword', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -928,23 +978,25 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
         proxy: proxy,
         timeout: 30000
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_item_report_by_time', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_item_report_by_time', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -969,23 +1021,25 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
         proxy: proxy,
         timeout: 30000
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_item_report_by_placement', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_item_report_by_placement', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -1004,23 +1058,25 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_price', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_price', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -1039,23 +1095,25 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_keyword_price', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_keyword_price', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -1074,23 +1132,25 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_segment_suggest_price', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_segment_suggest_price', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -1111,23 +1171,25 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_campaign_list', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_campaign_list', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
@@ -1147,23 +1209,25 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.status = response.status;
-        if (response.data.code == null)
-            response.data.code = 0;
-        return response.data;
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
     }).catch(function (error) {
         if (error.response) {
-            error.response.data.status = error.response.status;
-            if (error.response.data.code == null)
-                error.response.data.code = 999;
-            return error.response.data;
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
         } else {
             if (proxy == null) {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_query_collection_list', error.code, error.message);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_query_collection_list', error.code, error.message, proxy.host, proxy.port);
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, proxy: proxy.host + ':' + proxy.port };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
             }
         }
     });
