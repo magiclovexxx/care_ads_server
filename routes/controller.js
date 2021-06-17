@@ -25,7 +25,7 @@ router.post("/api_post_login", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -39,7 +39,7 @@ router.get("/api_get_captcha_info", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -54,7 +54,7 @@ router.get("/api_get_all_category_list", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -69,7 +69,7 @@ router.get("/api_get_second_category_list", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -84,7 +84,7 @@ router.get("/api_get_shop_info", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -102,7 +102,7 @@ router.get("/api_get_page_active_collection_list", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -117,7 +117,7 @@ router.get("/api_get_query_collection_list", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -140,7 +140,7 @@ router.get("/api_get_product_selector", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -156,7 +156,7 @@ router.post("/api_get_item_status", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -173,7 +173,7 @@ router.post("/api_post_marketing_graphql", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -190,7 +190,7 @@ router.post("/api_post_marketing_mass_edit", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -209,7 +209,7 @@ router.get("/api_get_shop_report_by_time", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -233,7 +233,7 @@ router.get("/api_get_campaign_statistics", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -257,7 +257,7 @@ router.get("/api_get_search_ads", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -276,7 +276,7 @@ router.get("/api_get_suggest_keyword", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -292,7 +292,7 @@ router.post("/api_post_marketing_campaign", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -308,7 +308,7 @@ router.put("/api_put_marketing_campaign", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -324,7 +324,7 @@ router.get("/api_get_marketing_campaign", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -339,7 +339,7 @@ router.get("/api_get_marketing_meta", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -361,7 +361,7 @@ router.get("/api_get_detail_report_by_time", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -381,7 +381,7 @@ router.get("/api_get_search_report_by_time", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -404,7 +404,7 @@ router.get("/api_get_detail_report_by_keyword", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -425,7 +425,7 @@ router.get("/api_get_item_report_by_time", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -445,7 +445,7 @@ router.get("/api_get_item_report_by_placement", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -462,7 +462,7 @@ router.post("/api_get_suggest_price", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -479,7 +479,7 @@ router.post("/api_get_segment_suggest_price", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -495,7 +495,7 @@ router.post("/api_get_suggest_keyword_price", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -512,7 +512,7 @@ router.get("/api_get_campaign_list", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
@@ -529,7 +529,7 @@ router.get("/api_get_search_hint", async (req, res) => {
     }
     catch (ex) {
         console.log(ex);
-        res.send(null);
+        res.send({ code: 1001, exception: ex });
     }
 });
 
