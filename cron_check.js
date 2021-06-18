@@ -109,7 +109,7 @@ check_all = async () => {
         if (checkVersion != version) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version)
             if (mode !== "DEV") {
-                const myShellScript = exec('./update.sh');
+                const myShellScript = exec('update.sh /');
                 myShellScript.stdout.on('data', (data) => {
                     // do whatever you want here with data
                 });
