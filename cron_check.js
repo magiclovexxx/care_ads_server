@@ -107,7 +107,7 @@ check_all = async () => {
 
         //Kiểm tra version và tự động update nếu có version mới
         if (checkVersion != version) {
-            console.log("-- Cập nhật phiên bản")
+            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version)
             if (mode !== "DEV") {
                 const myShellScript = exec('update.sh /');
                 myShellScript.stdout.on('data', (data) => {
@@ -324,12 +324,15 @@ check_all = async () => {
                                         if (check_profit >= 0)
                                             check_win = true;
                                     } else {
-                                        if (cost == 0)
+                                        if (cost == 0) {
                                             check_win = true;
+                                        }
                                         else {
-                                            var check_profit = (direct_gmv * (campaign.product_cost / 100)) / cost;
-                                            if (check_profit >= 1)
-                                                check_win = true;
+                                            if (direct_gmv != 0) {
+                                                var check_profit = cost / (direct_gmv * campaign.profit_num);
+                                                if (check_profit < 1)
+                                                    check_win = true;
+                                            }
                                         }
                                     }
                                     if (check_win) {
@@ -417,7 +420,6 @@ check_all = async () => {
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Tắt care quảng cáo tự động thành công');
                                 return;
                             }
-
 
                             var ads_placements = campaign_ads_list.campaign_ads_list[0].advertisements.filter(x => (x.placement == 1 || x.placement == 2 || x.placement == 5) && x.status == 1);
                             if (ads_placements.length == 0) {
