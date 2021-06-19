@@ -100,10 +100,9 @@ check_all = async () => {
 
         //check version từ server
         let version = result.data.version
-        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Phiên bản hiện tại:', version);
-
         //check version từ local
         var checkVersion = fs.readFileSync("version.txt", { flag: "as+" });
+        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Phiên bản hiện tại:', checkVersion);
 
         //Kiểm tra version và tự động update nếu có version mới
         if (checkVersion != version) {
