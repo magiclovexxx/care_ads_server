@@ -111,10 +111,10 @@ check_all = async () => {
             if (mode !== "DEV") {
                 const myShellScript = exec('./update.sh');
                 myShellScript.stdout.on('data', (data) => {
-                    // do whatever you want here with data
+                    console.api_post_login('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
                 });
                 myShellScript.stderr.on('data', (data) => {
-                    console.error(data);
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
                 });
             }
         }
