@@ -108,7 +108,7 @@ check_all = async () => {
         if (checkVersion != version) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version)
             if (mode !== "DEV") {
-                const myShellScript = exec('./update.sh');
+                const myShellScript = exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');
                 myShellScript.stdout.on('data', (data) => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
                 });
