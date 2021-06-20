@@ -102,10 +102,10 @@ check_all = async () => {
         let version = result.data.version
         //check version từ local
         var checkVersion = fs.readFileSync("version.txt", { flag: "as+" });
-        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Phiên bản hiện tại:', checkVersion);
+        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Phiên bản hiện tại:', checkVersion.toString());
 
         //Kiểm tra version và tự động update nếu có version mới
-        if (checkVersion != version) {
+        if (checkVersion.toString() != version) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version)
             if (mode !== "DEV") {
                 const myShellScript = exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');
