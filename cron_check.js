@@ -512,12 +512,12 @@ check_all = async () => {
                                             } else {
                                                 //Tắt ví trí không hiệu quả
                                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + placement.placement + ') Tắt vị trí không hiệu quả');
-                                                placement.status = 0;
+                                                placement.status = 2;
                                                 is_update_campaign = true;
                                                 is_down_price = false;
                                                 update_placements.push({
                                                     id: care_placement.id,
-                                                    status: 0,
+                                                    status: 2,
                                                     care_status: 2
                                                 });
                                             }
