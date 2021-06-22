@@ -428,7 +428,7 @@ check_all = async () => {
                                 }
                             });
                             var countTotalKeyword = advertisement_keyword.extinfo.keywords.length;
-                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Đang care:', campaign.placements.filter(x => x.care_status == 1).length + '/' + countTotalKeyword, 'Không hiệu quả:', campaign.placements.filter(x => x.care_status == 2).length + '/' + countTotalKeyword);
+                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Đang chạy:', campaign.placements.filter(x => x.care_status == 1).length + '/' + countTotalKeyword, 'Không hiệu quả:', campaign.placements.filter(x => x.care_status == 2).length + '/' + countTotalKeyword);
                         } else {
                             //Quảng cáo khám phá
                             var ads_auto = campaign_ads_list.campaign_ads_list[0].advertisements.filter(x => x.placement == 8 && x.status == 1);
