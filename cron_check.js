@@ -418,7 +418,7 @@ check_all = async () => {
                                     }
                                 } else {
                                     //Xóa từ khóa không tồn tại
-                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + keyword.keyword.normalize('NFC') + ') Xóa từ khóa không tồn tại');
+                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + care_keyword.keyword_base64.normalize('NFC') + ') Xóa từ khóa không tồn tại');
                                     update_placements.push({
                                         id: care_keyword.id,
                                         status: -1
