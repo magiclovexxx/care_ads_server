@@ -427,7 +427,7 @@ check_all = async () => {
                                     });
                                 }
                             });
-                            var countTotalKeyword = advertisement_keyword.extinfo.keywords.filter(x => x.status == 1).length;
+                            var countTotalKeyword = advertisement_keyword.extinfo.keywords.length;
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Đang care:', campaign.placements.filter(x => x.care_status == 1).length + '/' + countTotalKeyword, 'Không hiệu quả:', campaign.placements.filter(x => x.care_status == 2).length + '/' + countTotalKeyword);
                         } else {
                             //Quảng cáo khám phá
