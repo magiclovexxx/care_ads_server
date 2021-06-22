@@ -386,12 +386,14 @@ check_all = async () => {
                                                     //Tắt từ khóa không hiệu quả
                                                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + keyword.keyword.normalize('NFC') + ') Tắt từ khóa không hiệu quả');
                                                     keyword.status = 0;
+                                                    care_keyword.care_status = 2;
+                                                    care_keyword.status = 0;                                                    
                                                     is_update_campaign = true;
                                                     is_down_price = false;
                                                     update_placements.push({
                                                         id: care_keyword.id,
-                                                        status: 0,
-                                                        care_status: 2
+                                                        status: care_keyword.status,
+                                                        care_status: care_keyword.care_status
                                                     });
                                                 }
                                             }
@@ -413,19 +415,20 @@ check_all = async () => {
                                                 }
                                             }
                                         }
-                                    } else {
-
                                     }
                                 } else {
                                     //Xóa từ khóa không tồn tại
                                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' -> ' + care_keyword.keyword_base64.normalize('NFC') + ') Xóa từ khóa không tồn tại');
+                                    care_keyword.status = -1;
+                                    care_keyword.care_status = 0;
                                     update_placements.push({
                                         id: care_keyword.id,
-                                        status: -1
+                                        status: care_keyword.status
                                     });
                                 }
                             });
-                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Số lượng từ khóa đang care: ' + campaign.placements.length + '/' + advertisement_keyword.extinfo.keywords.length);
+                            var countTotalKeyword = advertisement_keyword.extinfo.keywords.filter(x => x.status == 1).length;
+                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ') Đang care:', campaign.placements.filter(x => x.care_status == 1).length + '/' + countTotalKeyword, 'Không hiệu quả:', campaign.placements.filter(x => x.care_status == 2).length + '/' + countTotalKeyword);
                         } else {
                             //Quảng cáo khám phá
                             var ads_auto = campaign_ads_list.campaign_ads_list[0].advertisements.filter(x => x.placement == 8 && x.status == 1);
