@@ -162,7 +162,10 @@ check_all = async () => {
                 result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 if (result.code != 0) {
                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_shop_info', result);
-                    return;
+                    if (result.code == 999)
+                        is_need_login = true;
+                    else
+                        return;
                 }
                 if (result.data.code != 0) {
                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_shop_info', result.data);
