@@ -16,52 +16,7 @@ function cookieParse(cookie) {
 
 const axiosInstance = createAxios();
 
-//Api shopee
-
-const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
-    const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
-    cookie = cookie.split('; ');
-    for (var i = 0; i < cookie.length; i++) {
-        if (cookie[i].indexOf('SPC_EC=') != -1) {
-            cookie = cookie[i];
-            break;
-        }
-    }
-    const result = await axiosInstance.get(Url, {
-        headers: {
-            cookie: cookie,
-            'User-Agent': UserAgent,
-            referer: 'https://banhang.shopee.vn/'
-        },
-        proxy: proxy
-    }).then(function (response) {
-        response.data.cookie = cookieParse(response.headers['set-cookie']) + '; ' + cookie;
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
-    }).catch(function (error) {
-        if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
-        } else {
-            if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
-            } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
-            }
-        }
-    });
-    return result;
-}
-
-const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vcode, captcha, captcha_id) => {
+const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, password, vcode, captcha, captcha_id) => {
     const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     var data = '';
@@ -90,6 +45,7 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, username, password, vco
     }
     const result = await axiosInstance.post(Url, data, {
         headers: {
+            cookie: cookie,
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
@@ -1229,7 +1185,6 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
 
 
 module.exports = {
-    api_get_login, //renew cookie
     api_post_login, //Đăng nhập
     api_get_all_category_list, //Lấy danh mục của shopee
     api_get_second_category_list, //Lấy danh mục cấp độ 2 của shopee 

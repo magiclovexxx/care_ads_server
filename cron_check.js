@@ -135,15 +135,14 @@ check_all = async () => {
 
                 //Kiểm tra gia hạn token
                 if (moment(shop.last_renew_time).add(1, 'days') < moment()) {
-                    result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
+                    result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);                    
                     if (result.status != 200) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Gia hạn cookie thất bại', result);
                         if (result.code == 999)
                             is_need_login = true;
                         else
                             return;
-                    }
-                    else {
+                    } else {
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Gia hạn cookie thành công');
                         cookie = result.data.cookie;
                         result = await api_put_shopee_accounts({
@@ -180,7 +179,7 @@ check_all = async () => {
 
                 if (is_need_login) {
                     spc_cds = uuidv4();
-                    result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, username, password, null);
+                    result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     if (result.status != 200) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thất bại', result);
                         if (result.code == 999)
