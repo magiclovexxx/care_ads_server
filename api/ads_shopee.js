@@ -4,7 +4,7 @@ var moment = require('moment');
 
 function createAxios() {
     const axios = require('axios');
-    return axios.create({ withCredentials: true, timeout: 15000 });
+    return axios.create({ withCredentials: true, timeout: 30000 });
 }
 
 function cookieParse(cookie) {
@@ -34,7 +34,7 @@ const api_get_login = async (SPC_CDS, proxy, UserAgent, cookie) => {
             referer: 'https://banhang.shopee.vn/'
         },
         proxy: proxy,
-        timeout: 5000
+        timeout: 20000
     }).then(function (response) {
         response.data.cookie = cookieParse(response.headers['set-cookie']) + '; ' + cookie;
         if (proxy == null) {
@@ -646,7 +646,7 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
             referer: 'https://banhang.shopee.vn/'
         },
         proxy: proxy,
-        timeout: 5000
+        timeout: 20000
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
