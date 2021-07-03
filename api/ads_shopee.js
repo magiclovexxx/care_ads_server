@@ -470,8 +470,7 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy,
-        timeout: 30000
+        proxy: proxy
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
@@ -645,7 +644,7 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
             referer: 'https://banhang.shopee.vn/'
         },
         proxy: proxy,
-        timeout: 30000
+        timeout: 60000
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
@@ -833,8 +832,7 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy,
-        timeout: 30000
+        proxy: proxy
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
@@ -881,8 +879,7 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy,
-        timeout: 30000
+        proxy: proxy
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
@@ -930,8 +927,7 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy,
-        timeout: 30000
+        proxy: proxy
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
@@ -974,8 +970,7 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy,
-        timeout: 30000
+        proxy: proxy
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
@@ -1017,8 +1012,7 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy,
-        timeout: 30000
+        proxy: proxy
     }).then(function (response) {
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
