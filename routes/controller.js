@@ -20,7 +20,7 @@ router.post("/api_post_login", async (req, res) => {
         var vcode = req.body.vcode;
         var captcha = req.body.captcha;
         var captcha_id = req.body.captcha_id;
-        var result = await shopeeApi.api_post_login(SPC_CDS, proxy, UserAgent, username, password, vcode, captcha, captcha_id);
+        var result = await shopeeApi.api_post_login(SPC_CDS, proxy, UserAgent, null, username, password, vcode, captcha, captcha_id);
         if (result.code == 1000) {
             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_login', result);
         }
