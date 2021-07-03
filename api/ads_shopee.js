@@ -16,13 +16,15 @@ function cookieParse(cookie, cookie_array) {
         result.push(item);
         cookie_primary_array.push(primary);
     }
-    var old_cookie_array = cookie.split('; ');
-    for (var i = 0; i < old_cookie_array.length; i++) {
-        var item = old_cookie_array[i];
-        var primary = item.split('=')[0];
-        if (cookie_primary_array.indexOf(primary) == -1)
-            result.push(item);
-    }    
+    if (cookie != null) {
+        var old_cookie_array = cookie.split('; ');
+        for (var i = 0; i < old_cookie_array.length; i++) {
+            var item = old_cookie_array[i];
+            var primary = item.split('=')[0];
+            if (cookie_primary_array.indexOf(primary) == -1)
+                result.push(item);
+        }
+    }
     return result.join('; ');
 }
 
