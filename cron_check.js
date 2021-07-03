@@ -134,7 +134,7 @@ check_all = async () => {
                 var is_need_login = false;
 
                 //Kiểm tra gia hạn token
-                /*if (moment(shop.last_renew_time).add(1, 'days') < moment()) {
+                if (moment(shop.last_renew_time).add(1, 'days') < moment()) {
                     result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
                     if (result.status != 200) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Gia hạn cookie thất bại', result);
@@ -157,8 +157,7 @@ check_all = async () => {
                         }
                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Cập nhật cookie lên máy chủ PHP thành công');
                     }
-
-                }*/
+                }
 
                 //Kiểm tra thông tin shop
                 result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
