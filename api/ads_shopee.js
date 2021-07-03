@@ -7,10 +7,22 @@ function createAxios() {
     return axios.create({ withCredentials: true, timeout: 120000 });
 }
 
-function cookieParse(cookie) {
+function cookieParse(cookie, cookie_array) {
     var result = [];
-    for (var i = 0; i < cookie.length; i++)
-        result.push(cookie[i].split(';')[0]);
+    var cookie_primary_array = [];
+    for (var i = 0; i < cookie_array.length; i++) {
+        var item = cookie_array[i].split(';')[0];
+        var primary = item.split('=')[0];
+        result.push(item);
+        cookie_primary_array.push(primary);
+    }
+    var old_cookie_array = cookie.split('; ');
+    for (var i = 0; i < old_cookie_array.length; i++) {
+        var item = old_cookie_array[i];
+        var primary = item.split('=')[0];
+        if (cookie_primary_array.indexOf(primary) == -1)
+            result.push(item);
+    }    
     return result.join('; ');
 }
 
@@ -51,7 +63,7 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, passw
         },
         proxy: proxy
     }).then(function (response) {
-        response.data.cookie = cookieParse(response.headers['set-cookie']);
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (proxy == null) {
             return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
         }
