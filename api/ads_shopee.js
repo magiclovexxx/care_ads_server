@@ -282,14 +282,15 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
     return result;
 }
 
-const api_get_search_items = async (cookie, keyword, page) => {
+const api_get_search_items = async (proxy, cookie, keyword, page) => {
     var Url = 'https://shopee.vn/api/v4/search/search_items?by=relevancy&keyword=' + encodeURI(keyword) + '&limit=60&newest=' + (page * 60) + '&order=desc&page_type=search&scenario=PAGE_GLOBAL_SEARCH&version=2';
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36',
             referer: 'https://shopee.vn/search?keyword=' + encodeURI(keyword) + '&page=' + page
-        }
+        },
+        proxy: proxy
     }).then(function (response) {
         response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
         return { code: 0, message: 'OK', status: response.status, data: response.data };
