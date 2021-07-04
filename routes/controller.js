@@ -621,9 +621,10 @@ router.get("/api_get_search_hint", async (req, res) => {
 
 router.get("/api_get_search_items", async (req, res) => {
     try {
+        var cookie = req.body.cookie;        
         var keyword = req.body.keyword;
         var page = req.body.page;
-        var result = await shopeeApi.api_get_search_items(keyword, page);        
+        var result = await shopeeApi.api_get_search_items(cookie, keyword, page);        
         res.send(result);
     }
     catch (ex) {
