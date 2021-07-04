@@ -619,4 +619,18 @@ router.get("/api_get_search_hint", async (req, res) => {
     }
 });
 
+router.get("/api_get_search_items", async (req, res) => {
+    try {
+        var keyword = req.body.keyword;
+        var page = req.body.page;
+        var result = await shopeeApi.api_get_search_items(keyword, page);        
+        res.send(result);
+    }
+    catch (ex) {
+        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_search_items', { code: 1001, message: ex });
+        res.send({ code: 1001, message: ex });
+    }
+});
+
+
 module.exports = router;

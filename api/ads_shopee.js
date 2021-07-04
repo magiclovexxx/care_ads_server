@@ -282,6 +282,26 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
     return result;
 }
 
+const api_get_search_items = async (keyword, page) => {
+    var Url = 'https://shopee.vn/api/v4/search/search_items?by=relevancy&keyword=' + encodeURI(keyword) + '&limit=60&newest=' + (page * 60) + '&order=desc&page_type=search&scenario=PAGE_GLOBAL_SEARCH&version=2';
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36',
+            referer: 'https://shopee.vn/search?keyword=' + encodeURI(keyword) + '&page=' + page
+        }
+    }).then(function (response) {
+
+        return { code: 0, message: 'OK', status: response.status, data: response.data };
+    }).catch(function (error) {
+        if (error.response) {
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data };
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+        }
+    });
+    return result;
+}
+
 const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, type) => {
     var Url = 'https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&keyword=' + encodeURI(keyword);
@@ -1234,5 +1254,6 @@ module.exports = {
     api_get_segment_suggest_price,
     api_get_search_hint,
     api_get_suggest_keyword_price,
-    api_get_captcha_info
+    api_get_captcha_info,
+    api_get_search_items
 }
