@@ -621,11 +621,15 @@ router.get("/api_get_search_hint", async (req, res) => {
 
 router.get("/api_get_search_items", async (req, res) => {
     try {
-        var proxy = req.body.proxy;
-        var cookie = req.body.cookie;        
+        var proxy = req.body.proxy;        
+        var UserAgent = req.body.UserAgent;        
+        var cookie = req.body.cookie;
+        var by = req.body.by;
         var keyword = req.body.keyword;
-        var page = req.body.page;
-        var result = await shopeeApi.api_get_search_items(proxy, cookie, keyword, page);        
+        var limit = req.body.limit;
+        var newest = req.body.newest;        
+        var order = req.body.order;
+        var result = await shopeeApi.api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);        
         res.send(result);
     }
     catch (ex) {
