@@ -638,5 +638,20 @@ router.get("/api_get_search_items", async (req, res) => {
     }
 });
 
+router.get("/api_get_shop_info_shopid", async (req, res) => {
+    try {
+        var proxy = req.body.proxy;        
+        var UserAgent = req.body.UserAgent;        
+        var cookie = req.body.cookie;
+        var shopid = req.body.shopid;
+        var result = await shopeeApi.api_get_shop_info_shopid(proxy, UserAgent, cookie, shopid);        
+        res.send(result);
+    }
+    catch (ex) {
+        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_shop_info_shopid', { code: 1001, message: ex });
+        res.send({ code: 1001, message: ex });
+    }
+});
+
 
 module.exports = router;

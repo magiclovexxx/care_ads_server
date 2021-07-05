@@ -311,6 +311,28 @@ const api_get_search_items = async (proxy, UserAgent, cookie, by, keyword, limit
     return result;
 }
 
+const api_get_shop_info_shopid = async (proxy, UserAgent, cookie, shopid) => {
+    var Url = 'https://shopee.vn/api/v4/product/get_shop_info?shopid=' + shopid;
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://shopee.vn'
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        return { code: 0, message: 'OK', status: response.status, data: response.data };
+    }).catch(function (error) {
+        if (error.response) {
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data };
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+        }
+    });
+    return result;
+}
+
 const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, type) => {
     var Url = 'https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&keyword=' + encodeURI(keyword);
@@ -1264,5 +1286,6 @@ module.exports = {
     api_get_search_hint,
     api_get_suggest_keyword_price,
     api_get_captcha_info,
-    api_get_search_items
+    api_get_search_items,
+    api_get_shop_info_shopid
 }
