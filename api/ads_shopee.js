@@ -84,7 +84,8 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, passw
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_post_login(SPC_CDS, null, UserAgent, cookie, username, password, vcode, captcha, captcha_id);
             }
         }
     });
@@ -120,7 +121,8 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_all_category_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
     });
@@ -155,7 +157,8 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_second_category_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
     });
@@ -190,7 +193,8 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_shop_info(SPC_CDS, null, UserAgent, cookie);
             }
         }
     });
@@ -228,7 +232,8 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_page_active_collection_list(SPC_CDS, null, UserAgent, cookie, page_number, page_size);
             }
         }
     });
@@ -275,7 +280,8 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_product_selector(SPC_CDS, null, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by);
             }
         }
     });
@@ -366,7 +372,8 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_search_hint(SPC_CDS, null, UserAgent, cookie, keyword, type);
             }
         }
     });
@@ -401,7 +408,8 @@ const api_post_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, d
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_post_marketing_mass_edit(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
     });
@@ -436,7 +444,8 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_post_marketing_graphql(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
     });
@@ -471,7 +480,8 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_item_status(SPC_CDS, null, UserAgent, cookie, item_id_list);
             }
         }
     });
@@ -513,7 +523,8 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_shop_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval);
             }
         }
     });
@@ -550,7 +561,8 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_captcha_info(SPC_CDS, null, UserAgent);
             }
         }
     });
@@ -596,7 +608,8 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_campaign_statistics(SPC_CDS, null, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
             }
         }
     });
@@ -643,7 +656,8 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_search_ads(SPC_CDS, null, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
             }
         }
     });
@@ -687,7 +701,8 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_suggest_keyword(SPC_CDS, null, UserAgent, cookie, keyword, count, placement, itemid);
             }
         }
     });
@@ -722,7 +737,8 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_post_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
             }
         }
     });
@@ -758,7 +774,8 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_put_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
             }
         }
     });
@@ -796,7 +813,8 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaignid);
             }
         }
     });
@@ -834,7 +852,8 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_marketing_meta(SPC_CDS, null, UserAgent, cookie);
             }
         }
     });
@@ -875,7 +894,8 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_search_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, agg_interval);
             }
         }
     });
@@ -922,7 +942,8 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_detail_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid);
             }
         }
     });
@@ -970,7 +991,8 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_detail_report_by_keyword(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid);
             }
         }
     });
@@ -1013,7 +1035,8 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_item_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid);
             }
         }
     });
@@ -1055,7 +1078,8 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_item_report_by_placement(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, itemid);
             }
         }
     });
@@ -1092,7 +1116,8 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
     });
@@ -1129,7 +1154,8 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_suggest_keyword_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
     });
@@ -1166,7 +1192,8 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_segment_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
     });
@@ -1205,7 +1232,8 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_campaign_list(SPC_CDS, null, UserAgent, cookie, placement_list);
             }
         }
     });
@@ -1243,7 +1271,8 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
             if (proxy == null) {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port };
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_get_query_collection_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
     });
