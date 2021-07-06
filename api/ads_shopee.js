@@ -293,6 +293,8 @@ const api_get_search_items = async (proxy, UserAgent, cookie, by, keyword, limit
     Url += '&version=' + version;
     const result = await axiosInstance.get(Url, {
         headers: {
+            'x-api-source': 'pc',
+            'x-shopee-language': 'vi',
             cookie: cookie,
             'User-Agent': UserAgent,
             referer: 'https://shopee.vn/search?keyword=' + encodeURI(keyword)
