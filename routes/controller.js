@@ -207,7 +207,7 @@ router.post("/api_post_marketing_graphql", async (req, res) => {
     }
 });
 
-router.post("/api_put_marketing_mass_edit", async (req, res) => {
+router.put("/api_put_marketing_mass_edit", async (req, res) => {
     try {
         var SPC_CDS = req.body.SPC_CDS;
         var proxy = req.body.proxy;
@@ -227,7 +227,7 @@ router.post("/api_put_marketing_mass_edit", async (req, res) => {
     }
 });
 
-router.post("/api_put_marketing_search_ads", async (req, res) => {
+router.put("/api_put_marketing_search_ads", async (req, res) => {
     try {
         var SPC_CDS = req.body.SPC_CDS;
         var proxy = req.body.proxy;
