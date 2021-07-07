@@ -207,7 +207,7 @@ router.post("/api_post_marketing_graphql", async (req, res) => {
     }
 });
 
-router.post("/api_post_marketing_mass_edit", async (req, res) => {
+router.post("/api_put_marketing_mass_edit", async (req, res) => {
     try {
         var SPC_CDS = req.body.SPC_CDS;
         var proxy = req.body.proxy;
@@ -215,14 +215,34 @@ router.post("/api_post_marketing_mass_edit", async (req, res) => {
         var cookie = req.body.cookie;
         var data = req.body.data;
         console.log(data);
-        var result = await shopeeApi.api_post_marketing_mass_edit(SPC_CDS, proxy, UserAgent, cookie, data);
+        var result = await shopeeApi.api_put_marketing_mass_edit(SPC_CDS, proxy, UserAgent, cookie, data);
         if (result.code != 0) {
-            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_mass_edit', result);
+            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_mass_edit', result);
         }
         res.send(result);
     }
     catch (ex) {
-        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_post_marketing_mass_edit', { code: 1001, message: ex });
+        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_mass_edit', { code: 1001, message: ex });
+        res.send({ code: 1001, message: ex });
+    }
+});
+
+router.post("/api_put_marketing_search_ads", async (req, res) => {
+    try {
+        var SPC_CDS = req.body.SPC_CDS;
+        var proxy = req.body.proxy;
+        var UserAgent = req.body.UserAgent;
+        var cookie = req.body.cookie;
+        var data = req.body.data;
+        console.log(data);
+        var result = await shopeeApi.api_put_marketing_search_ads(SPC_CDS, proxy, UserAgent, cookie, data);
+        if (result.code != 0) {
+            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_search_ads', result);
+        }
+        res.send(result);
+    }
+    catch (ex) {
+        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_search_ads', { code: 1001, message: ex });
         res.send({ code: 1001, message: ex });
     }
 });

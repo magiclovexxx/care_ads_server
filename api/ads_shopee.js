@@ -380,9 +380,9 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
     return result;
 }
 
-const api_post_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+const api_put_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/mass_edit/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
-    const result = await axiosInstance.post(Url, data, {
+    const result = await axiosInstance.put(Url, data, {
         headers: {
             cookie: cookie,
             'User-Agent': UserAgent,
@@ -409,7 +409,43 @@ const api_post_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, d
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
             } else {
                 console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
-                return api_post_marketing_mass_edit(SPC_CDS, null, UserAgent, cookie, data);
+                return api_put_marketing_mass_edit(SPC_CDS, null, UserAgent, cookie, data);
+            }
+        }
+    });
+    return result;
+}
+
+const api_put_marketing_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+    const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+    const result = await axiosInstance.put(Url, data, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://banhang.shopee.vn/'
+        },
+        proxy: proxy
+    }).then(function (response) {
+        if (proxy == null) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
+        }
+        else {
+            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
+        }
+    }).catch(function (error) {
+        if (error.response) {
+            if (proxy == null) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
+            }
+            else {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
+            }
+        } else {
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+            } else {
+                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                return api_put_marketing_search_ads(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
     });
@@ -1312,7 +1348,8 @@ module.exports = {
     api_get_search_report_by_time,
     api_post_marketing_graphql,
     api_get_marketing_meta,
-    api_post_marketing_mass_edit,
+    api_put_marketing_mass_edit,
+    api_put_marketing_search_ads,
     api_get_segment_suggest_price,
     api_get_search_hint,
     api_get_suggest_keyword_price,
