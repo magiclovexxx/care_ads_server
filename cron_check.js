@@ -329,7 +329,7 @@ check_all = async () => {
                                         if (!(care_schedule.hourOfDay.indexOf((+moment().format('HH')).toString()) != -1 &&
                                             care_schedule.dayOfWeek.indexOf(moment().day().toString()) != -1 &&
                                             care_schedule.dayOfMonth.indexOf((+moment().format('DD')).toString()) != -1 &&
-                                            schedule.monthOfYear.indexOf((+moment().format('MM')).toString()) != -1)) {
+                                            care_schedule.monthOfYear.indexOf((+moment().format('MM')).toString()) != -1)) {
                                             is_in_schedule = false;
                                         }
                                     }
