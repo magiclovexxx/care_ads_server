@@ -515,14 +515,11 @@ check_all = async () => {
                                                     //Tắt từ khóa không hiệu quả
                                                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tắt từ khóa không hiệu quả');
                                                     keyword.status = 0;
-                                                    care_keyword.care_status = 2;
-                                                    care_keyword.status = 0;
                                                     is_update_campaign = true;
                                                     is_down_price = false;
                                                     update_placements.push({
                                                         id: care_keyword.id,
-                                                        status: care_keyword.status,
-                                                        care_status: care_keyword.care_status
+                                                        care_status: 2
                                                     });
                                                 }
                                             }
@@ -538,7 +535,6 @@ check_all = async () => {
                                                     update_placements.push({
                                                         id: care_keyword.id,
                                                         last_click: click,
-                                                        price: keyword.price,
                                                         last_update_click: moment().format('YYYY-MM-DD HH:mm:ss')
                                                     });
                                                 }
