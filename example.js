@@ -1,10 +1,20 @@
 const { v4: uuidv4 } = require('uuid');
 const prompt = require('prompt');
 var shopeeApi = require('./api/ads_shopee.js');
-//Example Shopee
-
+var moment = require('moment');
 
 (async () => {
+    var schedule = JSON.parse('{"hourOfDay":["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],"monthOfYear":["1","2","3","4","5","6","7","8","9","10","11","12"],"dayOfWeek":["1","2","3","4","5","6","0"],"dayOfMonth":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]}');
+    if (!(schedule.hourOfDay.indexOf((+moment().format('HH')).toString()) != -1 &&
+        schedule.dayOfWeek.indexOf(moment().day().toString()) != -1 &&
+        schedule.dayOfMonth.indexOf((+moment().format('DD')).toString()) != -1 &&
+        schedule.monthOfYear.indexOf((+moment().format('MM')).toString()) != -1)) {
+        console.log('NO');
+    }
+    else {
+        console.log('OK');
+    }
+    /*
     //Khởi tạo thông tin đăng nhập
     const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36';
     const SPC_CDS = uuidv4();
@@ -20,5 +30,5 @@ var shopeeApi = require('./api/ads_shopee.js');
         //Đăng nhập với OTP
         result = await shopeeApi.api_post_login(SPC_CDS, null, UserAgent, cookie, username, password, OTP, null, null);
     }
-    console.log(result);
+    console.log(result);*/
 })();
