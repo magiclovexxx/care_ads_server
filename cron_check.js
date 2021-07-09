@@ -320,6 +320,7 @@ check_all = async () => {
 
                             var keyword_reports = result.data.data;
                             campaign.placements.forEach(async (care_keyword) => {
+
                                 var filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
                                 if (filter_keywords.length > 0) {
                                     var keyword = filter_keywords[0];
@@ -411,94 +412,93 @@ check_all = async () => {
                                         }
                                         if (check_win) {
                                             //Quảng cáo lãi/hòa
-                                            if (keyword.price < max_price) {
-                                                if (click == last_click) {
-                                                    //Không có click
-                                                    keyword.price = Math.round(keyword.price * 1.1);
-                                                    if (care_keyword.is_suggest_price == 1) {
-                                                        //Kiểm tra giá thầu gợi ý
-                                                        var data_suggest_keyword = {
-                                                            placement: 3,
+                                            if (click == last_click) {
+                                                //Không có click
+                                                keyword.price = Math.round(keyword.price * 1.1);
+                                                if (care_keyword.is_suggest_price == 1) {
+                                                    //Kiểm tra giá thầu gợi ý
+                                                    var data_suggest_keyword = {
+                                                        placement: 3,
+                                                        keyword_list: [keyword.keyword]
+                                                    }
+                                                    if (campaign.campaign_type == 'keyword') {
+                                                        data_suggest_keyword = {
+                                                            placement: 0,
+                                                            itemid: itemid,
                                                             keyword_list: [keyword.keyword]
                                                         }
-                                                        if (campaign.campaign_type == 'keyword') {
-                                                            data_suggest_keyword = {
-                                                                placement: 0,
-                                                                itemid: itemid,
-                                                                keyword_list: [keyword.keyword]
-                                                            }
-                                                        }
-                                                        result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
-                                                            data_suggest_keyword);
-                                                        if (result.code != 0) {
-                                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                            return;
-                                                        }
-                                                        if (result.data.code != 0) {
-                                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                            return;
-                                                        }
-                                                        if (result.data.data.length > 0) {
-                                                            var suggest_price = Math.round(parseFloat(data.data.data[0].recommend_price));
-                                                            if (suggest_price < min_price)
-                                                                suggest_price = min_price;
-                                                            keyword.price = suggest_price;
-                                                        }
                                                     }
-                                                    if (keyword.price > max_price)
-                                                        keyword.price = max_price;
-
-                                                    is_update_campaign = true;
-                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', keyword.price);
-                                                    update_placements.push({
-                                                        id: care_keyword.id,
-                                                        last_update_loss: null
-                                                    });
-                                                } else {
-                                                    if (care_keyword.is_suggest_price == 1) {
-                                                        //Kiểm tra giá thầu gợi ý
-                                                        var data_suggest_keyword = {
-                                                            placement: 3,
-                                                            keyword_list: [keyword.keyword]
-                                                        }
-                                                        if (campaign.campaign_type == 'keyword') {
-                                                            data_suggest_keyword = {
-                                                                placement: 0,
-                                                                itemid: itemid,
-                                                                keyword_list: [keyword.keyword]
-                                                            }
-                                                        }
-                                                        result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
-                                                            data_suggest_keyword);
-                                                        if (result.code != 0) {
-                                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                            return;
-                                                        }
-                                                        if (result.data.code != 0) {
-                                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                            return;
-                                                        }
-                                                        if (result.data.data.length > 0) {
-                                                            var suggest_price = Math.round(parseFloat(data.data.data[0].recommend_price));
-                                                            if (suggest_price < min_price)
-                                                                suggest_price = min_price;
-                                                            if (keyword.price != suggest_price && suggest_price < max_price) {
-                                                                keyword.price = suggest_price;
-                                                                if (keyword.price > max_price)
-                                                                    keyword.price = max_price;
-                                                                is_update_campaign = true;
-                                                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Điều chỉnh giá theo gợi ý: ', keyword.price);
-                                                            }
-                                                        }
+                                                    result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
+                                                        data_suggest_keyword);
+                                                    if (result.code != 0) {
+                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result);
+                                                        return;
                                                     }
-                                                    update_placements.push({
-                                                        id: care_keyword.id,
-                                                        last_click: click,
-                                                        last_update_click: moment().format('YYYY-MM-DD HH:mm:ss'),
-                                                        last_update_loss: null
-                                                    });
+                                                    if (result.data.code != 0) {
+                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result.data);
+                                                        return;
+                                                    }
+                                                    if (result.data.data.length > 0) {
+                                                        var suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
+                                                        if (suggest_price < min_price)
+                                                            suggest_price = min_price;
+                                                        keyword.price = suggest_price;
+                                                    }
                                                 }
+                                                if (keyword.price > max_price)
+                                                    keyword.price = max_price;
+
+                                                is_update_campaign = true;
+                                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', keyword.price);
+                                                update_placements.push({
+                                                    id: care_keyword.id,
+                                                    last_update_loss: null
+                                                });
+                                            } else {
+                                                if (care_keyword.is_suggest_price == 1) {
+                                                    //Kiểm tra giá thầu gợi ý
+                                                    var data_suggest_keyword = {
+                                                        placement: 3,
+                                                        keyword_list: [keyword.keyword]
+                                                    }
+                                                    if (campaign.campaign_type == 'keyword') {
+                                                        data_suggest_keyword = {
+                                                            placement: 0,
+                                                            itemid: itemid,
+                                                            keyword_list: [keyword.keyword]
+                                                        }
+                                                    }
+                                                    result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
+                                                        data_suggest_keyword);
+                                                    if (result.code != 0) {
+                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result);
+                                                        return;
+                                                    }
+                                                    if (result.data.code != 0) {
+                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result.data);
+                                                        return;
+                                                    }
+                                                    if (result.data.data.length > 0) {
+                                                        var suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
+                                                        if (suggest_price < min_price)
+                                                            suggest_price = min_price;
+                                                        if (keyword.price != suggest_price && suggest_price < max_price) {
+                                                            keyword.price = suggest_price;
+                                                            if (keyword.price > max_price)
+                                                                keyword.price = max_price;
+                                                            is_update_campaign = true;
+                                                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Điều chỉnh giá theo gợi ý: ', keyword.price);
+                                                        }
+                                                    }
+                                                }
+                                                update_placements.push({
+                                                    id: care_keyword.id,
+                                                    last_click: click,
+                                                    last_update_click: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                                    last_update_loss: null
+                                                });
                                             }
+
                                         } else {
                                             //Từ khóa cáo lỗ
                                             var is_down_price = false;
@@ -542,6 +542,7 @@ check_all = async () => {
                                         }
                                     } else {
                                         //Đấu thầu vị trí
+                                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Đấu thầu vị trí');
 
                                     }
                                 } else {
@@ -555,7 +556,7 @@ check_all = async () => {
                                     });
                                 }
                             });
-                            
+
                         } else {
                             //Quảng cáo khám phá
                             var ads_auto = campaign_ads_list.campaign_ads_list[0].advertisements.filter(x => x.placement == 8 && x.status == 1);
@@ -711,7 +712,7 @@ check_all = async () => {
                                         status: care_placement.status
                                     });
                                 }
-                            });                            
+                            });
                         }
 
                         if (is_update_campaign) {
