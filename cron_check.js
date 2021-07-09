@@ -169,7 +169,7 @@ check_all = async () => {
                         return;
                 }
 
-                if (result.data.code != 0) {
+                if (result.data != null && result.data.code != 0) {
                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_shop_info', result.data);
                     if (result.code == 999)
                         is_need_login = true;
@@ -321,7 +321,7 @@ check_all = async () => {
 
                             var keyword_reports = result.data.data;
                             campaign.placements.forEach(async (care_keyword) => {
-                                var filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_base64);
+                                var filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
                                 if (filter_keywords.length > 0) {
                                     var keyword = filter_keywords[0];
                                     if (care_keyword.care_status == 1
@@ -433,7 +433,7 @@ check_all = async () => {
                                     }
                                 } else {
                                     //Xóa từ khóa không tồn tại
-                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + care_keyword.keyword_base64.normalize('NFC') + ') Xóa từ khóa không tồn tại');
+                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + care_keyword.keyword_str.normalize('NFC') + ') Xóa từ khóa không tồn tại');
                                     care_keyword.status = -1;
                                     care_keyword.care_status = 0;
                                     update_placements.push({
