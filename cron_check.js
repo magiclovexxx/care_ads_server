@@ -283,7 +283,8 @@ check_all = async () => {
                         campaign_ads_list.ads_audit_event = 6;
                         if (campaign_ads_list.campaign_ads_list[0].campaign.start_time > moment().unix() ||
                             (campaign_ads_list.campaign_ads_list[0].campaign.end_time != 0 &&
-                                campaign_ads_list.campaign_ads_list[0].campaign.end_time < moment().unix())) {
+                                campaign_ads_list.campaign_ads_list[0].campaign.end_time < moment().unix()) ||
+                            campaign_ads_list.campaign_ads_list[0].campaign.status != 1) {
                             result = await api_put_shopee_campaigns({
                                 id: campaign.id,
                                 care_status: 0
@@ -293,11 +294,6 @@ check_all = async () => {
                                 return;
                             }
                             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Tắt care quảng cáo không hoạt động thành công');
-                            return;
-                        }
-
-                        if (campaign_ads_list.campaign_ads_list[0].campaign.status != 1) {
-                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Quảng cáo đang tạm dừng');
                             return;
                         }
 
