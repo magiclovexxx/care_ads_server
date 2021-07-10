@@ -4,7 +4,7 @@ var moment = require('moment');
 
 function createAxios() {
     const axios = require('axios');
-    return axios.create({ withCredentials: true, timeout: 120000 });
+    return axios.create({ withCredentials: true, timeout: 15000 });
 }
 
 function cookieParse(cookie, cookie_array) {
