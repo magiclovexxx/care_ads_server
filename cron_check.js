@@ -985,7 +985,7 @@ check_all = async () => {
     }
 }
 
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('*/3 * * * *', async () => {
     if (!is_running) {
         await check_all();
     }
