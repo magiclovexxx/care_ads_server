@@ -646,7 +646,6 @@ check_all = async () => {
                                             if (ads_location > care_keyword.max_location) {
                                                 //Tăng giá thầu
                                                 var old_price = keyword.price;
-                                                var suggest_price = 0;
                                                 keyword.price = Math.round(keyword.price * 1.1);
                                                 if (keyword.price > max_price)
                                                     keyword.price = max_price;
@@ -657,7 +656,7 @@ check_all = async () => {
                                                         update_keyword_list.push(keyword);
                                                     else
                                                         update_keyword_list[index] = keyword;
-                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, '(' + suggest_price + ')', ads_location, '>', care_keyword.max_location);
+                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, ads_location, '>', care_keyword.max_location);
                                                 }
                                             } else {
                                                 if (ads_location < care_keyword.min_location) {
