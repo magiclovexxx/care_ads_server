@@ -454,7 +454,7 @@ check_all = async () => {
                                                     keyword.price = max_price;
                                                 if (keyword.price != old_price) {
                                                     is_update_campaign = true;
-                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', keyword.price, suggest_price);
+                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, keyword.price, suggest_price);
                                                 }
                                                 update_placements.push({
                                                     id: care_keyword.id,
