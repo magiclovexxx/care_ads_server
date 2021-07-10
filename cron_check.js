@@ -951,7 +951,7 @@ check_all = async () => {
 
                         if (update_keyword_list.length > 0) {
                             result = await shopeeApi.api_put_marketing_search_ads(spc_cds, proxy, user_agent, cookie,
-                                { campaignid: campaign.campaignid, placement: 0, keyword_list: update_keyword_list });
+                                { campaignid: campaign.campaignid, placement: (campaign.campaign_type == 'keyword' ? 0 : 3), keyword_list: update_keyword_list });
                             if (result.code != 0) {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_put_marketing_search_ads', result);
                                 return;
