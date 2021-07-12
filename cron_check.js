@@ -493,7 +493,7 @@ check_all = async () => {
                                                     }
                                                     if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                        if (suggest_price > min_price && keyword.price > suggest_price)
                                                             keyword.price = suggest_price;
                                                     }
                                                 }
@@ -543,7 +543,7 @@ check_all = async () => {
                                                     }
                                                     if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                        if (suggest_price > min_price && keyword.price > suggest_price)
                                                             keyword.price = suggest_price;
                                                     }
                                                 }
@@ -651,7 +651,7 @@ check_all = async () => {
                                                     }
                                                     if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                        if (suggest_price > min_price && keyword.price > suggest_price)
                                                             keyword.price = suggest_price;
                                                     }
                                                 }
@@ -710,7 +710,7 @@ check_all = async () => {
                                                         }
                                                         if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                             suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                            if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                            if (suggest_price > min_price && keyword.price > suggest_price)
                                                                 keyword.price = suggest_price;
                                                         }
                                                     }
