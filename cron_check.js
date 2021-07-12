@@ -9,6 +9,7 @@ var moment = require('moment');
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const { v4: uuidv4 } = require('uuid');
 const { json } = require('body-parser');
+const { registerCustomQueryHandler } = require('puppeteer');
 
 function createAxios() {
     const axios = require('axios');
@@ -354,7 +355,7 @@ check_all = async () => {
 
                             var keyword_reports = result.data.data;
                             for (var i = 0; i < campaign.placements.length; i++) {
-                                care_keyword = campaign.placements[i];
+                                var care_keyword = campaign.placements[i];
                                 var filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
                                 if (filter_keywords.length > 0) {
                                     var keyword = filter_keywords[0];
@@ -493,7 +494,7 @@ check_all = async () => {
                                                     }
                                                     if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price > min_price && keyword.price > suggest_price)
+                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
                                                             keyword.price = suggest_price;
                                                     }
                                                 }
@@ -543,7 +544,7 @@ check_all = async () => {
                                                     }
                                                     if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price > min_price && keyword.price > suggest_price)
+                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
                                                             keyword.price = suggest_price;
                                                     }
                                                 }
@@ -651,7 +652,7 @@ check_all = async () => {
                                                     }
                                                     if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price > min_price && keyword.price > suggest_price)
+                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
                                                             keyword.price = suggest_price;
                                                     }
                                                 }
@@ -710,7 +711,7 @@ check_all = async () => {
                                                         }
                                                         if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                             suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                            if (suggest_price > min_price && keyword.price > suggest_price)
+                                                            if (suggest_price >= min_price && keyword.price > suggest_price)
                                                                 keyword.price = suggest_price;
                                                         }
                                                     }
