@@ -10,6 +10,7 @@ const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const { v4: uuidv4 } = require('uuid');
 const { json } = require('body-parser');
 const { registerCustomQueryHandler } = require('puppeteer');
+const { FORMERR } = require('dns');
 
 function createAxios() {
     const axios = require('axios');
@@ -181,7 +182,6 @@ check_all = async () => {
         let data_shops = result.data.shops;
         //console.log(Buffer.from(JSON.stringify(data_shops)).toString('base64'))
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng shop: ' + data_shops.length);
-
         data_shops.forEach(async (shop) => {
             try {
                 var spc_cds = shop.spc_cds;
@@ -193,7 +193,7 @@ check_all = async () => {
                 var is_need_login = false;
 
                 //Kiểm tra thông tin shop
-                result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
+                var result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
 
                 if (result.code != 0) {
                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Lỗi kết nối function api_get_shop_info', result);
@@ -249,7 +249,7 @@ check_all = async () => {
                 shop.campaigns.forEach(async (campaign) => {
                     try {
                         //Lấy thông tin chiến dịch
-                        result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
+                        var result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
                         if (result.code != 0) {
                             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_marketing_campaign', result);
                             return;
