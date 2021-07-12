@@ -8,8 +8,6 @@ const exec = require('child_process').exec;
 var moment = require('moment');
 const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const { v4: uuidv4 } = require('uuid');
-const { json } = require('body-parser');
-const { registerCustomQueryHandler } = require('puppeteer');
 const { FORMERR } = require('dns');
 
 function createAxios() {
@@ -182,8 +180,9 @@ check_all = async () => {
         let data_shops = result.data.shops;
         //console.log(Buffer.from(JSON.stringify(data_shops)).toString('base64'))
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng shop: ' + data_shops.length);
-        data_shops.forEach(async (shop) => {
+        for (var s = 0; s < data_shops.length; s++) {
             try {
+                var shop = data_shops[s];
                 var spc_cds = shop.spc_cds;
                 var proxy = shop.proxy;
                 var user_agent = shop.user_agent;
@@ -246,7 +245,8 @@ check_all = async () => {
                 }
                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Số lượng quảng cáo: ' + shop.campaigns.length);
 
-                shop.campaigns.forEach(async (campaign) => {
+                for (var c = 0; c < shop.campaigns.length; c++) {
+                    var campaign = shop.campaigns[c];
                     try {
                         //Lấy thông tin chiến dịch
                         var result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
@@ -981,11 +981,11 @@ check_all = async () => {
                     } catch (ex) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
                     }
-                });
+                }
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
             }
-        });
+        }
     } catch (ex) {
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
     }
