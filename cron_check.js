@@ -216,7 +216,7 @@ check_all = async () => {
                     if (result.status != 200) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thất bại', result);
                         if (result.code == 999) {
-                            if (moment(shop.last_renew_time).add(7, 'days') < moment()) {
+                            if (moment(shop.last_renew_time).add(14, 'days') < moment()) {
                                 result = await api_put_shopee_accounts({
                                     id: shop.id,
                                     status: 0
