@@ -191,31 +191,6 @@ check_all = async () => {
                 var cookie = shop.cookie;
                 var is_need_login = false;
 
-                //Kiểm tra gia hạn token
-                if (moment(shop.last_renew_time).add(1, 'days') < moment()) {
-                    result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
-                    if (result.status != 200) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Gia hạn cookie thất bại', result);
-                        if (result.code == 999)
-                            is_need_login = true;
-                        else
-                            return;
-                    } else {
-                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Gia hạn cookie thành công');
-                        cookie = result.data.cookie;
-                        result = await api_put_shopee_accounts({
-                            id: shop.id,
-                            cookie: cookie,
-                            last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
-                        });
-                        if (result.code != 0) {
-                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Cập nhật cookie lên máy chủ PHP thất bại', result);
-                            return;
-                        }
-                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Cập nhật cookie lên máy chủ PHP thành công');
-                    }
-                }
-
                 //Kiểm tra thông tin shop
                 result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
 
@@ -240,11 +215,14 @@ check_all = async () => {
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     if (result.status != 200) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thất bại', result);
-                        if (result.code == 999)
-                            result = await api_put_shopee_accounts({
-                                id: shop.id,
-                                status: 0
-                            });
+                        if (result.code == 999) {
+                            if (moment(shop.last_renew_time).add(7, 'days') < moment()) {
+                                result = await api_put_shopee_accounts({
+                                    id: shop.id,
+                                    status: 0
+                                });
+                            }
+                        }
                         return;
                     }
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thành công');
