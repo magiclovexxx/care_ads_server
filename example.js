@@ -16,6 +16,7 @@ var moment = require('moment');
         console.log('OK');
     }*/
     //Khởi tạo thông tin đăng nhập
+    /*
     const UserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4503.5 Safari/537.36';
     const SPC_CDS = uuidv4();
     var username = '0962986537'; //Tên người dùng
@@ -30,5 +31,6 @@ var moment = require('moment');
         //Đăng nhập với OTP
         result = await shopeeApi.api_post_login(SPC_CDS, null, UserAgent, cookie, username, password, OTP, null, null);
     }
-    console.log(result);
+    console.log(result);*/
+    
 })();

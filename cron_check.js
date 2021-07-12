@@ -487,13 +487,11 @@ check_all = async () => {
                                                         data_suggest_keyword);
                                                     if (result.code != 0) {
                                                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                        continue;
                                                     }
                                                     if (result.data.code != 0) {
                                                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                        continue;
                                                     }
-                                                    if (result.data.data.length > 0) {
+                                                    if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
                                                         if (suggest_price < min_price)
                                                             suggest_price = min_price;
@@ -541,13 +539,11 @@ check_all = async () => {
                                                         data_suggest_keyword);
                                                     if (result.code != 0) {
                                                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                        continue;
                                                     }
                                                     if (result.data.code != 0) {
                                                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                        continue;
                                                     }
-                                                    if (result.data.data.length > 0) {
+                                                    if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
                                                         if (suggest_price < min_price)
                                                             suggest_price = min_price;
@@ -653,13 +649,11 @@ check_all = async () => {
                                                         data_suggest_keyword);
                                                     if (result.code != 0) {
                                                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                        continue;
                                                     }
                                                     if (result.data.code != 0) {
                                                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                        continue;
                                                     }
-                                                    if (result.data.data.length > 0) {
+                                                    if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                         suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
                                                         if (suggest_price < min_price)
                                                             suggest_price = min_price;
@@ -716,13 +710,11 @@ check_all = async () => {
                                                             data_suggest_keyword);
                                                         if (result.code != 0) {
                                                             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                            continue;
                                                         }
                                                         if (result.data.code != 0) {
                                                             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                            continue;
                                                         }
-                                                        if (result.data.data.length > 0) {
+                                                        if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
                                                             suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
                                                             if (suggest_price < min_price)
                                                                 suggest_price = min_price;
