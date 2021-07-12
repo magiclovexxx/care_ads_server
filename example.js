@@ -4,6 +4,7 @@ var shopeeApi = require('./api/ads_shopee.js');
 var moment = require('moment');
 
 (async () => {
+    
     /*
     var schedule = JSON.parse('{"hourOfDay":["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23"],"monthOfYear":["1","2","3","4","5","6","7","8","9","10","11","12"],"dayOfWeek":["1","2","3","4","5","6","0"],"dayOfMonth":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]}');
     if (!(schedule.hourOfDay.indexOf((+moment().format('HH')).toString()) != -1 &&
@@ -32,5 +33,5 @@ var moment = require('moment');
         result = await shopeeApi.api_post_login(SPC_CDS, null, UserAgent, cookie, username, password, OTP, null, null);
     }
     console.log(result);*/
-    
+
 })();
