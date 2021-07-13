@@ -244,7 +244,7 @@ check_all = async () => {
                 }
                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Số lượng quảng cáo: ' + shop.campaigns.length);
                 //for (let c = 0; c < shop.campaigns.length; c++) {
-                shop.campaigns.forEach(function (campaign) {
+                shop.campaigns.forEach(async function (campaign) {
                     try {
                         //let campaign = shop.campaigns[c];
                         //Lấy thông tin chiến dịch
