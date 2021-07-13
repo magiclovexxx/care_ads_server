@@ -588,12 +588,21 @@ check_all = async () => {
                                                     keyword.price = Math.round(keyword.price * 0.9);
                                                     if (keyword.price < min_price)
                                                         keyword.price = min_price;
-                                                    let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
-                                                    if (index == -1)
-                                                        update_keyword_list.push(keyword);
-                                                    else
-                                                        update_keyword_list[index] = keyword;
-                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price);
+                                                        
+                                                    if (care_keyword.is_suggest_price == 1) {
+                                                        //Kiểm tra giá thầu gợi ý
+                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                            keyword.price = suggest_price;
+                                                    }
+
+                                                    if (keyword.price != old_price) {
+                                                        let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
+                                                        if (index == -1)
+                                                            update_keyword_list.push(keyword);
+                                                        else
+                                                            update_keyword_list[index] = keyword;
+                                                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price);
+                                                    }
                                                     update_placements.push({
                                                         id: care_keyword.id,
                                                         last_click: click,
@@ -638,12 +647,21 @@ check_all = async () => {
                                                         keyword.price = Math.round(keyword.price * 0.9);
                                                         if (keyword.price < min_price)
                                                             keyword.price = min_price;
-                                                        let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
-                                                        if (index == -1)
-                                                            update_keyword_list.push(keyword);
-                                                        else
-                                                            update_keyword_list[index] = keyword;
-                                                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '<', care_keyword.min_location);
+
+                                                        if (care_keyword.is_suggest_price == 1) {
+                                                            //Kiểm tra giá thầu gợi ý
+                                                            if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                                keyword.price = suggest_price;
+                                                        }
+                                                        
+                                                        if (keyword.price != old_price) {
+                                                            let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
+                                                            if (index == -1)
+                                                                update_keyword_list.push(keyword);
+                                                            else
+                                                                update_keyword_list[index] = keyword;
+                                                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '<', care_keyword.min_location);
+                                                        }
                                                     }
                                                 }
                                                 else {
