@@ -243,9 +243,9 @@ check_all = async () => {
                     }
                 }
                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Số lượng quảng cáo: ' + shop.campaigns.length);
-
-                shop.campaigns.forEach(async function (campaign) {
+                for (let c = 0; c < shop.campaigns.length; c++) {
                     try {
+                        let campaign = shop.campaigns[c];
                         //Lấy thông tin chiến dịch
                         let result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
                         if (result.code != 0) {
@@ -979,7 +979,7 @@ check_all = async () => {
                     } catch (ex) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
                     }
-                });
+                }
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
             }
