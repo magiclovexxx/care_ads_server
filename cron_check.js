@@ -357,29 +357,31 @@ check_all = async () => {
                                 return item['keyword_str'];
                             });
 
-                            let data_suggest_keyword = {
-                                placement: 3,
-                                keyword_list: suggest_keyword_list
-                            }
-                            if (campaign.campaign_type == 'keyword') {
-                                data_suggest_keyword = {
-                                    placement: 0,
-                                    itemid: itemid,
+                            if (suggest_keyword_list.length > 0) {
+                                let data_suggest_keyword = {
+                                    placement: 3,
                                     keyword_list: suggest_keyword_list
                                 }
-                            }
+                                if (campaign.campaign_type == 'keyword') {
+                                    data_suggest_keyword = {
+                                        placement: 0,
+                                        itemid: itemid,
+                                        keyword_list: suggest_keyword_list
+                                    }
+                                }
 
-                            result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
-                            if (result.code != 0) {
-                                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result);
-                            }
+                                result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
+                                if (result.code != 0) {
+                                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result);
+                                }
 
-                            if (result.data.code != 0) {
-                                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                            }
+                                if (result.data.code != 0) {
+                                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_suggest_keyword_price', result.data);
+                                }
 
-                            if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
-                                keyword_suggest_prices = result.data.data;
+                                if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
+                                    keyword_suggest_prices = result.data.data;
+                                }
                             }
 
                             for (let i = 0; i < campaign.placements.length; i++) {
@@ -588,7 +590,7 @@ check_all = async () => {
                                                     keyword.price = Math.round(keyword.price * 0.9);
                                                     if (keyword.price < min_price)
                                                         keyword.price = min_price;
-                                                        
+
                                                     if (care_keyword.is_suggest_price == 1) {
                                                         //Kiểm tra giá thầu gợi ý
                                                         if (suggest_price >= min_price && keyword.price > suggest_price)
