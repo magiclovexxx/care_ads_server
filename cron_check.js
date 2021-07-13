@@ -350,8 +350,38 @@ check_all = async () => {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi kết nối function api_get_detail_report_by_keyword', result.data);
                                 return;
                             }
-
                             let keyword_reports = result.data.data;
+
+                            let keyword_suggest_prices = [];
+                            let suggest_keyword_list = campaign.placements.map(function (item) {
+                                return item['keyword_str'];
+                            });
+
+                            let data_suggest_keyword = {
+                                placement: 3,
+                                keyword_list: suggest_keyword_list
+                            }
+                            if (campaign.campaign_type == 'keyword') {
+                                data_suggest_keyword = {
+                                    placement: 0,
+                                    itemid: itemid,
+                                    keyword_list: suggest_keyword_list
+                                }
+                            }
+
+                            result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
+                            if (result.code != 0) {
+                                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
+                            }
+
+                            if (result.data.code != 0) {
+                                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
+                            }
+
+                            if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
+                                keyword_suggest_prices = result.data.data;
+                            }
+
                             for (let i = 0; i < campaign.placements.length; i++) {
                                 let care_keyword = campaign.placements[i];
                                 let filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
@@ -391,6 +421,11 @@ check_all = async () => {
 
                                     let min_price = (campaign.campaign_type == 'keyword' ? (keyword.match_type == 0 ? 400 : 480) : (keyword.match_type == 0 ? 500 : 600));
                                     let max_price = parseFloat(care_keyword.max_price);
+                                    let suggest_price = 0;
+                                    let keyword_suggest_filters = keyword_suggest_prices.filter(x => x.keyword == keyword.keyword);
+                                    if (keyword_suggest_filters.length > 0) {
+                                        suggest_price = Math.round(parseFloat(keyword_suggest_filters[0].recommend_price));
+                                    }
 
                                     if (!is_in_schedule) {
                                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') [Lập lịch] Ngoài phạm vi');
@@ -464,37 +499,14 @@ check_all = async () => {
                                             if (click == last_click) {
                                                 //Không có click
                                                 let old_price = keyword.price;
-                                                let suggest_price = 0;
                                                 keyword.price = Math.round(keyword.price * 1.1);
                                                 if (keyword.price > max_price)
                                                     keyword.price = max_price;
 
                                                 if (care_keyword.is_suggest_price == 1) {
                                                     //Kiểm tra giá thầu gợi ý
-                                                    let data_suggest_keyword = {
-                                                        placement: 3,
-                                                        keyword_list: [keyword.keyword]
-                                                    }
-                                                    if (campaign.campaign_type == 'keyword') {
-                                                        data_suggest_keyword = {
-                                                            placement: 0,
-                                                            itemid: itemid,
-                                                            keyword_list: [keyword.keyword]
-                                                        }
-                                                    }
-                                                    result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
-                                                        data_suggest_keyword);
-                                                    if (result.code != 0) {
-                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                    }
-                                                    if (result.data.code != 0) {
-                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                    }
-                                                    if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
-                                                        suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
-                                                            keyword.price = suggest_price;
-                                                    }
+                                                    if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                        keyword.price = suggest_price;
                                                 }
 
                                                 if (keyword.price != old_price) {
@@ -515,37 +527,15 @@ check_all = async () => {
                                             } else {
                                                 //Có click
                                                 let old_price = keyword.price;
-                                                let suggest_price = 0;
                                                 if (keyword.price > max_price)
                                                     keyword.price = max_price;
 
                                                 if (care_keyword.is_suggest_price == 1) {
                                                     //Kiểm tra giá thầu gợi ý
-                                                    let data_suggest_keyword = {
-                                                        placement: 3,
-                                                        keyword_list: [keyword.keyword]
-                                                    }
-                                                    if (campaign.campaign_type == 'keyword') {
-                                                        data_suggest_keyword = {
-                                                            placement: 0,
-                                                            itemid: itemid,
-                                                            keyword_list: [keyword.keyword]
-                                                        }
-                                                    }
-                                                    result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
-                                                        data_suggest_keyword);
-                                                    if (result.code != 0) {
-                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                    }
-                                                    if (result.data.code != 0) {
-                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                    }
-                                                    if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
-                                                        suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
-                                                            keyword.price = suggest_price;
-                                                    }
+                                                    if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                        keyword.price = suggest_price;
                                                 }
+
                                                 if (keyword.price != old_price) {
                                                     let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
                                                     if (index == -1)
@@ -622,37 +612,14 @@ check_all = async () => {
                                             if (ads_location > max_location) {
                                                 //Tăng giá thầu
                                                 let old_price = keyword.price;
-                                                let suggest_price = 0;
                                                 keyword.price = Math.round(keyword.price * 1.1);
                                                 if (keyword.price > max_price)
                                                     keyword.price = max_price;
 
                                                 if (care_keyword.is_suggest_price == 1) {
                                                     //Kiểm tra giá thầu gợi ý
-                                                    let data_suggest_keyword = {
-                                                        placement: 3,
-                                                        keyword_list: [keyword.keyword]
-                                                    };
-                                                    if (campaign.campaign_type == 'keyword') {
-                                                        data_suggest_keyword = {
-                                                            placement: 0,
-                                                            itemid: itemid,
-                                                            keyword_list: [keyword.keyword]
-                                                        };
-                                                    }
-                                                    result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
-                                                        data_suggest_keyword);
-                                                    if (result.code != 0) {
-                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                    }
-                                                    if (result.data.code != 0) {
-                                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                    }
-                                                    if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
-                                                        suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
-                                                            keyword.price = suggest_price;
-                                                    }
+                                                    if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                        keyword.price = suggest_price;
                                                 }
 
                                                 if (keyword.price != old_price) {
@@ -682,37 +649,15 @@ check_all = async () => {
                                                 else {
                                                     //Giữ vị trí
                                                     let old_price = keyword.price;
-                                                    let suggest_price = 0;
                                                     if (keyword.price > max_price)
                                                         keyword.price = max_price;
 
                                                     if (care_keyword.is_suggest_price == 1) {
                                                         //Kiểm tra giá thầu gợi ý
-                                                        let data_suggest_keyword = {
-                                                            placement: 3,
-                                                            keyword_list: [keyword.keyword]
-                                                        };
-                                                        if (campaign.campaign_type == 'keyword') {
-                                                            data_suggest_keyword = {
-                                                                placement: 0,
-                                                                itemid: itemid,
-                                                                keyword_list: [keyword.keyword]
-                                                            };
-                                                        }
-                                                        result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie,
-                                                            data_suggest_keyword);
-                                                        if (result.code != 0) {
-                                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result);
-                                                        }
-                                                        if (result.data.code != 0) {
-                                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Lỗi kết nối function api_get_suggest_keyword_price', result.data);
-                                                        }
-                                                        if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
-                                                            suggest_price = Math.round(parseFloat(result.data.data[0].recommend_price));
-                                                            if (suggest_price >= min_price && keyword.price > suggest_price)
-                                                                keyword.price = suggest_price;
-                                                        }
+                                                        if (suggest_price >= min_price && keyword.price > suggest_price)
+                                                            keyword.price = suggest_price;
                                                     }
+
                                                     if (keyword.price != old_price) {
                                                         let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
                                                         if (index == -1)
