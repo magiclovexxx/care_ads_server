@@ -601,7 +601,7 @@ check_all = async () => {
                                                             update_keyword_list.push(keyword);
                                                         else
                                                             update_keyword_list[index] = keyword;
-                                                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price);
+                                                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Suggest:', suggest_price, 'Max:', max_price);
                                                     }
                                                     update_placements.push({
                                                         id: care_keyword.id,
@@ -653,14 +653,14 @@ check_all = async () => {
                                                             if (suggest_price >= min_price && keyword.price > suggest_price)
                                                                 keyword.price = suggest_price;
                                                         }
-                                                        
+
                                                         if (keyword.price != old_price) {
                                                             let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
                                                             if (index == -1)
                                                                 update_keyword_list.push(keyword);
                                                             else
                                                                 update_keyword_list[index] = keyword;
-                                                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '<', care_keyword.min_location);
+                                                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Suggest:', suggest_price, 'Max:', max_price, 'Location:', ads_location, '<', care_keyword.min_location);
                                                         }
                                                     }
                                                 }
@@ -682,9 +682,8 @@ check_all = async () => {
                                                             update_keyword_list.push(keyword);
                                                         else
                                                             update_keyword_list[index] = keyword;
-                                                        console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Điều chỉnh giá thầu: ', old_price, '->', keyword.price, 'Suggest:', suggest_price, 'Max:', max_price);
                                                     }
-                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giữ vị trí:', keyword.price, 'Max:', max_price, care_keyword.min_location, '<=', ads_location, '<=', care_keyword.max_location);
+                                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giữ vị trí:', old_price, '->', keyword.price, 'Suggest:', suggest_price, 'Max:', max_price, care_keyword.min_location, '<=', ads_location, '<=', care_keyword.max_location);
                                                 }
                                             }
                                         }
