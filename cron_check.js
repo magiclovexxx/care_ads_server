@@ -166,8 +166,9 @@ check_all = async () => {
                     //console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
                 });
                 myShellScript.stderr.on('data', (data) => {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
+                    //console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
                 });
+                return;
             }
         }
 
