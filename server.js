@@ -1,9 +1,7 @@
 const express = require('express');
 var routes = require('./routes/controller');
-var shopee = require('./api/shopee.js');
 var bodyParser = require('body-parser');
 const app = express();
-var cron = require('node-cron');
 
 require('dotenv').config();
 

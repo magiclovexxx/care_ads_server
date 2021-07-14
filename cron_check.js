@@ -1,4 +1,3 @@
-const cron = require('node-cron');
 const publicIp = require('public-ip');
 require('dotenv').config();
 const shopeeApi = require('./api/ads_shopee.js');
@@ -6,9 +5,7 @@ const fs = require('fs');
 const axiosInstance = createAxios();
 const exec = require('child_process').exec;
 const moment = require('moment');
-const { SSL_OP_EPHEMERAL_RSA } = require('constants');
 const { v4: uuidv4 } = require('uuid');
-const { FORMERR } = require('dns');
 
 function createAxios() {
     const axios = require('axios');
@@ -17,7 +14,6 @@ function createAxios() {
 
 const mode = process.env.MODE;
 const port = process.env.PORT;
-var is_running = false;
 
 if (mode == "DEV") {
     //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -145,7 +141,6 @@ async function locationKeyword(shopid, campaignid, itemid, max_page, cookie, by,
 }
 
 check_all = async () => {
-    is_running = true;
     try {
         let slave_ip = await publicIp.v4();
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Thông tin máy chủ JS', slave_ip, port);
@@ -952,18 +947,12 @@ check_all = async () => {
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
     }
     finally {
-        is_running = false;
+        setTimeout(async function () {
+            await check_all();
+        }, 120000);
     }
 }
 
-cron.schedule('*/3 * * * *', async () => {
-    if (!is_running) {
-        await check_all();
-    }
-});
-
 (async () => {
-    if (!is_running) {
-        await check_all();
-    }
+    await check_all();
 })();
