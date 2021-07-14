@@ -950,7 +950,7 @@ check_all = async () => {
     finally {
         setTimeout(async function () {
             await check_all();
-        }, 120000);
+        }, 60000);
     }
 }
 
