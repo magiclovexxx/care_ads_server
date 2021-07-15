@@ -6,6 +6,17 @@ const axiosInstance = createAxios();
 const exec = require('child_process').exec;
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
+const NodeRSA = require('node-rsa');
+
+const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
+    'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
+    'Rl2Szt0xJ6iXsPMMdO5kMBaqQ3Rsn20leQIDAQABAkA94KovrqpEOeEjwgWoNPXL\n' +
+    '/ZmD2uhVSMwSE2eQ9nuL3wO7SakKf2WjCh2EZ6ZSaP9bDyhonQbnasJfb7qI0dnh\n' +
+    'AiEAzhT2YJ4YY5Q+9URTKOf9pE6l4BsDeLnZJm7xJ3ctsf0CIQCJOc3KOf509XG4\n' +
+    '/ExIeZTDLqbNJkoK8ABUjEQMQ1EMLQIgdr8HdIbEYOS0HlmfXWvH8FxNIkQOjQrx\n' +
+    'wD6fAHGgx/UCIFO6xWpDAJP0vzMUHqeKJ88ARB6g4kTSNCFihJLG8EjxAiEAuYcD\n' +
+    'gNatFAx7DU7oXKCDHZ9DR4XlVVj0N0fcWI39Oow=\n' +
+    '-----END RSA PRIVATE KEY-----');
 
 function createAxios() {
     const axios = require('axios');
@@ -178,6 +189,17 @@ check_all = async () => {
                 let password = shop.password;
                 let cookie = shop.cookie;
                 let is_need_login = false;
+                if (cookie.indexOf('SPC_SC_UD=') != -1) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                    let encrypt_cookie = await api_put_shopee_accounts({
+                        id: shop.id,
+                        cookie: cookie
+                    });
+                    if (encrypt_cookie.code != 0) {
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Encrypt cookie ERROR');
+                    }
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Encrypt cookie OK');                    
+                }
 
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);

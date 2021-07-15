@@ -1,6 +1,17 @@
 const md5 = require('md5');
 const crypto = require('crypto');
-var moment = require('moment');
+const moment = require('moment');
+const NodeRSA = require('node-rsa');
+
+const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
+    'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
+    'Rl2Szt0xJ6iXsPMMdO5kMBaqQ3Rsn20leQIDAQABAkA94KovrqpEOeEjwgWoNPXL\n' +
+    '/ZmD2uhVSMwSE2eQ9nuL3wO7SakKf2WjCh2EZ6ZSaP9bDyhonQbnasJfb7qI0dnh\n' +
+    'AiEAzhT2YJ4YY5Q+9URTKOf9pE6l4BsDeLnZJm7xJ3ctsf0CIQCJOc3KOf509XG4\n' +
+    '/ExIeZTDLqbNJkoK8ABUjEQMQ1EMLQIgdr8HdIbEYOS0HlmfXWvH8FxNIkQOjQrx\n' +
+    'wD6fAHGgx/UCIFO6xWpDAJP0vzMUHqeKJ88ARB6g4kTSNCFihJLG8EjxAiEAuYcD\n' +
+    'gNatFAx7DU7oXKCDHZ9DR4XlVVj0N0fcWI39Oow=\n' +
+    '-----END RSA PRIVATE KEY-----');
 
 function createAxios() {
     const axios = require('axios');
@@ -8,34 +19,138 @@ function createAxios() {
 }
 
 function cookieParse(cookie, cookie_array) {
-    var result = [];
-    var cookie_primary_array = [];
-    for (var i = 0; i < cookie_array.length; i++) {
-        var item = cookie_array[i].split(';')[0];
-        var primary = item.split('=')[0];
-        result.push(item);
-        cookie_primary_array.push(primary);
+    let result = [];
+    let cookie_primary_array = [];
+    if (cookie_array != null) {
+        for (let i = 0; i < cookie_array.length; i++) {
+            let item = cookie_array[i].split(';')[0];
+            let primary = item.split('=')[0];
+            result.push(item);
+            cookie_primary_array.push(primary);
+        }
     }
     if (cookie != null) {
-        var old_cookie_array = cookie.split('; ');
-        for (var i = 0; i < old_cookie_array.length; i++) {
-            var item = old_cookie_array[i];
-            var primary = item.split('=')[0];
+        let old_cookie_array = cookie.split('; ');
+        for (let i = 0; i < old_cookie_array.length; i++) {
+            let item = old_cookie_array[i];
+            let primary = item.split('=')[0];
             if (cookie_primary_array.indexOf(primary) == -1)
                 result.push(item);
         }
     }
-    return result.join('; ');
+    return result.length > 0 ? result.join('; ') : null;
 }
 
 const axiosInstance = createAxios();
 
+const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+
+    if (method == 'GET') {
+        let result = await axiosInstance.get(url, {
+            headers: {
+                cookie: cookie,
+                'User-Agent': UserAgent,
+                referer: url
+            },
+            proxy: proxy
+        }).then(function (response) {
+            response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.data.cookie != null)
+                response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
+        }).catch(function (error) {
+            if (error.response) {
+                error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.data.cookie != null)
+                    error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                if (proxy == null) {
+                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
+                } else {
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                    return api_dynamic_request(null, UserAgent, cookie, url, method, data);
+                }
+            }
+        });
+        return result;
+    }
+
+    if (method == 'POST') {
+        let result = await axiosInstance.post(url, data, {
+            headers: {
+                cookie: cookie,
+                'User-Agent': UserAgent,
+                referer: url
+            },
+            proxy: proxy
+        }).then(function (response) {
+            response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.data.cookie != null)
+                response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
+        }).catch(function (error) {
+            if (error.response) {
+                error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.data.cookie != null)
+                    error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                if (proxy == null) {
+                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
+                } else {
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                    return api_dynamic_request(null, UserAgent, cookie, url, method, data);
+                }
+            }
+        });
+        return result;
+    }
+
+    if (method == 'PUT') {
+        let result = await axiosInstance.put(url, data, {
+            headers: {
+                cookie: cookie,
+                'User-Agent': UserAgent,
+                referer: url
+            },
+            proxy: proxy
+        }).then(function (response) {
+            response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.data.cookie != null)
+                response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
+        }).catch(function (error) {
+            if (error.response) {
+                error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.data.cookie != null)
+                    error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                if (proxy == null) {
+                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
+                } else {
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                    return api_dynamic_request(null, UserAgent, cookie, url, method, data);
+                }
+            }
+        });
+        return result;
+    }
+}
+
 const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, password, vcode, captcha, captcha_id) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
-    var data = '';
-    var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
-    var email_regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let data = '';
+    let vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+    let email_regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (vnf_regex.test(username) == false) {
         if (email_regex.test(username) == false) {
@@ -66,25 +181,20 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, passw
         proxy: proxy
     }).then(function (response) {
         response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_post_login(SPC_CDS, null, UserAgent, cookie, username, password, vcode, captcha, captcha_id);
             }
         }
@@ -92,8 +202,10 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, passw
     return result;
 }
 
-
 const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/v3/category/get_all_category_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
     const result = await axiosInstance.get(Url, {
         headers: {
@@ -103,25 +215,21 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_all_category_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -130,6 +238,9 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
 }
 
 const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/v3/category/get_second_category_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
     const result = await axiosInstance.get(Url, {
         headers: {
@@ -139,25 +250,21 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_second_category_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -166,6 +273,9 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
 }
 
 const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/selleraccount/shop_info/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.get(Url, {
         headers: {
@@ -175,25 +285,21 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_shop_info(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -202,7 +308,10 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
 }
 
 const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, cookie, page_number, page_size) => {
-    var Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/page_active_collection_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/page_active_collection_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&page_number=' + page_number;
     Url += '&page_size=' + page_size;
 
@@ -214,25 +323,21 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_page_active_collection_list(SPC_CDS, null, UserAgent, cookie, page_number, page_size);
             }
         }
@@ -241,7 +346,10 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
 }
 
 const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/public/product_selector/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/public/product_selector/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&offset=' + offset;
     Url += '&limit=' + limit;
     Url += '&is_ads=' + is_ads;
@@ -262,25 +370,21 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_product_selector(SPC_CDS, null, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by);
             }
         }
@@ -289,7 +393,10 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
 }
 
 const api_get_search_items = async (proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) => {
-    var Url = 'https://shopee.vn/api/v4/search/search_items?by=' + by;
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://shopee.vn/api/v4/search/search_items?by=' + by;
     Url += '&keyword=' + encodeURI(keyword)
     Url += '&limit=' + limit;
     Url += '&newest=' + newest;
@@ -308,19 +415,32 @@ const api_get_search_items = async (proxy, UserAgent, cookie, by, keyword, limit
         proxy: proxy
     }).then(function (response) {
         response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
-        return { code: 0, message: 'OK', status: response.status, data: response.data };
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data };
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
+            } else {
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                return api_get_search_items(null, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version);
+            }
         }
     });
     return result;
 }
 
 const api_get_shop_info_shopid = async (proxy, UserAgent, cookie, shopid) => {
-    var Url = 'https://shopee.vn/api/v4/product/get_shop_info?shopid=' + shopid;
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://shopee.vn/api/v4/product/get_shop_info?shopid=' + shopid;
     const result = await axiosInstance.get(Url, {
         headers: {
             cookie: cookie,
@@ -330,19 +450,32 @@ const api_get_shop_info_shopid = async (proxy, UserAgent, cookie, shopid) => {
         proxy: proxy
     }).then(function (response) {
         response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
-        return { code: 0, message: 'OK', status: response.status, data: response.data };
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data };
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
+            } else {
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                return api_get_shop_info_shopid(null, UserAgent, cookie, shopid);
+            }
         }
     });
     return result;
 }
 
 const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, type) => {
-    var Url = 'https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     Url += '&keyword=' + encodeURI(keyword);
     Url += '&type=' + type;
 
@@ -354,25 +487,21 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_search_hint(SPC_CDS, null, UserAgent, cookie, keyword, type);
             }
         }
@@ -381,6 +510,9 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
 }
 
 const api_put_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/mass_edit/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.put(Url, data, {
         headers: {
@@ -390,25 +522,21 @@ const api_put_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, da
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_put_marketing_mass_edit(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -417,6 +545,9 @@ const api_put_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, da
 }
 
 const api_put_marketing_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.put(Url, data, {
         headers: {
@@ -426,25 +557,21 @@ const api_put_marketing_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, d
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_put_marketing_search_ads(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -453,6 +580,9 @@ const api_put_marketing_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, d
 }
 
 const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/n/marketing/graphql/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, data, {
         headers: {
@@ -462,25 +592,21 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_post_marketing_graphql(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -489,6 +615,9 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
 }
 
 const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_list) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_item_status/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, item_id_list, {
         headers: {
@@ -498,25 +627,21 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_item_status(SPC_CDS, null, UserAgent, cookie, item_id_list);
             }
         }
@@ -525,7 +650,10 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
 }
 
 const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, placement_list, agg_interval) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/shop_report_by_time/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/shop_report_by_time/';
     Url += '?start_time=' + start_time;
     Url += '&end_time=' + end_time;
     Url += '&placement_list=' + encodeURI(JSON.stringify(placement_list));
@@ -541,25 +669,21 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_shop_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval);
             }
         }
@@ -567,38 +691,38 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
     return result;
 }
 
-const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
-    var Url = 'https://banhang.shopee.vn/api/selleraccount/v2/get_captcha_info/';
+const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/selleraccount/v2/get_captcha_info/';
     Url += '?region=VN';
     Url += '&SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     const result = await axiosInstance.get(Url, {
         headers: {
+            cookie: cookie,
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
-                return api_get_captcha_info(SPC_CDS, null, UserAgent);
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                return api_get_captcha_info(SPC_CDS, null, UserAgent, cookie);
             }
         }
     });
@@ -606,7 +730,10 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent) => {
 }
 
 const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign_statistics/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign_statistics/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&campaign_type=' + campaign_type;
@@ -626,25 +753,21 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_campaign_statistics(SPC_CDS, null, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
             }
         }
@@ -653,7 +776,10 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
 }
 
 const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/list/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/list/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     if (campaign_type == 'keyword' || campaign_type == 'shop')
@@ -674,25 +800,21 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_search_ads(SPC_CDS, null, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
             }
         }
@@ -701,7 +823,10 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
 }
 
 const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keyword, count, placement, itemid) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/suggest/keyword/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/suggest/keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&keyword=' + encodeURI(keyword);
@@ -716,28 +841,23 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy,
-        timeout: 60000
+        proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_suggest_keyword(SPC_CDS, null, UserAgent, cookie, keyword, count, placement, itemid);
             }
         }
@@ -746,6 +866,9 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
 }
 
 const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ads_list) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, campaign_ads_list, {
         headers: {
@@ -755,25 +878,21 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_post_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
             }
         }
@@ -783,6 +902,9 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
 
 
 const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ads_list) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
     const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
     const result = await axiosInstance.put(Url, campaign_ads_list, {
         headers: {
@@ -792,25 +914,21 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_put_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
             }
         }
@@ -819,7 +937,10 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
 }
 
 const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, campaignid) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&campaignid=' + campaignid;
@@ -831,25 +952,21 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaignid);
             }
         }
@@ -859,7 +976,10 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
 
 
 const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/meta/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/meta/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     const result = await axiosInstance.get(Url, {
@@ -870,25 +990,21 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_marketing_meta(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -897,7 +1013,10 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
 }
 
 const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, agg_interval) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/search_report_by_time/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/search_report_by_time/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&start_time=' + start_time;
@@ -912,25 +1031,21 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_search_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, agg_interval);
             }
         }
@@ -939,7 +1054,10 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
 }
 
 const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_time/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_time/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&start_time=' + start_time;
@@ -960,25 +1078,21 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_detail_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid);
             }
         }
@@ -987,7 +1101,10 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
 }
 
 const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_keyword/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&start_time=' + start_time;
@@ -1009,25 +1126,21 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_detail_report_by_keyword(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid);
             }
         }
@@ -1036,7 +1149,10 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
 }
 
 const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/item_report_by_time/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/item_report_by_time/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&start_time=' + start_time;
@@ -1053,25 +1169,21 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_item_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid);
             }
         }
@@ -1080,7 +1192,10 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
 }
 
 const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, placement_list, itemid) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/item_report_by_placement/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/item_report_by_placement/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&start_time=' + start_time;
@@ -1096,25 +1211,21 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_item_report_by_placement(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, itemid);
             }
         }
@@ -1123,7 +1234,10 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
 }
 
 const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_suggest_price/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_suggest_price/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, data, {
@@ -1134,25 +1248,21 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -1161,7 +1271,10 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
 }
 
 const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_suggest_keyword_price/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_suggest_keyword_price/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, data, {
@@ -1172,25 +1285,21 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_suggest_keyword_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -1199,7 +1308,10 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
 }
 
 const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_segment_suggest_price/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_segment_suggest_price/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, data, {
@@ -1210,25 +1322,21 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_segment_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -1237,7 +1345,10 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
 }
 
 const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placement_list) => {
-    var Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/list/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/list/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
     Url += '&placement_list=' + encodeURI(JSON.stringify(placement_list));
@@ -1250,25 +1361,21 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_campaign_list(SPC_CDS, null, UserAgent, cookie, placement_list);
             }
         }
@@ -1277,7 +1384,10 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
 }
 
 const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
-    var Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/query_collection_list/';
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/query_collection_list/';
     Url += '?SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
 
@@ -1289,25 +1399,21 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
         },
         proxy: proxy
     }).then(function (response) {
-        if (proxy == null) {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: null, port: null };
-        }
-        else {
-            return { code: 0, message: 'OK', status: response.status, data: response.data, host: proxy.host, port: proxy.port };
-        }
+        response.data.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.data.cookie != null)
+            response.data.cookie = RSA.encrypt(response.data.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, proxy: { code: 0, message: 'OK' } };
     }).catch(function (error) {
         if (error.response) {
-            if (proxy == null) {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: null, port: null };
-            }
-            else {
-                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, host: proxy.host, port: proxy.port };
-            }
+            error.response.data.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.data.cookie != null)
+                error.response.data.cookie = RSA.encrypt(error.response.data.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
         } else {
             if (proxy == null) {
-                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, host: null, port: null };
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, proxy: { code: 0, message: 'OK' } };
             } else {
-                console.error({ code: 1000, message: error.code + ' ' + error.message, status: 1000, host: proxy.host, port: proxy.port });
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
                 return api_get_query_collection_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -1317,6 +1423,7 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
 
 
 module.exports = {
+    api_dynamic_request,
     api_post_login, //Đăng nhập
     api_get_all_category_list, //Lấy danh mục của shopee
     api_get_second_category_list, //Lấy danh mục cấp độ 2 của shopee 
