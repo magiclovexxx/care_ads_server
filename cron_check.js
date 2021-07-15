@@ -12,15 +12,8 @@ function createAxios() {
     return axios.create({ timeout: 120000 });
 }
 
-const mode = process.env.MODE;
 const port = process.env.PORT;
-
-if (mode == "DEV") {
-    //process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    var api_url = "http://careads.hotaso.vn/api_user";
-} else {
-    var api_url = "http://sacuco.com/api_user";
-}
+const api_url = "http://api.sacuco.com/api_user";
 
 function api_get_shopee_accounts(slave_ip, slave_port) {
     const Url = api_url + '/shopee_accounts?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
