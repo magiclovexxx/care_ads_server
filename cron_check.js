@@ -132,7 +132,7 @@ async function locationKeyword(shopid, campaignid, itemid, max_page, cookie, by,
                 if (page < max_page) {
                     page = page + 1;
                     newest = newest + limit;
-                    return locationKeyword(shopid, campaignid, itemid, max_page, result.data.cookie, by, keyword, limit, newest, order);
+                    return locationKeyword(shopid, campaignid, itemid, max_page, result.cookie, by, keyword, limit, newest, order);
                 } else {
                     return 999;
                 }
@@ -239,7 +239,7 @@ check_all = async () => {
                         return;
                     }
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Đăng nhập thành công');
-                    cookie = result.data.cookie;
+                    cookie = result.cookie;
                     result = await api_put_shopee_accounts({
                         id: shop.id,
                         spc_cds: spc_cds,
