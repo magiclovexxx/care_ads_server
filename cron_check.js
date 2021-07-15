@@ -164,16 +164,14 @@ check_all = async () => {
         //Kiểm tra version và tự động update nếu có version mới
         if (checkVersion.toString() != version) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version)
-            if (mode !== "DEV") {
-                const myShellScript = exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');
-                myShellScript.stdout.on('data', (data) => {
-                    //console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
-                });
-                myShellScript.stderr.on('data', (data) => {
-                    //console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
-                });
-                return;
-            }
+            const myShellScript = exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');
+            myShellScript.stdout.on('data', (data) => {
+                //console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
+            });
+            myShellScript.stderr.on('data', (data) => {
+                //console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
+            });
+            return;
         }
 
         //Dữ liệu của các shop
@@ -198,7 +196,7 @@ check_all = async () => {
                     if (encrypt_cookie.code != 0) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Encrypt cookie ERROR');
                     }
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Encrypt cookie OK');                    
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ') Encrypt cookie OK');
                 }
 
                 //Kiểm tra thông tin shop
