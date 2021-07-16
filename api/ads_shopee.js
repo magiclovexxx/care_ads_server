@@ -824,7 +824,12 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
 
 const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keyword, count, placement, itemid) => {
     if (cookie != null) {
-        cookie = RSA.decrypt(cookie, 'utf8');
+        try {
+            cookie = RSA.decrypt(cookie, 'utf8');
+        }
+        catch (ex) {
+            console.error(ex, cookie);
+        }
     }
     let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/suggest/keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
