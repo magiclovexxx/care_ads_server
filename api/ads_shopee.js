@@ -72,6 +72,9 @@ const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) 
                     return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
                 } else {
                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                    if (cookie != null) {
+                        cookie = RSA.encrypt(cookie, 'base64');
+                    }
                     return api_dynamic_request(null, UserAgent, cookie, url, method, data);
                 }
             }
@@ -103,6 +106,9 @@ const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) 
                     return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
                 } else {
                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                    if (cookie != null) {
+                        cookie = RSA.encrypt(cookie, 'base64');
+                    }
                     return api_dynamic_request(null, UserAgent, cookie, url, method, data);
                 }
             }
@@ -134,6 +140,9 @@ const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) 
                     return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
                 } else {
                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                    if (cookie != null) {
+                        cookie = RSA.encrypt(cookie, 'base64');
+                    }
                     return api_dynamic_request(null, UserAgent, cookie, url, method, data);
                 }
             }
@@ -195,6 +204,9 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, passw
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_post_login(SPC_CDS, null, UserAgent, cookie, username, password, vcode, captcha, captcha_id);
             }
         }
@@ -230,6 +242,9 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_all_category_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -265,6 +280,9 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_second_category_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -300,6 +318,9 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_shop_info(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -338,6 +359,9 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_page_active_collection_list(SPC_CDS, null, UserAgent, cookie, page_number, page_size);
             }
         }
@@ -385,6 +409,9 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_product_selector(SPC_CDS, null, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by);
             }
         }
@@ -429,6 +456,9 @@ const api_get_search_items = async (proxy, UserAgent, cookie, by, keyword, limit
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_search_items(null, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version);
             }
         }
@@ -464,6 +494,9 @@ const api_get_shop_info_shopid = async (proxy, UserAgent, cookie, shopid) => {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_shop_info_shopid(null, UserAgent, cookie, shopid);
             }
         }
@@ -502,6 +535,9 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_search_hint(SPC_CDS, null, UserAgent, cookie, keyword, type);
             }
         }
@@ -537,6 +573,9 @@ const api_put_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, da
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_put_marketing_mass_edit(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -572,6 +611,9 @@ const api_put_marketing_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, d
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_put_marketing_search_ads(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -607,6 +649,9 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_post_marketing_graphql(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -642,6 +687,9 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_item_status(SPC_CDS, null, UserAgent, cookie, item_id_list);
             }
         }
@@ -684,6 +732,9 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_shop_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval);
             }
         }
@@ -722,6 +773,9 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_captcha_info(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -768,6 +822,9 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_campaign_statistics(SPC_CDS, null, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
             }
         }
@@ -815,6 +872,9 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_search_ads(SPC_CDS, null, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
             }
         }
@@ -824,12 +884,7 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
 
 const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keyword, count, placement, itemid) => {
     if (cookie != null) {
-        try {
-            cookie = RSA.decrypt(cookie, 'utf8');
-        }
-        catch (ex) {
-            console.error(ex, cookie);
-        }
+        cookie = RSA.decrypt(cookie, 'utf8');
     }
     let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/suggest/keyword/';
     Url += '?SPC_CDS=' + SPC_CDS;
@@ -863,6 +918,9 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_suggest_keyword(SPC_CDS, null, UserAgent, cookie, keyword, count, placement, itemid);
             }
         }
@@ -898,6 +956,9 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_post_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
             }
         }
@@ -934,6 +995,9 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_put_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
             }
         }
@@ -972,6 +1036,9 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaignid);
             }
         }
@@ -1010,6 +1077,9 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_marketing_meta(SPC_CDS, null, UserAgent, cookie);
             }
         }
@@ -1051,6 +1121,9 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_search_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, agg_interval);
             }
         }
@@ -1098,6 +1171,9 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_detail_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid);
             }
         }
@@ -1146,6 +1222,9 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_detail_report_by_keyword(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid);
             }
         }
@@ -1189,6 +1268,9 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_item_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid);
             }
         }
@@ -1231,6 +1313,9 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_item_report_by_placement(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, itemid);
             }
         }
@@ -1268,6 +1353,9 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -1305,6 +1393,9 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_suggest_keyword_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -1342,6 +1433,9 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_segment_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
             }
         }
@@ -1381,6 +1475,9 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_campaign_list(SPC_CDS, null, UserAgent, cookie, placement_list);
             }
         }
@@ -1419,6 +1516,9 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             } else {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
                 return api_get_query_collection_list(SPC_CDS, null, UserAgent, cookie);
             }
         }
