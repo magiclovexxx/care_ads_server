@@ -234,7 +234,6 @@ router.put("/api_put_marketing_mass_edit", async (req, res) => {
         let UserAgent = req.body.UserAgent;
         let cookie = req.body.cookie;
         let data = req.body.data;
-        console.log(data);
         let result = await shopeeApi.api_put_marketing_mass_edit(SPC_CDS, proxy, UserAgent, cookie, data);
         if (result.code != 0) {
             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_mass_edit', result);
@@ -254,7 +253,6 @@ router.put("/api_put_marketing_search_ads", async (req, res) => {
         let UserAgent = req.body.UserAgent;
         let cookie = req.body.cookie;
         let data = req.body.data;
-        console.log(data);
         let result = await shopeeApi.api_put_marketing_search_ads(SPC_CDS, proxy, UserAgent, cookie, data);
         if (result.code != 0) {
             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_put_marketing_search_ads', result);
