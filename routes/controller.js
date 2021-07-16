@@ -358,7 +358,7 @@ router.get("/api_get_suggest_keyword", async (req, res) => {
         res.send(result);
     }
     catch (ex) {
-        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_keyword', { code: 1001, message: ex });
+        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] api_get_suggest_keyword', { code: 1001, message: ex }, req.body.cookie);
         res.send({ code: 1001, message: ex });
     }
 });
