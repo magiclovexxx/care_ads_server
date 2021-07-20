@@ -145,6 +145,7 @@ async function locationKeyword(shopid, campaignid, itemid, max_page, cookie, by,
 }
 
 check_all = async () => {
+    var is_wait = false;
     try {
         let slave_ip = await publicIp.v4();
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Thông tin máy chủ JS', slave_ip, port);
@@ -176,6 +177,8 @@ check_all = async () => {
         let data_shops = result.data.shops;
         //console.log(Buffer.from(JSON.stringify(data_shops)).toString('base64'))
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng shop: ' + data_shops.length);
+        let iDone = 0;
+        is_wait = true;
         data_shops.forEach(async function (shop) {
             try {
                 let spc_cds = shop.spc_cds;
@@ -936,14 +939,25 @@ check_all = async () => {
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
             }
+            finally {
+                iDone++;
+                if (iDone == data_shops.length) {
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành:', data_shops.length);
+                    setTimeout(async function () {
+                        await check_all();
+                    }, 60000);
+                }
+            }
         });
     } catch (ex) {
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
     }
     finally {
-        setTimeout(async function () {
-            await check_all();
-        }, 180000);
+        if (!is_wait) {
+            setTimeout(async function () {
+                await check_all();
+            }, 60000);
+        }
     }
 }
 
