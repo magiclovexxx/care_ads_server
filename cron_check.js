@@ -20,7 +20,7 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
 
 function createAxios() {
     const axios = require('axios');
-    return axios.create({ timeout: 120000 });
+    return axios.create({ timeout: 60000 });
 }
 
 const port = process.env.PORT;
