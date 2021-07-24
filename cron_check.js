@@ -102,14 +102,16 @@ function getMaxPage(max_location) {
 
 }
 
-async function locationKeyword(shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order) {
+async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order) {
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     if (result.code != 0) {
-        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaignid + ') Lỗi api_get_search_items', result);
+        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
         return -1;
     }
-    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopid + ' -> ' + campaignid + ') Tìm vị trí:', keyword, newest, max_page);
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword, newest, max_page);
     if (result.data.items != null) {
         let index = result.data.items.findIndex(x => x.item_basic.itemid == itemid && x.item_basic.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
@@ -133,7 +135,7 @@ async function locationKeyword(shopid, campaignid, itemid, max_page, proxy, cook
                 if (page < max_page) {
                     page = page + 1;
                     newest = newest + limit;
-                    return locationKeyword(shopid, campaignid, itemid, max_page, proxy, result.cookie, by, keyword, limit, newest, order);
+                    return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, by, keyword, limit, newest, order);
                 } else {
                     return 999;
                 }
@@ -611,7 +613,7 @@ check_all = async () => {
                                         let min_location = care_keyword.min_location;
                                         let max_location = care_keyword.max_location;
                                         let max_page = getMaxPage(max_location);
-                                        let ads_location = await locationKeyword(shop.shop_id, campaign.campaignid, itemid, max_page, proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                        let ads_location = await locationKeyword(shop.name, shop.shop_id, campaign.campaignid, itemid, max_page, proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                         if (ads_location != -1) {
                                             if (ads_location > max_location) {
                                                 //Tăng giá thầu
