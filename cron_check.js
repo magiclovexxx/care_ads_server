@@ -216,6 +216,7 @@ check_all = async () => {
                                 result.status == 464) {
                                 result = await api_put_shopee_accounts({
                                     id: shop.id,
+                                    options: JSON.stringify(result.data),
                                     status: 0
                                 });
                             }
