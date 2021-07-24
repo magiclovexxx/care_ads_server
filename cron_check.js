@@ -229,6 +229,7 @@ check_all = async () => {
                         id: shop.id,
                         spc_cds: spc_cds,
                         cookie: cookie,
+                        options: JSON.stringify(result.data),
                         last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
                     });
                     if (result.code != 0) {
