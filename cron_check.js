@@ -36,7 +36,7 @@ function api_get_shopee_accounts(slave_ip, slave_port) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return null;
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
@@ -51,7 +51,7 @@ function api_put_shopee_accounts(data) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return null;
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
@@ -66,7 +66,7 @@ function api_put_shopee_campaigns(data) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return null;
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
@@ -245,7 +245,7 @@ check_all = async () => {
                             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', (result.data != null ? result.data : result.message));
                             return;
                         }
-                        if (result.data.code != 0) {
+                        if (result.data != null && result.data.code != 0) {
                             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', result.data.message);
                             return;
                         }
@@ -339,7 +339,7 @@ check_all = async () => {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_detail_report_by_keyword', (result.data != null ? result.data : result.message));
                                 return;
                             }
-                            if (result.data.code != 0) {
+                            if (result.data != null && result.data.code != 0) {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_detail_report_by_keyword', result.data.message);
                                 return;
                             }
@@ -368,11 +368,11 @@ check_all = async () => {
                                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', (result.data != null ? result.data : result.message));
                                 }
 
-                                if (result.data.code != 0) {
+                                if (result.data != null && result.data.code != 0) {
                                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.data.message);
                                 }
 
-                                if (result.code == 0 && result.data.code == 0 && result.data.data.length > 0) {
+                                if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
                                     keyword_suggest_prices = result.data.data;
                                 }
                             }
@@ -735,7 +735,7 @@ check_all = async () => {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_item_report_by_placement', (result.data != null ? result.data : result.message));
                                 return;
                             }
-                            if (result.data.code != 0) {
+                            if (result.data != null && result.data.code != 0) {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_item_report_by_placement', result.data.message);
                                 return;
                             }
@@ -903,7 +903,7 @@ check_all = async () => {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_campaign', (result.data != null ? result.data : result.message));
                                 return;
                             }
-                            if (result.data.code != 0) {
+                            if (result.data != null && result.data.code != 0) {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_campaign', result.data.message);
                                 return;
                             }
@@ -917,7 +917,7 @@ check_all = async () => {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_search_ads', (result.data != null ? result.data : result.message));
                                 return;
                             }
-                            if (result.data.code != 0) {
+                            if (result.data != null && result.data.code != 0) {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_search_ads', result.data.message);
                                 return;
                             }
