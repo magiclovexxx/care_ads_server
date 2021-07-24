@@ -109,9 +109,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
         return -1;
     }
-    //process.stdout.clearLine();
-    //process.stdout.cursorTo(0);
-    console.info('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword, newest, max_page);
+    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword, newest, max_page);
     if (result.data.items != null) {
         let index = result.data.items.findIndex(x => x.item_basic.itemid == itemid && x.item_basic.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
