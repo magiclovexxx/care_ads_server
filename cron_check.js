@@ -947,7 +947,7 @@ check_all = async () => {
                 if (iDone == data_shops.length) {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành:', data_shops.length);
                     setTimeout(async function () {
-                        await check_all();
+                        exec('pm2 restart cron_check');
                     }, 60000);
                 }
             }
@@ -958,7 +958,7 @@ check_all = async () => {
     finally {
         if (!is_wait) {
             setTimeout(async function () {
-                await check_all();
+                exec('pm2 restart cron_check');
             }, 60000);
         }
     }
