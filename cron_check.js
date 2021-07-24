@@ -821,7 +821,7 @@ check_all = async () => {
                                     let check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
                                     if (check_profit >= 0) {
                                         //Quảng cáo lãi/hòa
-                                        if (placement.extinfo.target.premium_rate < care_placement.max_price) {
+                                        if (placement.extinfo.target.premium_rate < care_placement.max_price || placement.extinfo.target.premium_rate > max_price) {
                                             if (click == last_click) {
                                                 //Không có click
                                                 placement.extinfo.target.premium_rate = placement.extinfo.target.premium_rate + 10;
