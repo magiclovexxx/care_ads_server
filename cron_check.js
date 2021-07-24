@@ -216,7 +216,7 @@ check_all = async () => {
                                 result.status == 464) {
                                 result = await api_put_shopee_accounts({
                                     id: shop.id,
-                                    options: JSON.stringify(result.data),
+                                    options: JSON.stringify(result),
                                     status: 0
                                 });
                             }
@@ -229,7 +229,7 @@ check_all = async () => {
                         id: shop.id,
                         spc_cds: spc_cds,
                         cookie: cookie,
-                        options: JSON.stringify(result.data),
+                        options: JSON.stringify(result),
                         last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
                     });
                     if (result.code != 0) {
