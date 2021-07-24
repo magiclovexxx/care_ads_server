@@ -109,7 +109,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
         return -1;
     }
-    process.stdout.clearLine();
+    //process.stdout.clearLine();
     process.stdout.cursorTo(0);
     process.stdout.write('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword, newest, max_page);
     if (result.data.items != null) {
