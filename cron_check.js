@@ -2,7 +2,6 @@ const publicIp = require('public-ip');
 require('dotenv').config();
 const shopeeApi = require('./api/ads_shopee.js');
 const fs = require('fs');
-const axiosInstance = createAxios();
 const exec = require('child_process').exec;
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
@@ -20,8 +19,9 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
 
 function createAxios() {
     const axios = require('axios');
-    return axios.create({ timeout: 60000 });
+    return axios.create({ withCredentials: true, timeout: 30000 });
 }
+const axiosInstance = createAxios();
 
 const port = process.env.PORT;
 const api_url = "http://api.sacuco.com/api_user";
@@ -821,12 +821,12 @@ check_all = async () => {
                                     let check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
                                     if (check_profit >= 0) {
                                         //Quảng cáo lãi/hòa
-                                        if (placement.extinfo.target.premium_rate < 300) {
+                                        if (placement.extinfo.target.premium_rate < care_placement.max_price) {
                                             if (click == last_click) {
                                                 //Không có click
                                                 placement.extinfo.target.premium_rate = placement.extinfo.target.premium_rate + 10;
-                                                if (placement.extinfo.target.premium_rate > 300)
-                                                    placement.extinfo.target.premium_rate = 300;
+                                                if (placement.extinfo.target.premium_rate > care_placement.max_price)
+                                                    placement.extinfo.target.premium_rate = care_placement.max_price;
                                                 placement.extinfo.target.price = Math.round(placement.extinfo.target.base_price * (placement.extinfo.target.premium_rate / 100 + 1));
                                                 is_update_campaign = true;
                                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shop.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Tăng giá thầu:', placement.extinfo.target.price, '(' + placement.extinfo.target.premium_rate + '%)', 'Base:', placement.extinfo.target.base_price);
