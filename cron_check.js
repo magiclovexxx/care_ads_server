@@ -160,6 +160,12 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
 
 }
 
+function sleep(ms) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
+}
+
 check_all_new = async () => {
     var is_wait = false;
     try {
@@ -267,18 +273,16 @@ check_all_new = async () => {
             } finally {
                 iDone++;
                 if (iDone == (data_accounts.length + data_campaigns.length)) {
-                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành:', (data_accounts.length + data_campaigns.length));
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', (data_accounts.length + data_campaigns.length));
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, 10000);
+                    }, 3000);
                 }
             }
         });
 
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng quảng cáo: ' + data_campaigns.length);
-        //for(let c = 0; c < data_campaigns.length; c++) {
         data_campaigns.forEach(async function (campaign) {
-            //    let campaign = data_campaigns[c];
             try {
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
@@ -467,18 +471,26 @@ check_all_new = async () => {
                                 keyword_list: suggest_keyword_list
                             }
                         }
-
-                        result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
-                        if (result.code != 0) {
-                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                        }
-
-                        if (result.data != null && result.data != '' && result.data.code != 0) {
-                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.data.message);
-                        }
-
-                        if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
-                            keyword_suggest_prices = result.data.data;
+                        let iTry = 0;
+                        while (true) {
+                            result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
+                            if (result.status == 429 && iTry < 10) {
+                                iTry++;
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Đợi 3s lấy giá thầu gợi ý lần', (iTry + 1));
+                                await sleep(3000);
+                            }
+                            else {
+                                if (result.code != 0) {
+                                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                                }
+                                if (result.data != null && result.data != '' && result.data.code != 0) {
+                                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.data.message);
+                                }
+                                if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
+                                    keyword_suggest_prices = result.data.data;
+                                }
+                                break;
+                            }
                         }
                     }
 
@@ -1044,14 +1056,13 @@ check_all_new = async () => {
             finally {
                 iDone++;
                 if (iDone == (data_accounts.length + data_campaigns.length)) {
-                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành:', (data_accounts.length + data_campaigns.length));
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', (data_accounts.length + data_campaigns.length));
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, 10000);
+                    }, 3000);
                 }
             }
         });
-        //}
     } catch (ex) {
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
     }
@@ -1059,7 +1070,7 @@ check_all_new = async () => {
         if (!is_wait) {
             setTimeout(async function () {
                 exec('pm2 restart cron_check');
-            }, 10000);
+            }, 3000);
         }
     }
 }
