@@ -489,7 +489,7 @@ check_all_new = async () => {
                             let last_suggest_price = await api_get_last_suggest_price(campaign.sid);
                             if (last_suggest_price) {
                                 result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
-                                if (result.status == 429 && iTry < 20) {
+                                if (result.status == 429 && iTry < 30) {
                                     iTry++;
                                     let sleep_random = getRandomArbitrary(3000, 10000);
                                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy dữ liệu giá thầu gợi ý lần', iTry, sleep_random, 'ms');
@@ -508,7 +508,7 @@ check_all_new = async () => {
                                     break;
                                 }
                             } else {
-                                await sleep(1000);
+                                await sleep(getRandomArbitrary(1000, 3000));
                             }
                         }
                     }
