@@ -1038,6 +1038,14 @@ check_all_new = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Cập nhật dữ liệu PHP');
                 }
 
+                result = await api_put_shopee_campaigns({
+                    id: campaign.cid,
+                    name: slave_ip + ':' + port
+                });
+                if (result.code != 0) {
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_campaigns', result.message);
+                }
+                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Update Last Server');                
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
             }
