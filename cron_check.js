@@ -480,7 +480,7 @@ check_all_new = async () => {
                             result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                             if (result.status == 429 && iTry < 10) {
                                 iTry++;
-                                let sleep_random = getRandomArbitrary(3000, 30000);
+                                let sleep_random = getRandomArbitrary(3000, 10000);
                                 console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy dữ liệu giá thầu gợi ý lần', iTry, sleep_random, 'ms');
                                 await sleep(sleep_random);
                             }
