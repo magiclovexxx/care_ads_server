@@ -59,9 +59,9 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
 function api_get_last_suggest_price(id) {
     const Url = api_url + '/last_suggest_price?id=' + id;
     return axiosInstance.get(Url).then(function (response) {
-        return parseInt(response.data);
+        return response.data;
     }).catch(function (error) {
-        return 0;
+        return false;
     });
 }
 
@@ -177,7 +177,7 @@ function sleep(ms) {
 
 function getRandomArbitrary(min, max) {
     return Math.round(Math.random() * (max - min) + min);
-  }
+}
 
 check_all_new = async () => {
     var is_wait = false;
@@ -486,27 +486,29 @@ check_all_new = async () => {
                         }
                         let iTry = 0;
                         while (true) {
-                            //let last_suggest_price = await api_get_last_suggest_price(campaign.sid);
-                            //console.log((moment().valueOf() - last_suggest_price));
-
-                            result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
-                            if (result.status == 429 && iTry < 20) {
-                                iTry++;
-                                let sleep_random = getRandomArbitrary(3000, 10000);
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy dữ liệu giá thầu gợi ý lần', iTry, sleep_random, 'ms');
-                                await sleep(sleep_random);
-                            }
-                            else {
-                                if (result.code != 0) {
-                                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                            let last_suggest_price = await api_get_last_suggest_price(campaign.sid);
+                            if (last_suggest_price) {
+                                result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
+                                if (result.status == 429 && iTry < 20) {
+                                    iTry++;
+                                    let sleep_random = getRandomArbitrary(3000, 10000);
+                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy dữ liệu giá thầu gợi ý lần', iTry, sleep_random, 'ms');
+                                    await sleep(sleep_random);
                                 }
-                                if (result.data != null && result.data != '' && result.data.code != 0) {
-                                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.data.message);
+                                else {
+                                    if (result.code != 0) {
+                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                                    }
+                                    if (result.data != null && result.data != '' && result.data.code != 0) {
+                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.data.message);
+                                    }
+                                    if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
+                                        keyword_suggest_prices = result.data.data;
+                                    }
+                                    break;
                                 }
-                                if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
-                                    keyword_suggest_prices = result.data.data;                                    
-                                }
-                                break;
+                            } else {
+                                await sleep(1000);
                             }
                         }
                     }
