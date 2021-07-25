@@ -166,6 +166,10 @@ function sleep(ms) {
     });
 }
 
+function getRandomArbitrary(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
+
 check_all_new = async () => {
     var is_wait = false;
     try {
@@ -476,8 +480,9 @@ check_all_new = async () => {
                             result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                             if (result.status == 429 && iTry < 10) {
                                 iTry++;
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy dữ liệu giá thầu gợi ý lần', (iTry + 1));
-                                await sleep(3000 * iTry);
+                                let sleep_random = getRandomArbitrary(3000, 30000);
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy dữ liệu giá thầu gợi ý lần', iTry, sleep_random, 'ms');
+                                await sleep(sleep_random);
                             }
                             else {
                                 if (result.code != 0) {
