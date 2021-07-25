@@ -278,7 +278,7 @@ check_all_new = async () => {
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng quảng cáo: ' + data_campaigns.length);
         //for(let c = 0; c < data_campaigns.length; c++) {
         data_campaigns.forEach(async function (campaign) {
-        //    let campaign = data_campaigns[c];
+            //    let campaign = data_campaigns[c];
             try {
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
@@ -1038,14 +1038,6 @@ check_all_new = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Cập nhật dữ liệu PHP');
                 }
 
-                result = await api_put_shopee_campaigns({
-                    id: campaign.cid,
-                    name: slave_ip + ':' + port
-                });
-                if (result.code != 0) {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_campaigns', result.message);
-                }
-                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Update Last Server');                
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
             }
