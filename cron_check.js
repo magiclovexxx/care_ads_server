@@ -216,7 +216,7 @@ check_all_new = async () => {
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 if (result.code != 0) {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Lỗi api_get_shop_info', (result.data != null ? result.data : result.message));
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Lỗi api_get_shop_info', (result.data != null && result.data != '' ? result.data : result.message));
                     if (result.code == 999 &&
                         result.status == 403)
                         is_need_login = true;
@@ -230,7 +230,7 @@ check_all_new = async () => {
                     spc_cds = uuidv4();
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     if (result.status != 200) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Lỗi api_post_login', (result.data != null ? result.data : result.message));
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Lỗi api_post_login', (result.data != null && result.data != '' ? result.data : result.message));
                         if (result.code == 999) {
                             if (moment(account.last_renew_time).add(10, 'days') < moment() ||
                                 result.status == 481 ||
@@ -297,7 +297,7 @@ check_all_new = async () => {
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
 
                 if (result.code != 0) {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_get_shop_info', (result.data != null ? result.data : result.message));
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_get_shop_info', (result.data != null && result.data != '' ? result.data : result.message));
                     if (result.code == 999 &&
                         result.status == 403)
                         is_need_login = true;
@@ -309,7 +309,7 @@ check_all_new = async () => {
                     spc_cds = uuidv4();
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     if (result.status != 200) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_post_login', (result.data != null ? result.data : result.message));
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_post_login', (result.data != null && result.data != '' ? result.data : result.message));
                         if (result.code == 999) {
                             if (moment(campaign.last_renew_time).add(10, 'days') < moment() ||
                                 result.status == 481 ||
@@ -345,7 +345,7 @@ check_all_new = async () => {
                 //Lấy thông tin chiến dịch
                 result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
                 if (result.code != 0) {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', (result.data != null ? result.data : result.message));
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', (result.data != null && result.data != '' ? result.data : result.message));
                     return;
                 }
                 if (result.data != null && result.data.code != 0) {
@@ -439,7 +439,7 @@ check_all_new = async () => {
                     result = await shopeeApi.api_get_detail_report_by_keyword(spc_cds, proxy, user_agent, cookie,
                         startDate, endDate, placement_list, 1, 0, itemid, adsid);
                     if (result.code != 0) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_detail_report_by_keyword', (result.data != null ? result.data : result.message));
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_detail_report_by_keyword', (result.data != null && result.data != '' ? result.data : result.message));
                         return;
                     }
                     if (result.data != null && result.data.code != 0) {
@@ -468,7 +468,7 @@ check_all_new = async () => {
 
                         result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                         if (result.code != 0) {
-                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', (result.data != null ? result.data : result.message));
+                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', (result.data != null && result.data != '' ? result.data : result.message));
                         }
 
                         if (result.data != null && result.data.code != 0) {
@@ -835,7 +835,7 @@ check_all_new = async () => {
                         startDate,
                         endDate, [1, 2, 5, 8], itemid);
                     if (result.code != 0) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_item_report_by_placement', (result.data != null ? result.data : result.message));
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_item_report_by_placement', (result.data != null && result.data != '' ? result.data : result.message));
                         return;
                     }
                     if (result.data != null && result.data.code != 0) {
@@ -1003,7 +1003,7 @@ check_all_new = async () => {
                 if (is_update_campaign) {
                     result = await shopeeApi.api_put_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign_ads_list);
                     if (result.code != 0) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_campaign', (result.data != null ? result.data : result.message));
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_campaign', (result.data != null && result.data != '' ? result.data : result.message));
                         return;
                     }
                     if (result.data != null && result.data.code != 0) {
@@ -1017,7 +1017,7 @@ check_all_new = async () => {
                     result = await shopeeApi.api_put_marketing_search_ads(spc_cds, proxy, user_agent, cookie,
                         { campaignid: campaign.campaignid, placement: (campaign.campaign_type == 'keyword' ? 0 : 3), keyword_list: update_keyword_list });
                     if (result.code != 0) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_search_ads', (result.data != null ? result.data : result.message));
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_search_ads', (result.data != null && result.data != '' ? result.data : result.message));
                         return;
                     }
                     if (result.data != null && result.data.code != 0) {
