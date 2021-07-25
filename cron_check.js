@@ -56,6 +56,15 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
+function api_get_last_suggest_price(id) {
+    const Url = api_url + '/last_suggest_price?id=' + id;
+    return axiosInstance.get(Url).then(function (response) {
+        return parseInt(response.data);
+    }).catch(function (error) {
+        return 0;
+    });
+}
+
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -477,6 +486,9 @@ check_all_new = async () => {
                         }
                         let iTry = 0;
                         while (true) {
+                            //let last_suggest_price = await api_get_last_suggest_price(campaign.sid);
+                            //console.log((moment().valueOf() - last_suggest_price));
+
                             result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                             if (result.status == 429 && iTry < 20) {
                                 iTry++;
@@ -492,14 +504,7 @@ check_all_new = async () => {
                                     console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_suggest_keyword_price', result.data.message);
                                 }
                                 if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
-                                    keyword_suggest_prices = result.data.data;
-                                    result = await api_put_shopee_accounts({
-                                        id: campaign.sid,
-                                        last_suggest_price: moment().valueOf()
-                                    });
-                                    if (result.code != 0) {
-                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_put_shopee_accounts', result.message);
-                                    }
+                                    keyword_suggest_prices = result.data.data;                                    
                                 }
                                 break;
                             }
