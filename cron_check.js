@@ -276,9 +276,9 @@ check_all_new = async () => {
         });
 
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng quảng cáo: ' + data_campaigns.length);
-        for(let c = 0; c < data_campaigns.length; c++) {
-        //data_campaigns.forEach(async function (campaign) {
-            let campaign = data_campaigns[c];
+        //for(let c = 0; c < data_campaigns.length; c++) {
+        data_campaigns.forEach(async function (campaign) {
+        //    let campaign = data_campaigns[c];
             try {
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
@@ -1058,8 +1058,8 @@ check_all_new = async () => {
                     }, 10000);
                 }
             }
-        //});
-        }
+        });
+        //}
     } catch (ex) {
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
     }
