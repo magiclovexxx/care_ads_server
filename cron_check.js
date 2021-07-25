@@ -493,6 +493,13 @@ check_all_new = async () => {
                                 }
                                 if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
                                     keyword_suggest_prices = result.data.data;
+                                    result = await api_put_shopee_accounts({
+                                        id: campaign.sid,
+                                        last_suggest_price: moment().format('YYYY-MM-DD HH:mm:ss')
+                                    });
+                                    if (result.code != 0) {
+                                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                    }
                                 }
                                 break;
                             }
