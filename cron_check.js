@@ -476,8 +476,8 @@ check_all_new = async () => {
                             result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                             if (result.status == 429 && iTry < 10) {
                                 iTry++;
-                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Đợi 3s lấy giá thầu gợi ý lần', (iTry + 1));
-                                await sleep(3000);
+                                console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy dữ liệu giá thầu gợi ý lần', (iTry + 1));
+                                await sleep(3000 * iTry);
                             }
                             else {
                                 if (result.code != 0) {
