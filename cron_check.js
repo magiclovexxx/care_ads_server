@@ -26,21 +26,6 @@ const axiosInstance = createAxios();
 const port = process.env.PORT;
 const api_url = "http://api.sacuco.com/api_user";
 
-function api_get_shopee_accounts(slave_ip, slave_port) {
-    const Url = api_url + '/shopee_accounts?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.get(Url).then(function (response) {
-        response.data.status = response.status;
-        return response.data;
-    }).catch(function (error) {
-        if (error.response) {
-            error.response.data.status = error.response.status;
-            return error.response.data;
-        } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
-        }
-    });
-}
-
 function api_get_shopee_campaigns(slave_ip, slave_port) {
     const Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.get(Url).then(function (response) {
@@ -56,8 +41,17 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
-function api_get_last_suggest_price(id) {
-    const Url = api_url + '/last_suggest_price?id=' + id;
+function api_get_sync_begin(id, api_type) {
+    const Url = api_url + '/api_sync_begin?id=' + id + '&api_type=' + api_type;
+    return axiosInstance.get(Url).then(function (response) {        
+        return response.data;
+    }).catch(function (error) {
+        return false;
+    });
+}
+
+function api_get_sync_end(id, api_type) {
+    const Url = api_url + '/api_sync_end?id=' + id + '&api_type=' + api_type;
     return axiosInstance.get(Url).then(function (response) {
         return response.data;
     }).catch(function (error) {
@@ -486,8 +480,8 @@ check_all_new = async () => {
                         }
                         let iTry = 0;
                         while (true) {
-                            let last_suggest_price = await api_get_last_suggest_price(campaign.sid);
-                            if (last_suggest_price) {
+                            let is_sync_begin = await api_get_sync_begin(campaign.sid, 0);
+                            if (is_sync_begin) {
                                 result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                                 if (result.status == 429 && iTry < 30) {
                                     iTry++;
@@ -504,12 +498,9 @@ check_all_new = async () => {
                                     }
                                     if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
                                         keyword_suggest_prices = result.data.data;
-                                        result = await api_put_shopee_accounts({
-                                            id: campaign.sid,
-                                            last_suggest_time: moment().format('YYYY-MM-DD HH:mm:ss')
-                                        });
-                                        if (result.code != 0) {
-                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                        let is_sync_end = await api_get_sync_end(campaign.sid, 0);
+                                        if (!is_sync_end) {
+                                            console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_get_sync_end');
                                         }
                                     }
                                     break;
