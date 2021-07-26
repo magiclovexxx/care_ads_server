@@ -2,6 +2,7 @@ const md5 = require('md5');
 const crypto = require('crypto');
 const moment = require('moment');
 const NodeRSA = require('node-rsa');
+const { v4: uuidv4 } = require('uuid');
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -1372,9 +1373,22 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
     Url += '&SPC_CDS_VER=2';
     const result = await axiosInstance.post(Url, data, {
         headers: {
-            cookie: cookie,
-            'User-Agent': UserAgent,
-            referer: 'https://banhang.shopee.vn/'
+            'authority': 'banhang.shopee.vn',
+            'sec-ch-ua': '"Google Chrome";v="93", " Not;A Brand";v="99", "Chromium";v="93"',
+            'sc-fe-ver': '30988',
+            'sc-fe-session': SPC_CDS,
+            'user-agent': UserAgent,
+            'content-type': 'application/json;charset=UTF-8',
+            'accept': 'application/json, text/plain, */*',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'origin': 'https://banhang.shopee.vn',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://banhang.shopee.vn/portal/marketing/pas/assembly/',
+            'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
+            'cookie': cookie
         },
         proxy: proxy
     }).then(function (response) {

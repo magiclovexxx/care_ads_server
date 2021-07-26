@@ -394,9 +394,9 @@ check_all_new = async () => {
                                 }
                                 if (campaign.campaign_type == 'keyword') {
                                     data_suggest_keyword = {
-                                        placement: 0,
                                         itemid: itemid,
-                                        keyword_list: suggest_keyword_list
+                                        keyword_list: suggest_keyword_list,
+                                        placement: 0
                                     }
                                 }
                                 let iTry = 0;
