@@ -41,8 +41,8 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
-function api_get_sync_begin(id, api_type) {
-    const Url = api_url + '/api_sync_begin?id=' + id + '&api_type=' + api_type;
+function api_get_sync_begin(id, slave_ip, slave_port) {
+    const Url = api_url + '/api_sync_begin?id=' + id + '&slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.get(Url).then(function (response) {        
         return response.data;
     }).catch(function (error) {
@@ -50,8 +50,8 @@ function api_get_sync_begin(id, api_type) {
     });
 }
 
-function api_get_sync_end(id, api_type) {
-    const Url = api_url + '/api_sync_end?id=' + id + '&api_type=' + api_type;
+function api_get_sync_end(id, slave_ip, slave_port) {
+    const Url = api_url + '/api_sync_end?id=' + id + '&slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.get(Url).then(function (response) {
         return response.data;
     }).catch(function (error) {
@@ -480,7 +480,7 @@ check_all_new = async () => {
                         }
                         let iTry = 0;
                         while (true) {
-                            let is_sync_begin = await api_get_sync_begin(campaign.sid, 0);
+                            let is_sync_begin = await api_get_sync_begin(campaign.sid, slave_ip, port);
                             if (is_sync_begin) {
                                 result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                                 if (result.status == 429 && iTry < 10) {
@@ -498,7 +498,7 @@ check_all_new = async () => {
                                     }
                                     if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
                                         keyword_suggest_prices = result.data.data;
-                                        let is_sync_end = await api_get_sync_end(campaign.sid, 0);
+                                        let is_sync_end = await api_get_sync_end(campaign.sid, slave_ip, port);
                                         if (!is_sync_end) {
                                             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ') Lỗi api_get_sync_end');
                                         }
