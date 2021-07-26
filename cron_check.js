@@ -967,16 +967,12 @@ check_all_new = async () => {
                                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_search_ads', result.data.message);
                                 return;
                             }
-                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Cập nhật dữ liệu SHOPEE');
+                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Update Data SHOPEE');
                         }
 
                         if (update_placements.length > 0) {
-                            result = await api_put_shopee_placements(update_placements);
-                            if (result.code != 0) {
-                                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_placements', result.message);
-                                return;
-                            }
-                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Cập nhật dữ liệu PHP');
+                            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Update Data SACUCO');
+                            api_put_shopee_placements(update_placements);
                         }
 
                     } catch (ex) {
@@ -984,12 +980,8 @@ check_all_new = async () => {
                     }
                 }
                 if (account.is_pending) {
-                    result = await api_set_account_pending(account.sid);
-                    if (result.code != 0) {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Lỗi api_set_account_pending', result.message);
-                        return;
-                    }
-                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Update Pending OK');
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Update Pending Account');
+                    api_set_account_pending(account.sid);
                 }
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
