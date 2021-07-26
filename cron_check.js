@@ -41,6 +41,22 @@ function api_get_shopee_accounts(slave_ip, slave_port) {
     });
 }
 
+function api_set_account_pending(id) {
+    const Url = api_url + '/account_pending?id=' + id;
+    return axiosInstance.get(Url).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message };
+        }
+    });
+}
+
+
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -966,6 +982,14 @@ check_all_new = async () => {
                     } catch (ex) {
                         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
                     }
+                }
+                if (account.is_pending) {
+                    result = await api_set_account_pending(account.sid);
+                    if (result.code != 0) {
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Lỗi api_set_account_pending', result.message);
+                        return;
+                    }
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Update Pending OK');
                 }
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
