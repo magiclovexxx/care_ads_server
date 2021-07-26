@@ -26,21 +26,6 @@ const axiosInstance = createAxios();
 const port = process.env.PORT;
 const api_url = "http://api.sacuco.com/api_user";
 
-function api_get_shopee_campaigns(slave_ip, slave_port) {
-    const Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.get(Url).then(function (response) {
-        response.data.status = response.status;
-        return response.data;
-    }).catch(function (error) {
-        if (error.response) {
-            error.response.data.status = error.response.status;
-            return error.response.data;
-        } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
-        }
-    });
-}
-
 function api_get_shopee_accounts(slave_ip, slave_port) {
     const Url = api_url + '/shopee_accounts?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.get(Url).then(function (response) {
@@ -53,24 +38,6 @@ function api_get_shopee_accounts(slave_ip, slave_port) {
         } else {
             return { code: 1000, message: error.code + ' ' + error.message };
         }
-    });
-}
-
-function api_get_sync_begin(id, slave_ip, slave_port) {
-    const Url = api_url + '/api_sync_begin?id=' + id + '&slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.get(Url).then(function (response) {
-        return response.data;
-    }).catch(function (error) {
-        return false;
-    });
-}
-
-function api_get_sync_end(id, slave_ip, slave_port) {
-    const Url = api_url + '/api_sync_end?id=' + id + '&slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.get(Url).then(function (response) {
-        return response.data;
-    }).catch(function (error) {
-        return false;
     });
 }
 
