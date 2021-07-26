@@ -483,9 +483,10 @@ check_all_new = async () => {
                             let is_sync_begin = await api_get_sync_begin(campaign.sid, 0);
                             if (is_sync_begin) {
                                 result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
-                                if (result.status == 429 && iTry < 100) {
+                                if (result.status == 429 && iTry < 10) {
                                     iTry++;
                                     let sleep_random = getRandomArbitrary(1000, 3000);
+                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Try Suggest Price:', iTry, sleep_random, 'ms');
                                     await sleep(sleep_random);
                                 }
                                 else {
