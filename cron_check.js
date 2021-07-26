@@ -418,6 +418,7 @@ check_all_new = async () => {
                                         if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
                                             keyword_suggest_prices = result.data.data;
                                         }
+                                        await sleep(1000);
                                         break;
                                     }
                                 }
