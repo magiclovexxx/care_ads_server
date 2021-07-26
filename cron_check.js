@@ -486,7 +486,6 @@ check_all_new = async () => {
                                 if (result.status == 429 && iTry < 100) {
                                     iTry++;
                                     let sleep_random = getRandomArbitrary(1000, 3000);
-                                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Try Suggest Price:', iTry, sleep_random, 'ms');
                                     await sleep(sleep_random);
                                 }
                                 else {
