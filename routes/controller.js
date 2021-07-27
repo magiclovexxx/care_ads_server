@@ -287,7 +287,9 @@ router.get("/api_get_suggest_keyword", async (req, res) => {
         let count = req.body.count;
         let placement = req.body.placement;
         let itemid = req.body.itemid;
-        let result = await shopeeApi.api_get_suggest_keyword(SPC_CDS, proxy, UserAgent, cookie, keyword, count, placement, itemid);
+        let campaignid = req.body.campaignid;
+        let adsid = req.body.adsid;
+        let result = await shopeeApi.api_get_suggest_keyword(SPC_CDS, proxy, UserAgent, cookie, keyword, count, placement, itemid, campaignid, adsid);
         res.send(result);
     }
     catch (ex) {

@@ -190,13 +190,7 @@ check_all_new = async () => {
         //Kiểm tra version và tự động update nếu có version mới
         if (checkVersion.toString() != version) {
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version)
-            const myShellScript = exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');
-            myShellScript.stdout.on('data', (data) => {
-                //console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
-            });
-            myShellScript.stderr.on('data', (data) => {
-                //console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', data);
-            });
+            exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');
             return;
         }
 
@@ -357,6 +351,7 @@ check_all_new = async () => {
                                 }
                                 advertisement_keyword = ads_keyword_manual[0];
                                 itemid = advertisement_keyword != null ? advertisement_keyword.itemid : advertisement_auto.itemid;
+                                adsid = advertisement_keyword != null ? advertisement_keyword.adsid : advertisement_auto.adsid;
                                 if (advertisement_keyword != null)
                                     placement_list.push(0);
                                 if (advertisement_auto != null)
@@ -418,6 +413,7 @@ check_all_new = async () => {
                                         if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
                                             keyword_suggest_prices = result.data.data;
                                         }
+                                        await sleep(100);
                                         break;
                                     }
                                 }

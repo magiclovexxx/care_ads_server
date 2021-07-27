@@ -883,7 +883,7 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
     return result;
 }
 
-const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keyword, count, placement, itemid) => {
+const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keyword, count, placement, itemid, campaignid, adsid) => {
     if (cookie != null) {
         cookie = RSA.decrypt(cookie, 'utf8');
     }
@@ -895,6 +895,12 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
     Url += '&placement=' + placement;
     if (itemid != null && itemid != '') {
         Url += '&itemid=' + itemid;
+    }
+    if (campaignid != null && campaignid != '') {
+        Url += '&campaignid=' + campaignid;
+    }
+    if (adsid != null && adsid != '') {
+        Url += '&adsid=' + adsid;
     }
     const result = await axiosInstance.get(Url, {
         headers: {
