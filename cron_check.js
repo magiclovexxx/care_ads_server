@@ -413,7 +413,7 @@ check_all_new = async () => {
                                     result = await shopeeApi.api_get_suggest_keyword_price(spc_cds, proxy, user_agent, cookie, data_suggest_keyword);
                                     if (result.status == 429 && iTry < 10) {
                                         iTry++;
-                                        let sleep_random = getRandomArbitrary(1000, 10000);
+                                        let sleep_random = getRandomArbitrary(1000, 3000);
                                         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Try Suggest Price:', iTry, sleep_random, 'ms');
                                         await sleep(sleep_random);
                                     }
@@ -427,7 +427,6 @@ check_all_new = async () => {
                                         if (result.code == 0 && result.data != null && result.data.code == 0 && result.data.data.length > 0) {
                                             keyword_suggest_prices = result.data.data;
                                         }
-                                        await sleep(100);
                                         break;
                                     }
                                 }
@@ -1005,7 +1004,7 @@ check_all_new = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', data_accounts.length);
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, 3000);
+                    }, 1000);
                 }
             }
         });
@@ -1018,7 +1017,7 @@ check_all_new = async () => {
         if (!is_wait) {
             setTimeout(async function () {
                 exec('pm2 restart cron_check');
-            }, 3000);
+            }, 1000);
         }
     }
 }
