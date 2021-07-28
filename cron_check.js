@@ -544,7 +544,7 @@ check_all = async () => {
                                     if (click == last_click) {
                                         //Không có click
                                         let old_price = keyword.price;
-                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                         if (ads_location == 1) {
                                             keyword.price = Math.round(keyword.price * 0.9);
                                             if (keyword.price < min_price)
@@ -638,7 +638,7 @@ check_all = async () => {
                                 let min_location = care_keyword.min_location;
                                 let max_location = care_keyword.max_location;
                                 let max_page = getMaxPage(max_location);
-                                let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, max_page, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, max_page, proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                 if (ads_location != -1) {
                                     if (ads_location > max_location) {
                                         //Tăng giá thầu
