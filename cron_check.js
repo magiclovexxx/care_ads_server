@@ -169,7 +169,7 @@ check_all = async () => {
         if (checkVersion.toString() != version) {
             is_wait = true;
             console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version);
-            exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');            
+            exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');
             return;
         }
 
@@ -544,9 +544,16 @@ check_all = async () => {
                                     if (click == last_click) {
                                         //Không có click
                                         let old_price = keyword.price;
-                                        keyword.price = Math.round(keyword.price * 1.1);
-                                        if (keyword.price > max_price)
-                                            keyword.price = max_price;
+                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                        if (ads_location == 1) {
+                                            keyword.price = Math.round(keyword.price * 0.9);
+                                            if (keyword.price < min_price)
+                                                keyword.price = min_price;
+                                        } else {
+                                            keyword.price = Math.round(keyword.price * 1.1);
+                                            if (keyword.price > max_price)
+                                                keyword.price = max_price;
+                                        }
 
                                         if (keyword.price != old_price) {
                                             let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
@@ -566,9 +573,15 @@ check_all = async () => {
                                     } else {
                                         //Có click
                                         let old_price = keyword.price;
-                                        if (keyword.price > max_price)
-                                            keyword.price = max_price;
-
+                                        if (ads_location == 1) {
+                                            keyword.price = Math.round(keyword.price * 0.9);
+                                            if (keyword.price < min_price)
+                                                keyword.price = min_price;
+                                        } else {
+                                            keyword.price = Math.round(keyword.price * 1.1);
+                                            if (keyword.price > max_price)
+                                                keyword.price = max_price;
+                                        }
                                         if (keyword.price != old_price) {
                                             let index = update_keyword_list.findIndex(x => x.keyword == keyword.keyword);
                                             if (index == -1)
