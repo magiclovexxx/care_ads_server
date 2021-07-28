@@ -952,7 +952,7 @@ check_all = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', (data_accounts.length + data_campaigns.length));
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, 3000);
+                    }, 1000);
                 }
             }
         });
@@ -963,7 +963,7 @@ check_all = async () => {
         if (!is_wait) {
             setTimeout(async function () {
                 exec('pm2 restart cron_check');
-            }, 3000);
+            }, 1000);
         }
     }
 }
