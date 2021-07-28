@@ -56,6 +56,20 @@ function api_set_account_pending(id) {
     });
 }
 
+function api_set_account_unlock(id) {
+    const Url = api_url + '/account_unlock?id=' + id;
+    return axiosInstance.get(Url).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message };
+        }
+    });
+}
 
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
@@ -978,6 +992,10 @@ check_all_new = async () => {
                 if (account.is_pending) {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Update Pending Account');
                     api_set_account_pending(account.sid);
+                }
+                else {
+                    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + account.name + ') Update Unlock Account');
+                    api_set_account_unlock(account.sid);
                 }
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
