@@ -163,7 +163,8 @@ check_all = async () => {
 
         //Kiểm tra version và tự động update nếu có version mới
         if (checkVersion.toString() != version) {
-            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version)
+            is_wait = true;
+            console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Cập nhật phiên bản:', version);
             exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check');            
             return;
         }
