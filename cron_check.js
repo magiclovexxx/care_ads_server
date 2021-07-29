@@ -41,6 +41,21 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
+function api_get_free_proxy(slave_ip, slave_port) {
+    const Url = api_url + '/free_proxy?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
+    return axiosInstance.get(Url).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message };
+        }
+    });
+}
+
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -148,7 +163,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
 check_all = async () => {
     var is_wait = false;
     try {
-        setTimeout(async function () {            
+        setTimeout(async function () {
             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
         }, 1200000);
@@ -437,7 +452,21 @@ check_all = async () => {
                         return;
                     }
                     let keyword_reports = result.data.data;
-
+                    let free_proxy = null;
+                    result = await api_get_free_proxy(slave_ip, port);
+                    if (result.code != 0) {
+                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi api_get_free_proxy', result.message);
+                    } else {
+                        free_proxy = {
+                            host: result.data.proxy_ip,
+                            port: parseInt(result.data.proxy_port),
+                            auth: {
+                                username: result.data.proxy_username,
+                                password: result.data.proxy_password
+                            }
+                        };
+                    }
+                    
                     for (let i = 0; i < campaign.placements.length; i++) {
                         let care_keyword = campaign.placements[i];
                         let filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
@@ -550,7 +579,7 @@ check_all = async () => {
                                     if (click == last_click) {
                                         //Không có click
                                         let old_price = keyword.price;
-                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, free_proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                         if (ads_location == 1) {
                                             keyword.price = Math.round(keyword.price * 0.9);
                                             if (keyword.price < min_price)
@@ -644,7 +673,7 @@ check_all = async () => {
                                 let min_location = care_keyword.min_location;
                                 let max_location = care_keyword.max_location;
                                 let max_page = getMaxPage(max_location);
-                                let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, max_page, proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, max_page, free_proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                 if (ads_location != -1) {
                                     if (ads_location > max_location) {
                                         //Tăng giá thầu
