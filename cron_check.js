@@ -148,10 +148,16 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
 check_all = async () => {
     var is_wait = false;
     try {
-        setTimeout(async function () {
+        setTimeout(async function () {            
             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
-        }, 600000);
+        }, 1200000);
+        setTimeout(async function () {
+            if (!is_wait) {
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Khởi động tiến trình bị treo');
+                exec('pm2 restart cron_check');
+            }
+        }, 300000);
         let slave_ip = await publicIp.v4();
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Thông tin máy chủ JS', slave_ip, port);
         let result = await api_get_shopee_campaigns(slave_ip, port);
