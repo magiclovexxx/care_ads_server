@@ -579,7 +579,7 @@ check_all = async () => {
                                     if (click == last_click) {
                                         //Không có click
                                         let old_price = keyword.price;
-                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, free_proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                        let ads_location = 0;//await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, free_proxy, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                         if (ads_location == 1) {
                                             keyword.price = Math.round(keyword.price * 0.9);
                                             if (keyword.price < min_price)
