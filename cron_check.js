@@ -118,14 +118,13 @@ function getMaxPage(max_location) {
 }
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order) {
-    sleep(100);
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     if (result.code != 0) {
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
         return -1;
     }
-    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword, newest, max_page);
+    console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), newest, max_page);
     if (result.data.items != null) {
         let index = result.data.items.findIndex(x => x.item_basic.itemid == itemid && x.item_basic.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
@@ -276,6 +275,7 @@ check_all = async () => {
                         return;
                     }
                 }
+                sleep(1000);
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
             } finally {
@@ -475,7 +475,7 @@ check_all = async () => {
                             }
                         };
                     }*/
-                    
+
                     for (let i = 0; i < campaign.placements.length; i++) {
                         let care_keyword = campaign.placements[i];
                         let filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
@@ -985,7 +985,7 @@ check_all = async () => {
                     }
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Cập nhật dữ liệu PHP');
                 }
-
+                sleep(1000);
             } catch (ex) {
                 console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
             }
