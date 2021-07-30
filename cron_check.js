@@ -162,6 +162,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
 
 check_all = async () => {
     var is_wait = false;
+    var slave_type = 'LIVE';
     try {
         setTimeout(async function () {
             console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Khởi động tiến trình bị treo');
@@ -194,6 +195,7 @@ check_all = async () => {
             return;
         }
 
+        slave_type = result.data.type;
         let data_campaigns = result.data.campaigns;
         let data_accounts = result.data.accounts;
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng tài khoản: ' + data_accounts.length);
@@ -275,7 +277,7 @@ check_all = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', (data_accounts.length + data_campaigns.length));
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, 3000);
+                    }, (slave_type == 'CRON' ? 3000 : 60000));
                 }
             }
         });
@@ -986,7 +988,7 @@ check_all = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', (data_accounts.length + data_campaigns.length));
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, 1000);
+                    }, (slave_type == 'CRON' ? 3000 : 60000));
                 }
             }
         });
@@ -997,7 +999,7 @@ check_all = async () => {
         if (!is_wait) {
             setTimeout(async function () {
                 exec('pm2 restart cron_check');
-            }, 1000);
+            }, (slave_type == 'CRON' ? 3000 : 60000));
         }
     }
 }
