@@ -1032,6 +1032,7 @@ check_all = async () => {
                     campaign.job_done = true;
                 }
             } catch (ex) {
+                campaign.job_done = true;
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
         });
