@@ -119,7 +119,7 @@ function getMaxPage(max_location) {
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order) {
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
-
+    
     //sleep(100);
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     if (result.code != 0) {
@@ -293,10 +293,8 @@ check_all = async () => {
         });
 
         console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Số lượng quảng cáo: ' + data_campaigns.length);
-        //data_campaigns.forEach(async function (campaign) {
-        for (let c = 0; c < data_campaigns.length; c++) {            
+        data_campaigns.forEach(async function (campaign) {
             try {
-                let campaign = data_campaigns[c];
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
                     host: campaign.proxy_ip,
@@ -1010,8 +1008,7 @@ check_all = async () => {
                     }, (slave_type == 'CRON' ? 10000 : 60000));
                 }
             }
-        }
-        //});
+        });
     } catch (ex) {
         console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Lỗi ngoại lệ <' + ex + '>');
     }
