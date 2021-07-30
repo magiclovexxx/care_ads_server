@@ -1041,7 +1041,7 @@ check_all = async () => {
         if (!is_wait) {
             console.log('===== Hoàn thành tiến trình =====');
             setTimeout(async function () {
-                exec('pm2 restart cron_check');
+                //exec('pm2 restart cron_check');
             }, (slave_type == 'CRON' ? 3000 : 60000));
         }
     }
