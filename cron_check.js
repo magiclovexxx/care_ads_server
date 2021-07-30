@@ -87,11 +87,7 @@ function api_put_shopee_placements(data) {
 }
 
 async function php_update_placements(campaign, update_placements) {
-    let result = await api_put_shopee_placements(update_placements);
-    if (result.code != 0) {
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_placements', result.message);
-        return false;
-    }
+    api_put_shopee_placements(update_placements);
     return true;
 }
 
