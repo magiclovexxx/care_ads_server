@@ -144,7 +144,6 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
     let result = await shopeeApi.api_get_search_items_waiting(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     if (result.code != 0) {
         if (result.code == 1000) {
-            sleep(1000);
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_waiting', result);
@@ -201,13 +200,6 @@ check_all = async () => {
         setTimeout(async function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
-        }, 1200000);
-
-        setTimeout(async function () {
-            if (!is_wait) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
-                exec('pm2 restart cron_check');
-            }
         }, 300000);
 
         let slave_ip = await publicIp.v4();
@@ -1038,6 +1030,10 @@ check_all = async () => {
         });
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+        console.log('===== Hoàn thành tiến trình =====');
+        setTimeout(async function () {
+            exec('pm2 restart cron_check');
+        }, (slave_type == 'CRON' ? 3000 : 60000));
     }
     finally {
         if (!is_wait) {
