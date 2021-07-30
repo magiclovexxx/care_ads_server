@@ -244,10 +244,11 @@ check_all = async () => {
         if ((data_accounts.length + data_campaigns.length) > 0) {
             is_wait = true;
             setInterval(function () {
-                if(data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
-                && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0)
-                console.log('===== Hoàn thành tiến trình 2 =====');
-                //exec('pm2 restart cron_check');
+                if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
+                    && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
+                    console.log('===== Hoàn thành tiến trình =====');
+                    exec('pm2 restart cron_check');
+                }
             }, 3000);
         } else {
             return;
@@ -1041,7 +1042,7 @@ check_all = async () => {
         if (!is_wait) {
             console.log('===== Hoàn thành tiến trình =====');
             setTimeout(async function () {
-                //exec('pm2 restart cron_check');
+                exec('pm2 restart cron_check');
             }, (slave_type == 'CRON' ? 3000 : 60000));
         }
     }
