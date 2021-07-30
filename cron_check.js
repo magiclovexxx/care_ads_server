@@ -287,7 +287,7 @@ check_all = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', (data_accounts.length + data_campaigns.length));
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, (slave_type == 'CRON' ? 10000 : 60000));
+                    }, (slave_type == 'CRON' ? 3000 : 60000));
                 }
             }
         });
@@ -1005,7 +1005,7 @@ check_all = async () => {
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] Hoàn thành dữ liệu:', (data_accounts.length + data_campaigns.length));
                     setTimeout(async function () {
                         exec('pm2 restart cron_check');
-                    }, (slave_type == 'CRON' ? 10000 : 60000));
+                    }, (slave_type == 'CRON' ? 3000 : 60000));
                 }
             }
         });
@@ -1016,7 +1016,7 @@ check_all = async () => {
         if (!is_wait) {
             setTimeout(async function () {
                 exec('pm2 restart cron_check');
-            }, (slave_type == 'CRON' ? 10000 : 60000));
+            }, (slave_type == 'CRON' ? 3000 : 60000));
         }
     }
 }
