@@ -247,7 +247,7 @@ check_all = async () => {
                 if(data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                 && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0)
                 console.log('===== Hoàn thành tiến trình 2 =====');
-                exec('pm2 restart cron_check');
+                //exec('pm2 restart cron_check');
             }, 3000);
         } else {
             return;
