@@ -987,7 +987,6 @@ check_all = async () => {
                     }
                     console.log('[' + moment().format('MM/DD/YYYY HH:mm:ss') + '] (' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Cập nhật dữ liệu SHOPEE');
                 }
-
                 if (update_placements.length > 0) {
                     result = await api_put_shopee_placements(update_placements);
                     if (result.code != 0) {
