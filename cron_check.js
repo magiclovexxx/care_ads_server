@@ -1033,14 +1033,14 @@ check_all = async () => {
         console.log('===== Hoàn thành tiến trình =====');
         setTimeout(async function () {
             exec('pm2 restart cron_check');
-        }, (slave_type == 'CRON' ? 3000 : 60000));
+        }, (slave_type == 'CRON' ? 3000 : 300000));
     }
     finally {
         if (!is_wait) {
             console.log('===== Hoàn thành tiến trình =====');
             setTimeout(async function () {
                 exec('pm2 restart cron_check');
-            }, (slave_type == 'CRON' ? 3000 : 60000));
+            }, (slave_type == 'CRON' ? 3000 : 300000));
         }
     }
 }
