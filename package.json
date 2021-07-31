@@ -4,16 +4,16 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "md5": "^2.2.1",
     "moment": "^2.29.1",
     "node-rsa": "^1.1.1",
-    "nodemon": "^2.0.6",
+    "nodemon": "^2.0.12",
     "prompt": "^1.1.0",
-    "public-ip": "^4.0.3",
+    "public-ip": "^4.0.4",
     "uuid": "^8.3.2"
   },
   "scripts": {
