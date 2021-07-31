@@ -190,7 +190,7 @@ function sleep(ms) {
 
 check_all = async () => {
     var is_wait = false;
-    var slave_type = 'LIVE';
+    var slave_type = 'CRON';
     try {
         //Khởi động nếu bị treo
         setTimeout(async function () {
