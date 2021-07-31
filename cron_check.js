@@ -219,7 +219,7 @@ check_all = async () => {
         if (checkVersion.toString() != version) {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
-            exec('git stash; git pull origin master; npm install; pm2 stop server; pm2 stop cron_check; pm2 start server.js -o "/dev/null"; pm2 start cron_check.js -o "/dev/null"; pm2 startup; pm2 save; pm2 restart all');
+            exec('git stash; git pull origin master; npm install; pm2 start server.js -o "/dev/null"; pm2 start cron_check.js -o "/dev/null"; pm2 startup; pm2 save; pm2 restart all');
             return;
         }
 
