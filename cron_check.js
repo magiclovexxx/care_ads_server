@@ -19,7 +19,7 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
 
 function createAxios() {
     const axios = require('axios');
-    return axios.create({ withCredentials: true, timeout: 15000 });
+    return axios.create({ withCredentials: true, timeout: 30000 });
 }
 const axiosInstance = createAxios();
 
