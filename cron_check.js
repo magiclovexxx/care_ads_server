@@ -262,7 +262,6 @@ check_all = async () => {
         }
 
         data_accounts.forEach(async function (account) {
-            api_get_test_performance();
             try {
                 let spc_cds = account.spc_cds;
                 let proxy = {
@@ -337,7 +336,6 @@ check_all = async () => {
         });
 
         data_campaigns.forEach(async function (campaign) {
-            api_get_test_performance();
             try {
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
@@ -1045,6 +1043,7 @@ check_all = async () => {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
         });
+        api_get_test_performance();        
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
