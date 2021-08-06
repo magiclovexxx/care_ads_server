@@ -41,21 +41,6 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
-function api_get_test_performance() {
-    const Url = 'https://beta.sacuco.com/api_user/shopee_campaigns/';
-    return axiosInstance.get(Url).then(function (response) {
-        response.data.status = response.status;
-        return response.data;
-    }).catch(function (error) {
-        if (error.response) {
-            error.response.data.status = error.response.status;
-            return error.response.data;
-        } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
-        }
-    });
-}
-
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -165,7 +150,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
             return -1;
         }
     }
-    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword, newest, max_page);
+    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), newest, max_page);
     if (result.data.items != null) {
         let index = result.data.items.findIndex(x => x.item_basic.itemid == itemid && x.item_basic.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
@@ -234,7 +219,7 @@ check_all = async () => {
         if (checkVersion.toString() != version) {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
-            exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check;');
+            exec('git stash; git pull origin master; npm install; pm2 start server.js -o "/dev/null"; pm2 start cron_check.js -o "/dev/null"; pm2 startup; pm2 save; pm2 restart all');
             return;
         }
 
@@ -544,7 +529,7 @@ check_all = async () => {
                                         //Từ khóa tạm dừng lập lịch
                                         if (is_in_schedule) {
                                             //Tới giờ lập lịch
-                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') [Lập lịch] Mở lại');
+                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') [Lập lịch] Mở lại');
                                             //Bật lại từ khóa nếu đang bị tắt
                                             is_next_step = true;
                                             if (keyword.status == 0) {
@@ -568,11 +553,11 @@ check_all = async () => {
                                     let max_price = parseFloat(care_keyword.max_price);
 
                                     if (!is_in_schedule) {
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') [Lập lịch] Ngoài phạm vi');
+                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') [Lập lịch] Ngoài phạm vi');
                                         if (care_keyword.care_out_schedule == 0) {
                                             //Giảm về mức tối thiểu
                                             if (keyword.price > min_price) {
-                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') [Lập lịch] Giảm về mức tối thiểu:', min_price);
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') [Lập lịch] Giảm về mức tối thiểu:', min_price);
                                                 keyword.price = min_price;
                                                 is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                 if (!is_next_step) {
@@ -582,7 +567,7 @@ check_all = async () => {
                                         } else {
                                             //Tạm dừng từ khóa
                                             if (keyword.status == 1) {
-                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') [Lập lịch] Tạm dừng từ khóa');
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') [Lập lịch] Tạm dừng từ khóa');
                                                 keyword.status = 0;
                                                 is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                 if (!is_next_step) {
@@ -654,7 +639,7 @@ check_all = async () => {
                                                         if (!is_next_step) {
                                                             return;
                                                         }
-                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
+                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
                                                     }
 
                                                     if (care_keyword.last_update_loss != null) {
@@ -697,7 +682,7 @@ check_all = async () => {
                                                     is_down_price = true;
                                                 } else {
                                                     //Tắt từ khóa không hiệu quả
-                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') Tắt từ khóa không hiệu quả');
+                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tắt từ khóa không hiệu quả');
                                                     keyword.status = 0;
                                                     is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                     if (!is_next_step) {
@@ -727,7 +712,7 @@ check_all = async () => {
                                                         if (!is_next_step) {
                                                             return;
                                                         }
-                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
+                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
                                                     }
                                                     is_next_step = await php_update_placements(campaign, [{
                                                         id: care_keyword.id,
@@ -758,7 +743,7 @@ check_all = async () => {
                                                     if (!is_next_step) {
                                                         return;
                                                     }
-                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '>', max_location);
+                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '>', max_location);
                                                 }
                                             } else {
                                                 if (ads_location < min_location) {
@@ -773,7 +758,7 @@ check_all = async () => {
                                                             if (!is_next_step) {
                                                                 return;
                                                             }
-                                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '<', care_keyword.min_location);
+                                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '<', care_keyword.min_location);
                                                         }
                                                     }
                                                 }
@@ -789,14 +774,14 @@ check_all = async () => {
                                                             return;
                                                         }
                                                     }
-                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword + ') Giữ vị trí:', old_price, '->', keyword.price, 'Max:', max_price, care_keyword.min_location, '<=', ads_location, '<=', care_keyword.max_location);
+                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giữ vị trí:', old_price, '->', keyword.price, 'Max:', max_price, care_keyword.min_location, '<=', ads_location, '<=', care_keyword.max_location);
                                                 }
                                             }
                                         }
                                     }
                                 } else {
                                     //Xóa từ khóa không tồn tại
-                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + care_keyword.keyword_str + ') Xóa từ khóa không tồn tại');
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + care_keyword.keyword_str.normalize('NFC') + ') Xóa từ khóa không tồn tại');
                                     is_next_step = await php_update_placements(campaign, [{
                                         id: care_keyword.id,
                                         status: -1
@@ -1043,7 +1028,6 @@ check_all = async () => {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
         });
-        api_get_test_performance();        
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
