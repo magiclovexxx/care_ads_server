@@ -41,6 +41,21 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
+function api_get_test_performance() {
+    const Url = 'https://beta.sacuco.com/api_user/shopee_campaigns/';
+    return axiosInstance.get(Url).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message };
+        }
+    });
+}
+
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -219,7 +234,7 @@ check_all = async () => {
         if (checkVersion.toString() != version) {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
-            exec('git stash; git pull origin master; npm install; pm2 restart cron_check; pm2 restart server');
+            exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check;');
             return;
         }
 
@@ -1028,6 +1043,7 @@ check_all = async () => {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
         });
+        api_get_test_performance();        
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
