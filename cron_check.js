@@ -263,7 +263,6 @@ check_all = async () => {
 
         data_accounts.forEach(async function (account) {
             try {
-                api_get_test_performance();
                 let spc_cds = account.spc_cds;
                 let proxy = {
                     host: account.proxy_ip,
