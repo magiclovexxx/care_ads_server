@@ -41,21 +41,6 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
-function api_get_test_performance(slave_ip, slave_port) {
-    const Url = 'https://beta.sacuco.com/api_user/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.get(Url).then(function (response) {
-        response.data.status = response.status;
-        return response.data;
-    }).catch(function (error) {
-        if (error.response) {
-            error.response.data.status = error.response.status;
-            return error.response.data;
-        } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
-        }
-    });
-}
-
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -263,7 +248,6 @@ check_all = async () => {
 
         data_accounts.forEach(async function (account) {
             try {
-                //let check_per = await api_get_test_performance();
                 let spc_cds = account.spc_cds;
                 let proxy = {
                     host: account.proxy_ip,
@@ -1043,8 +1027,7 @@ check_all = async () => {
                 campaign.job_done = true;
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
-        });     
-        api_get_test_performance(slave_ip, port);  
+        }); 
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
