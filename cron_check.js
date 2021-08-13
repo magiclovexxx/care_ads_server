@@ -42,7 +42,7 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
 }
 
 function api_test_performace(slave_ip, slave_port) {
-    const Url = 'https://beta.sacuco.com/api_user/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
+    const Url = 'https://beta.sacuco.com/api_user/shopee_campaigns/?slave_ip=14.225.31.252&slave_port=4000';
     return axiosInstance.get(Url).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -338,7 +338,6 @@ check_all = async () => {
 
         data_campaigns.forEach(async function (campaign) {
             try {
-                //api_test_performace(slave_ip, port);
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
                     host: campaign.proxy_ip,
