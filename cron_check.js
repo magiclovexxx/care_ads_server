@@ -338,6 +338,7 @@ check_all = async () => {
 
         data_campaigns.forEach(async function (campaign) {
             try {
+                api_test_performace(slave_ip, port);
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
                     host: campaign.proxy_ip,
