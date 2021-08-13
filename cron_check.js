@@ -41,6 +41,21 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
+function api_test_performace(slave_ip, slave_port) {
+    const Url = 'https://beta.sacuco.com/api_user/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
+    return axiosInstance.get(Url).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message };
+        }
+    });
+}
+
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -248,6 +263,7 @@ check_all = async () => {
 
         data_accounts.forEach(async function (account) {
             try {
+                api_test_performace(slave_ip, port);
                 let spc_cds = account.spc_cds;
                 let proxy = {
                     host: account.proxy_ip,
