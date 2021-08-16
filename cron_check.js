@@ -263,6 +263,7 @@ check_all = async () => {
         
         data_accounts.forEach(async function (account) {
             try {
+                let check1 = await api_test_performace(slave_ip, port);
                 let spc_cds = account.spc_cds;
                 let proxy = {
                     host: account.proxy_ip,
@@ -1043,7 +1044,6 @@ check_all = async () => {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
         });
-        api_test_performace(slave_ip, port);
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
