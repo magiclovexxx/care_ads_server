@@ -66,7 +66,7 @@ function api_put_shopee_accounts(data) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
 }
@@ -81,7 +81,7 @@ function api_put_shopee_campaigns(data) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
 }
@@ -96,7 +96,7 @@ function api_put_shopee_placements(data) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return null;
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
 }
@@ -104,7 +104,7 @@ function api_put_shopee_placements(data) {
 async function php_update_placements(campaign, update_placements) {
     let result = api_put_shopee_placements(update_placements);
     if (result.code != 0) {
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_placements', result.status, result.message);
+        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_placements', result);
         return false;
     }
     return true;
@@ -260,7 +260,7 @@ check_all = async () => {
         } else {
             return;
         }
-        
+
         data_accounts.forEach(async function (account) {
             try {
                 let spc_cds = account.spc_cds;
