@@ -41,8 +41,8 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
     });
 }
 
-function api_test_performace(slave_ip, slave_port) {
-    const Url = 'https://beta.sacuco.com/api_user/shopee_campaigns/?slave_ip=14.225.31.252&slave_port=4000';
+function last_connection(slave_ip, slave_port) {
+    const Url = api_url + '/last_connection?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.get(Url).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -51,7 +51,7 @@ function api_test_performace(slave_ip, slave_port) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
         }
     });
 }
@@ -219,7 +219,7 @@ check_all = async () => {
 
         let slave_ip = await publicIp.v4();
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
-        let result = await api_get_shopee_campaigns(slave_ip, port);
+        let result = await api_get_shopee_campaigns(slave_ip, port);        
         if (result.code != 0) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_shopee_campaigns', result.message);
             return;
@@ -253,11 +253,13 @@ check_all = async () => {
             setInterval(function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
+                    last_connection(slave_ip, port);
                     console.log('===== Hoàn thành tiến trình =====');
                     exec('pm2 restart cron_check');
                 }
             }, 3000);
         } else {
+            last_connection(slave_ip, port);
             return;
         }
 
