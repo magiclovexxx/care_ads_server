@@ -214,7 +214,7 @@ check_all = async () => {
         setTimeout(async function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
-        }, 300000);
+        }, 600000);
 
         let slave_ip = await publicIp.v4();
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
