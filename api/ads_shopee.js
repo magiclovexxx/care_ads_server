@@ -452,7 +452,7 @@ const api_get_search_items_waiting = async (proxy, UserAgent, cookie, by, keywor
             'cookie': cookie
         },
         proxy: proxy,
-        timeout: 180000
+        timeout: 300000
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
