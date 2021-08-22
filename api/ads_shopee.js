@@ -434,11 +434,22 @@ const api_get_search_items_waiting = async (proxy, UserAgent, cookie, by, keywor
     Url += '&version=' + version;
     const result = await axiosInstance.get(Url, {
         headers: {
+            'authority': 'shopee.vn',
+            'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+            'sec-ch-ua-mobile': '?0',
+            'user-agent': UserAgent,
             'x-api-source': 'pc',
             'x-shopee-language': 'vi',
-            cookie: cookie,
-            'User-Agent': UserAgent,
-            referer: 'https://shopee.vn/search?keyword=' + encodeURI(keyword)
+            'x-requested-with': 'XMLHttpRequest',
+            'if-none-match-': '55b03-0bdbd793997dcec906abc543fead0f71',
+            'sec-ch-ua-platform': '"Windows"',
+            'accept': '*/*',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
+            'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
+            'cookie': cookie
         },
         proxy: proxy
     }).then(function (response) {
@@ -473,11 +484,22 @@ const api_get_search_items = async (proxy, UserAgent, cookie, by, keyword, limit
     Url += '&version=' + version;
     const result = await axiosInstance.get(Url, {
         headers: {
+            'authority': 'shopee.vn',
+            'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+            'sec-ch-ua-mobile': '?0',
+            'user-agent': UserAgent,
             'x-api-source': 'pc',
             'x-shopee-language': 'vi',
-            cookie: cookie,
-            'User-Agent': UserAgent,
-            referer: 'https://shopee.vn/search?keyword=' + encodeURI(keyword)
+            'x-requested-with': 'XMLHttpRequest',
+            'if-none-match-': '55b03-0bdbd793997dcec906abc543fead0f71',
+            'sec-ch-ua-platform': '"Windows"',
+            'accept': '*/*',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
+            'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
+            'cookie': cookie
         },
         proxy: proxy
     }).then(function (response) {
