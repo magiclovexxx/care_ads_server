@@ -157,7 +157,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_waiting(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
-    let end_unix = moment().unix();    
+    let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000) {
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order);
@@ -220,7 +220,7 @@ check_all = async () => {
 
         let slave_ip = await publicIp.v4();
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
-        let result = await api_get_shopee_campaigns(slave_ip, port);        
+        let result = await api_get_shopee_campaigns(slave_ip, port);
         if (result.code != 0) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_shopee_campaigns', result.message);
             return;
