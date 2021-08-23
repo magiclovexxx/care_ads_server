@@ -12,7 +12,7 @@ const axiosInstance = createAxios();
 function request_sacuco(Url) {
     return axiosInstance.get(Url, {
         proxy: {
-            host: '103.153.64.222',
+            host: '127.0.0.1',
             port: 3128,
             auth: {
                 username: 'magic',
