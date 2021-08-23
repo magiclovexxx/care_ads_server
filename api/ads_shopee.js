@@ -1156,6 +1156,93 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
     return result;
 }
 
+const api_get_order_id_list = async (SPC_CDS, proxy, UserAgent, cookie, from_page_number, source, page_size, page_number, total, is_massship) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/v3/order/get_order_id_list/';
+    Url += '?SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    Url += '&from_page_number=' + from_page_number;
+    Url += '&source=' + source;
+    Url += '&page_size=' + page_size;
+    Url += '&page_number=' + page_number;
+    Url += '&total=' + total;
+    Url += '&is_massship=' + is_massship;
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://banhang.shopee.vn/'
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.cookie != null)
+            response.cookie = RSA.encrypt(response.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.cookie != null)
+                error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+        } else {
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            } else {
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
+                return api_get_order_id_list(SPC_CDS, null, UserAgent, cookie, from_page_number, source, page_size, page_number, total, is_massship);
+            }
+        }
+    });
+    return result;
+}
+
+const api_get_package = async (SPC_CDS, proxy, UserAgent, cookie, order_id) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/v3/order/get_package';
+    Url += '?SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    Url += '&order_id=' + order_id;
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://banhang.shopee.vn/'
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.cookie != null)
+            response.cookie = RSA.encrypt(response.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.cookie != null)
+                error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+        } else {
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            } else {
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
+                return api_get_package(SPC_CDS, null, UserAgent, cookie, order_id);
+            }
+        }
+    });
+    return result;
+}
+
 const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, agg_interval) => {
     if (cookie != null) {
         cookie = RSA.decrypt(cookie, 'utf8');
@@ -1650,5 +1737,7 @@ module.exports = {
     api_get_captcha_info,
     api_get_search_items,
     api_get_shop_info_shopid,
-    api_get_search_items_waiting
+    api_get_search_items_waiting,
+    api_get_order_id_list,
+    api_get_package
 }
