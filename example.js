@@ -21,8 +21,9 @@ async function check_order_list(SPC_CDS, proxy, UserAgent, cookie, orders, last_
                 result.data.data.order_info.package_list[0].tracking_info.length > 0 &&
                 result.data.data.order_info.package_list[0].tracking_info[0].logistics_status == 201) {
                 let ctime = result.data.data.order_info.package_list[0].tracking_info[0].ctime;
+                result = await shopeeApi.api_get_one_order(SPC_CDS, proxy, UserAgent, cookie, order_id);
                 console.log('Đơn hàng hoàn:', order_id, 'Trang:', page_number, 'Thời gian:', moment.unix(ctime).format('MM/DD/YYYY HH:mm:ss'));
-            } else { 
+            } else {
                 console.log('Đơn hàng hủy:', order_id, 'Trang:', page_number);
             }
         }
@@ -43,8 +44,9 @@ async function check_order_list(SPC_CDS, proxy, UserAgent, cookie, orders, last_
         }
     };
 
-    let last_total = 0;
+    let last_order_total = 0;
     let last_order_id = 0;
+    let init_page_num = 2;
 
     let result = await shopeeApi.api_get_order_id_list(SPC_CDS, proxy, UserAgent, cookie, 1, 'cancelled_all', 40, 1, 0, false);
     if (result.code == 0 &&
@@ -53,14 +55,18 @@ async function check_order_list(SPC_CDS, proxy, UserAgent, cookie, orders, last_
         let first_order_id = result.data.data.orders[0].order_id;
         let is_continue_check = await check_order_list(SPC_CDS, proxy, UserAgent, cookie, result.data.data.orders, last_order_id, 1);
         if (is_continue_check) {
-            let need_check_page = Math.ceil((result.data.data.page_info.total - last_total) / 40);
+            let total = result.data.data.page_info.total;
+            let need_check_page = Math.ceil((total - last_order_total) / 40);
             if (need_check_page > 1) {
-                for (let i = 2; i <= need_check_page; i++) {
+                for (let i = (init_page_num != 1 ? init_page_num : 2); i <= need_check_page; i++) {
                     result = await shopeeApi.api_get_order_id_list(SPC_CDS, proxy, UserAgent, cookie, 1, 'cancelled_all', 40, i, 0, false);
                     if (result.code == 0 &&
                         result.data.code == 0 &&
                         result.data.data.orders.length > 0) {
                         is_continue_check = await check_order_list(SPC_CDS, proxy, UserAgent, cookie, result.data.data.orders, last_order_id, i);
+                        if (init_page_num != 1) {
+                            console.log('call api set init_page_num =', i);
+                        }
                         if (!is_continue_check) {
                             break;
                         }
@@ -68,6 +74,13 @@ async function check_order_list(SPC_CDS, proxy, UserAgent, cookie, orders, last_
                         break;
                     }
                 }
+
+                if (init_page_num != 1) {
+                    console.log('call api set init_page_num =', 1);
+                    console.log('call api set last_order_total =', total);
+                    console.log('call api set last_order_id =', first_order_id);
+                }
+
             }
         }
     }
