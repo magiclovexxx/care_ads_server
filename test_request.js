@@ -10,16 +10,7 @@ function createAxios() {
 const axiosInstance = createAxios();
 
 function request_sacuco(Url) {
-    return axiosInstance.get(Url, {
-        proxy: {
-            host: '127.0.0.1',
-            port: 3128,
-            auth: {
-                username: 'magic',
-                password: 'Admin@123'
-            }
-        }
-    }).then(function (response) {
+    return axiosInstance.get(Url).then(function (response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function (error) {
@@ -33,7 +24,6 @@ function request_sacuco(Url) {
 }
 
 (async () => {
-    let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
     const { url } = await prompt.get(['url']);
     const { forcount } = await prompt.get(['forcount']);
     for (let i = 0; i < forcount; i++) {
