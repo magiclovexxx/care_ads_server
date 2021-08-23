@@ -9,8 +9,17 @@ function createAxios() {
 }
 const axiosInstance = createAxios();
 
-function request_sacuco(Url) {    
-    return axiosInstance.get(Url).then(function (response) {
+function request_sacuco(Url) {
+    return axiosInstance.get(Url, {
+        proxy: {
+            host: '103.153.64.222',
+            port: 3128,
+            auth: {
+                username: 'magic',
+                password: 'Admin@123'
+            }
+        }
+    }).then(function (response) {
         response.data.status = response.status;
         return response.data;
     }).catch(function (error) {
