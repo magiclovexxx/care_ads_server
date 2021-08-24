@@ -7,34 +7,46 @@ function createAxios() {
     const axios = require('axios');
     return axios.create({ withCredentials: true, timeout: 60000 });
 }
-
 const axiosInstance = createAxios();
+
 async function check_order_list(SPC_CDS, proxy, UserAgent, cookie, orders, last_order_id, page_number) {
     for (let j = 0; j < orders.length; j++) {
         let order_id = orders[j].order_id;
         if (order_id == last_order_id) {
-            return false;
-        } else {
-            let result = await shopeeApi.api_get_package(SPC_CDS, proxy, UserAgent, cookie, order_id);
-            if (result.code == 0 && result.data.code == 0 &&
-                result.data.data.order_info.package_list.length > 0 &&
+            return 2;
+        }
+        let result = await shopeeApi.api_get_package(SPC_CDS, proxy, UserAgent, cookie, order_id);
+        if (result.code == 0 && result.data.code == 0) {
+            if (result.data.data.order_info.package_list.length > 0 &&
                 result.data.data.order_info.package_list[0].tracking_info.length > 0 &&
                 result.data.data.order_info.package_list[0].tracking_info[0].logistics_status == 201) {
                 let ctime = result.data.data.order_info.package_list[0].tracking_info[0].ctime;
-                result = await shopeeApi.api_get_one_order(SPC_CDS, proxy, UserAgent, cookie, order_id);
-                console.log('Đơn hàng hoàn:', order_id, 'Trang:', page_number, 'Thời gian:', moment.unix(ctime).format('MM/DD/YYYY HH:mm:ss'));
+                if (moment.unix(ctime).add(7, 'days') >= moment()) {
+                    result = await shopeeApi.api_get_one_order(SPC_CDS, proxy, UserAgent, cookie, order_id);
+                    if (result.code == 0 && result.data.code == 0) {
+                        console.log('Đơn hàng hoàn:', order_id, 'Trang:', page_number, 'Thời gian:', moment.unix(ctime).format('MM/DD/YYYY HH:mm:ss'));
+                    } else {
+                        console.log('Lỗi api_get_one_order');
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
             } else {
                 console.log('Đơn hàng hủy:', order_id, 'Trang:', page_number);
             }
+        } else {
+            console.log('Lỗi api_get_package');
+            return 1;
         }
     }
-    return true;
+    return 0;
 }
 
 (async () => {
-    let cookie = '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';
+    let cookie = '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';
     let UserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) coc_coc_browser/95.0.150 Chrome/89.0.4389.150 Safari/537.36';
-    let SPC_CDS = '892dfad1-f65b-4641-b370-02dd77d35840';
+    let SPC_CDS = '795452a9-4594-4398-b854-bd381d510f6b';
     let proxy = {
         host: '14.225.31.223',
         port: 3128,
@@ -46,41 +58,44 @@ async function check_order_list(SPC_CDS, proxy, UserAgent, cookie, orders, last_
 
     let last_order_total = 0;
     let last_order_id = 0;
-    let init_page_num = 2;
 
     let result = await shopeeApi.api_get_order_id_list(SPC_CDS, proxy, UserAgent, cookie, 1, 'cancelled_all', 40, 1, 0, false);
-    if (result.code == 0 &&
-        result.data.code == 0 &&
-        result.data.data.orders.length > 0) {
-        let first_order_id = result.data.data.orders[0].order_id;
-        let is_continue_check = await check_order_list(SPC_CDS, proxy, UserAgent, cookie, result.data.data.orders, last_order_id, 1);
-        if (is_continue_check) {
+    if (result.code == 0 && result.data.code == 0) {
+        if (result.data.data.orders.length > 0) {
             let total = result.data.data.page_info.total;
-            let need_check_page = Math.ceil((total - last_order_total) / 40);
-            console.log(need_check_page);
-            if (need_check_page > 1) {
-                for (let i = (init_page_num != 1 ? init_page_num : 2); i <= need_check_page; i++) {
-                    result = await shopeeApi.api_get_order_id_list(SPC_CDS, proxy, UserAgent, cookie, 1, 'cancelled_all', 40, i, 0, false);
-                    if (result.code == 0 &&
-                        result.data.code == 0 &&
-                        result.data.data.orders.length > 0) {
-                        is_continue_check = await check_order_list(SPC_CDS, proxy, UserAgent, cookie, result.data.data.orders, last_order_id, i);
-                        if (init_page_num != 1) {
-                            console.log('call api set init_page_num =', i);
-                        }
-                        if (is_continue_check) {
-                            total = result.data.data.page_info.total;
-                            need_check_page = Math.ceil((total - last_order_total) / 40);
+            let first_order_id = result.data.data.orders[0].order_id;
+            let continue_check = await check_order_list(SPC_CDS, proxy, UserAgent, cookie, result.data.data.orders, last_order_id, 1);
+            let is_error = false;
+            if (continue_check == 0) {
+                let need_check_page = Math.ceil((total - last_order_total) / 40);
+                if (need_check_page > 1) {
+                    for (let i = 2; i <= need_check_page; i++) {
+                        result = await shopeeApi.api_get_order_id_list(SPC_CDS, proxy, UserAgent, cookie, 1, 'cancelled_all', 40, i, 0, false);
+                        if (result.code == 0 && result.data.code == 0) {
+                            if (result.data.data.orders.length > 0) {
+                                continue_check = await check_order_list(SPC_CDS, proxy, UserAgent, cookie, result.data.data.orders, last_order_id, i);
+                                if (continue_check != 0) {
+                                    if (continue_check == 1) {
+                                        console.log('Lỗi check_order_list');
+                                        is_error = true;
+                                    }
+                                    break;
+                                }
+                            } else {
+                                break;
+                            }
                         } else {
+                            console.log('Lỗi api_get_order_id_list');
+                            is_error = true;
                             break;
                         }
-                    } else {
-                        break;
                     }
                 }
+            } else {
+                if (continue_check == 1)
+                    is_error = true;
             }
-            if (init_page_num != 1) {
-                console.log('call api set init_page_num =', 1);
+            if (!is_error) {
                 console.log('call api set last_order_total =', total);
                 console.log('call api set last_order_id =', first_order_id);
             }
