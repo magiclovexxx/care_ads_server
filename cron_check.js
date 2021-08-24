@@ -124,7 +124,8 @@ async function check_order_list(spc_cds, proxy, user_agent, cookie, orders, last
         }
         let result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
         if (result.code == 0 && result.data.code == 0) {
-            if (result.data.data.order_info.package_list.length > 0 &&
+            if (result.data.data.order_info.package_list != null &&
+                result.data.data.order_info.package_list.length > 0 &&
                 result.data.data.order_info.package_list[0].tracking_info.length > 0 &&
                 result.data.data.order_info.package_list[0].tracking_info[0].logistics_status == 201) {
                 let ctime = result.data.data.order_info.package_list[0].tracking_info[0].ctime;
@@ -285,7 +286,7 @@ check_all = async () => {
         setTimeout(async function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
-        }, 1200000);
+        }, 1800000);
 
         let slave_ip = await publicIp.v4();
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
@@ -405,7 +406,7 @@ check_all = async () => {
 
                 result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, 1, 0, false);
                 if (result.code == 0 && result.data.code == 0) {
-                    if (result.data.data.orders.length > 0) {
+                    if (result.data.data.orders != null && result.data.data.orders.length > 0) {
                         let total = result.data.data.page_info.total;
                         let first_order_id = result.data.data.orders[0].order_id;
                         let continue_check = await check_order_list(spc_cds, proxy, user_agent, cookie, result.data.data.orders, last_order_id, 1, account.uid, account.sid, account.name);
@@ -416,7 +417,7 @@ check_all = async () => {
                                 for (let i = 2; i <= need_check_page; i++) {
                                     result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, i, 0, false);
                                     if (result.code == 0 && result.data.code == 0) {
-                                        if (result.data.data.orders.length > 0) {
+                                        if (result.data.data.orders != null && result.data.data.orders.length > 0) {
                                             continue_check = await check_order_list(spc_cds, proxy, user_agent, cookie, result.data.data.orders, last_order_id, i, account.uid, account.sid, account.name);
                                             if (continue_check != 0) {
                                                 if (continue_check == 1) {
