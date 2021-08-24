@@ -101,6 +101,75 @@ function api_put_shopee_placements(data) {
     });
 }
 
+function api_put_shopee_orders(data) {
+    const Url = api_url + '/shopee_orders';
+    return axiosInstance.put(Url, data).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+        }
+    });
+}
+
+async function check_order_list(spc_cds, proxy, user_agent, cookie, orders, last_order_id, page_number, user_id, shop_id, shop_name) {
+    for (let j = 0; j < orders.length; j++) {
+        let order_id = orders[j].order_id;
+        if (order_id == last_order_id) {
+            return 2;
+        }
+        let result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+        if (result.code == 0 && result.data.code == 0) {
+            if (result.data.data.order_info.package_list.length > 0 &&
+                result.data.data.order_info.package_list[0].tracking_info.length > 0 &&
+                result.data.data.order_info.package_list[0].tracking_info[0].logistics_status == 201) {
+                let ctime = result.data.data.order_info.package_list[0].tracking_info[0].ctime;
+                let packages = result.data.data;
+                if (moment.unix(ctime).add(7, 'days') >= moment()) {
+                    result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
+                    if (result.code == 0 && result.data.code == 0) {
+                        let order_sn = result.data.data.order_sn;
+                        let status = result.data.data.status;
+                        let options = result.data.data;
+                        let refund_time = moment.unix(ctime).format('YYYY-MM-DD HH:mm:ss');
+                        result = await api_put_shopee_orders([{
+                            uid: user_id,
+                            shop_id: shop_id,
+                            order_id: order_id,
+                            order_sn: order_sn,
+                            refund_time: refund_time,
+                            options: JSON.stringify(options),
+                            packages: JSON.stringify(packages),
+                            status: status
+                        }]);
+                        if (result.code != 0) {
+                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shop_name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
+                            return 1;
+                        }
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shop_name + ' -> ' + order_id + ') Đơn hàng hoàn OK (' + page_number + ')', moment.unix(ctime).format('MM/DD/YYYY HH:mm:ss'));
+
+                    } else {
+                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shop_name + ' -> ' + order_id + ') Lỗi api_get_one_order', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                        return 1;
+                    }
+                } else {
+                    return 2;
+                }
+            } else {
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shop_name + ' -> ' + order_id + ') Đơn hàng hủy: SKIP (' + page_number + ')');
+            }
+        } else {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shop_name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+            return 1;
+        }
+    }
+    return 0;
+}
+
 async function php_update_placements(campaign, update_placements) {
     let result = await api_put_shopee_placements(update_placements);
     if (result.code != 0) {
@@ -279,6 +348,8 @@ check_all = async () => {
                 let username = account.username;
                 let password = account.password;
                 let cookie = account.cookie;
+                let last_order_total = account.last_order_total;
+                let last_order_id = account.last_order_id;
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
                 //sleep(100);
@@ -331,6 +402,57 @@ check_all = async () => {
                         return;
                     }
                 }
+
+                result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, 1, 0, false);
+                if (result.code == 0 && result.data.code == 0) {
+                    if (result.data.data.orders.length > 0) {
+                        let total = result.data.data.page_info.total;
+                        let first_order_id = result.data.data.orders[0].order_id;
+                        let continue_check = await check_order_list(spc_cds, proxy, user_agent, cookie, result.data.data.orders, last_order_id, 1, account.uid, account.sid, account.name);
+                        let is_error = false;
+                        if (continue_check == 0) {
+                            let need_check_page = Math.ceil((total - last_order_total) / 40);
+                            if (need_check_page > 1) {
+                                for (let i = 2; i <= need_check_page; i++) {
+                                    result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, i, 0, false);
+                                    if (result.code == 0 && result.data.code == 0) {
+                                        if (result.data.data.orders.length > 0) {
+                                            continue_check = await check_order_list(spc_cds, proxy, user_agent, cookie, result.data.data.orders, last_order_id, i, account.uid, account.sid, account.name);
+                                            if (continue_check != 0) {
+                                                if (continue_check == 1) {
+                                                    is_error = true;
+                                                }
+                                                break;
+                                            }
+                                        } else {
+                                            break;
+                                        }
+                                    } else {
+                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_order_id_list', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                                        is_error = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (continue_check == 1)
+                                is_error = true;
+                        }
+                        if (!is_error) {
+                            result = await api_put_shopee_accounts({
+                                id: account.sid,
+                                last_order_total: total,
+                                last_order_id: first_order_id
+                            });
+                            if (result.code != 0) {
+                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                return;
+                            }
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Hoàn thành lấy đơn hàng hoàn', total, first_order_id);
+                        }
+                    }
+                }
+
             } catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             } finally {
