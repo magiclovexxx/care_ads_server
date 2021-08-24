@@ -130,7 +130,7 @@ async function check_order_list(spc_cds, proxy, user_agent, cookie, orders, last
                 result.data.data.order_info.package_list[0].tracking_info[0].logistics_status == 201) {
                 let ctime = result.data.data.order_info.package_list[0].tracking_info[0].ctime;
                 let packages = result.data.data;
-                if (moment.unix(ctime).add(7, 'days') >= moment()) {
+                if (moment.unix(ctime).add(7, 'days') >= moment().startOf('day')) {
                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
                     if (result.code == 0 && result.data.code == 0) {
                         let order_sn = result.data.data.order_sn;
