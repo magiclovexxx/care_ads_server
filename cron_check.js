@@ -129,22 +129,26 @@ async function check_order_list(spc_cds, proxy, user_agent, cookie, orders, last
                 result.data.data.order_info.package_list[0].tracking_info.length > 0 &&
                 result.data.data.order_info.package_list[0].tracking_info[0].logistics_status == 201) {
                 let ctime = result.data.data.order_info.package_list[0].tracking_info[0].ctime;
-                let packages = result.data.data;
+                let get_package = result.data.data;
+                let last_logistics_status = result.data.data.order_info.package_list[0].tracking_info[0].logistics_status;
                 if (moment.unix(ctime).add(7, 'days') >= moment().startOf('day')) {
                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
                     if (result.code == 0 && result.data.code == 0) {
                         let order_sn = result.data.data.order_sn;
                         let status = result.data.data.status;
-                        let options = result.data.data;
-                        let refund_time = moment.unix(ctime).format('YYYY-MM-DD HH:mm:ss');
+                        let cancel_reason_ext = result.data.data.cancel_reason_ext;
+                        let get_one_order = result.data.data;
+                        let cancel_time = moment.unix(ctime).format('YYYY-MM-DD HH:mm:ss');
                         result = await api_put_shopee_orders([{
                             uid: user_id,
                             shop_id: shop_id,
                             order_id: order_id,
                             order_sn: order_sn,
-                            refund_time: refund_time,
-                            options: JSON.stringify(options),
-                            packages: JSON.stringify(packages),
+                            cancel_time: cancel_time,
+                            cancel_reason_ext: cancel_reason_ext,
+                            last_logistics_status: last_logistics_status,
+                            get_one_order: JSON.stringify(get_one_order),
+                            get_package: JSON.stringify(get_package),
                             status: status
                         }]);
                         if (result.code != 0) {
