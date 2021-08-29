@@ -354,7 +354,7 @@ check_all = async () => {
                 let count_cancel_page = 0;
                 let first_cancel_time = 0;
                 while (true) {
-                    let result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, cancel_page, 0, false);
+                    let result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_complete', 40, cancel_page, 0, false);
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.orders.length > 0) {
                             let loop_status = 1;
