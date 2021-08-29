@@ -122,6 +122,7 @@ async function check_order_list(spc_cds, proxy, user_agent, cookie, orders, last
         if (order_id == last_order_id) {
             return 2;
         }
+
         let result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
         if (result.code == 0 && result.data.code == 0) {
             if (result.data.data.order_info.package_list != null &&
@@ -137,6 +138,9 @@ async function check_order_list(spc_cds, proxy, user_agent, cookie, orders, last
                         let order_sn = result.data.data.order_sn;
                         let status = result.data.data.status;
                         let cancel_reason_ext = result.data.data.cancel_reason_ext;
+                        for (let n = 0; n < result.data.data.order_items.length; n++) {
+                            result.data.data.order_items[n].product.description = null;
+                        }
                         let get_one_order = result.data.data;
                         let cancel_time = moment.unix(ctime).format('YYYY-MM-DD HH:mm:ss');
                         result = await api_put_shopee_orders([{
@@ -408,7 +412,7 @@ check_all = async () => {
                     }
                 }
 
-                result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, 1, 0, false);
+                result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_complete', 40, 1, 0, false);
                 if (result.code == 0 && result.data.code == 0) {
                     if (result.data.data.orders != null && result.data.data.orders.length > 0) {
                         let total = result.data.data.page_info.total;
@@ -419,7 +423,7 @@ check_all = async () => {
                             let need_check_page = Math.ceil((total - last_order_total) / 40);
                             if (need_check_page > 1) {
                                 for (let i = 2; i <= need_check_page; i++) {
-                                    result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, i, 0, false);
+                                    result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_complete', 40, i, 0, false);
                                     if (result.code == 0 && result.data.code == 0) {
                                         if (result.data.data.orders != null && result.data.data.orders.length > 0) {
                                             continue_check = await check_order_list(spc_cds, proxy, user_agent, cookie, result.data.data.orders, last_order_id, i, account.uid, account.sid, account.name);
