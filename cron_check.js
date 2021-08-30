@@ -349,7 +349,7 @@ check_all = async () => {
                     }
                 }
 
-                /*
+                
                 //Lấy đơn hàng hủy
                 let cancel_page = 1;
                 let count_cancel_page = 0;
@@ -657,7 +657,7 @@ check_all = async () => {
                     count_complete_page++;
                     if (last_complete_page != 0 && count_complete_page >= 3)
                         break;
-                }*/
+                }
             } catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             } finally {
