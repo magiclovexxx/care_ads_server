@@ -415,7 +415,9 @@ check_all = async () => {
                                         if (result.code == 0 && result.data.code == 0) {
                                             let get_package = result.data.data;
                                             let last_logistics_status = 0;
-                                            if (get_package.order_info.package_list.length > 0 &&
+                                            if (get_package.order_info.package_list != null &&
+                                                get_package.order_info.package_list.length > 0 &&
+                                                get_package.order_info.package_list[0].tracking_info != null &&
                                                 get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                 last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
                                             }
