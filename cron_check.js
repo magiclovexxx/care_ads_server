@@ -56,6 +56,21 @@ function last_connection(slave_ip, slave_port) {
     });
 }
 
+function restore_check(id) {
+    const Url = api_url + '/restore_check?id=' + id;
+    return axiosInstance.get(Url).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+        }
+    });
+}
+
 function api_put_shopee_accounts(data) {
     const Url = api_url + '/shopee_accounts';
     return axiosInstance.put(Url, data).then(function (response) {
@@ -349,7 +364,9 @@ check_all = async () => {
                     }
                 }
 
-                
+                //Check restore
+                let is_restore_check = false;
+
                 //Lấy đơn hàng hủy
                 let cancel_page = 1;
                 let count_cancel_page = 0;
@@ -508,8 +525,10 @@ check_all = async () => {
                     }
                     cancel_page++;
                     count_cancel_page++;
-                    if (last_cancel_page != 0 && count_cancel_page >= 3)
+                    if (last_cancel_page != 0 && count_cancel_page >= 3) {
+                        is_restore_check = true;
                         break;
+                    }
                 }
 
                 //Lấy đơn đã giao
@@ -655,8 +674,14 @@ check_all = async () => {
                     }
                     complete_page++;
                     count_complete_page++;
-                    if (last_complete_page != 0 && count_complete_page >= 3)
+                    if (last_complete_page != 0 && count_complete_page >= 3) {
+                        is_restore_check = true;
                         break;
+                    }
+                }
+                if (is_restore_check) {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Restore Check');
+                    restore_check(account.sid);
                 }
             } catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
