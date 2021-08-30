@@ -361,6 +361,7 @@ check_all = async () => {
                         if (result.data.data.orders.length > 0) {
                             let loop_status = 1;
                             let orders = result.data.data.orders;
+                            let total_page = Math.ceil(result.data.data.page_info.total / 40);
                             for (let i = 0; i < orders.length; i++) {
                                 let order_id = orders[i].order_id;
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
@@ -377,7 +378,8 @@ check_all = async () => {
                                             last_cancel_time = first_cancel_time;
                                             result = await api_put_shopee_accounts({
                                                 id: account.sid,
-                                                last_cancel_time: last_cancel_time
+                                                last_cancel_time: last_cancel_time,
+                                                cancel_total_page: total_page
                                             });
                                             if (result.code != 0) {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
@@ -399,7 +401,8 @@ check_all = async () => {
                                         last_cancel_time = cancel_time;
                                         result = await api_put_shopee_accounts({
                                             id: account.sid,
-                                            last_cancel_time: last_cancel_time
+                                            last_cancel_time: last_cancel_time,
+                                            cancel_total_page: total_page
                                         });
                                         if (result.code != 0) {
                                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
@@ -472,7 +475,8 @@ check_all = async () => {
                                     last_cancel_page = cancel_page;
                                     result = await api_put_shopee_accounts({
                                         id: account.sid,
-                                        last_cancel_page: last_cancel_page
+                                        last_cancel_page: last_cancel_page,
+                                        cancel_total_page: total_page
                                     });
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
