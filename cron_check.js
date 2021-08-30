@@ -350,9 +350,11 @@ check_all = async () => {
                 }
 
                 //Lấy đơn hàng hủy
-                let cancel_page = (last_cancel_page == 0 ? 1 : last_cancel_page);
+                let cancel_page = 1;
                 let count_cancel_page = 0;
                 let first_cancel_time = 0;
+                let disable_check_time = false;
+
                 while (true) {
                     let result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_complete', 40, cancel_page, 0, false);
                     if (result.code == 0 && result.data.code == 0) {
@@ -368,8 +370,9 @@ check_all = async () => {
                                     if (first_cancel_time == 0) {
                                         first_cancel_time = cancel_time;
                                     }
-                                    if (last_cancel_page == 0 &&
+                                    if (!disable_check_time &&
                                         cancel_time < last_cancel_time) {
+                                        disable_check_time = true;
                                         last_cancel_time = first_cancel_time;
                                         result = await api_put_shopee_accounts({
                                             id: account.sid,
@@ -380,7 +383,13 @@ check_all = async () => {
                                             return;
                                         }
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_time', last_cancel_time);
-                                        loop_status = 0;
+                                        if (last_cancel_page == 0) {
+                                            loop_status = 0;
+                                        } else {
+                                            count_cancel_page = 0;
+                                            cancel_page = last_cancel_page;
+                                            loop_status = 3;
+                                        }
                                         break;
                                     }
 
@@ -455,7 +464,7 @@ check_all = async () => {
                                 }
                             }
                             if (loop_status != 0) {
-                                if (last_cancel_page != 0) {
+                                if (last_cancel_page != 0 && cancel_page > last_cancel_page) {
                                     last_cancel_page = cancel_page;
                                     result = await api_put_shopee_accounts({
                                         id: account.sid,

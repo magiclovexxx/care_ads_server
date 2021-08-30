@@ -10,23 +10,24 @@ function createAxios() {
 const axiosInstance = createAxios();
 
 (async () => {
-    let cookie = 'PIPGG8M3uoi25mDaFUu5kyzlhodgSclHUfvfaxv/SwmvtfhXJWAotYIRbaCDBYh0cYi4fxsBxJ5KtQfFlwss1SCJa7B5aBmZdSeTMOUkiNkg6JaVUgHKukPWqlitON0GRj2N/lJ+zgVLW/ks6eJq313ZP2PXtmo0+1N7/RIOw9w3rGWYRMjcm16+DqIgiMH4ldvegQ0lDHbPNtMEI5ShubYH9vxYxIjCKdH9x/j7tG72+qbAklbY8X7JLi8wpDiOCk8mTJU1ZdAX6y03IAOLNMbP7z4XdLF8Y8HcL1P8snlFSeQ9AuflIx8DT5PTHUUjGwQBxhiMrV9WLsoow1pg/FFy6aUxV1GrjWMbyWYwQj4loLR4Yzocd6Hj2O9MM4XdWmZj7rPL5n8qyEqL/g3mVxXTjB5WwlPa83OICMkRoN8++/zw2mHkJh0ejyFHKEWpNKrODXv2pepC2DA2oYMj3O+EaMg0Zlq1l3aeRaSj6DcTBRhoATRFZ4UGF2hibycaFfH7/fIofbxnb8eJ5yhkkf8R2Yl4GlOdRkWuwi89H2GhKoSdgmC8p7uWCYQuEVHRyyaADRWWrb9EZnGkJt1N5TkdcHPGTfzP4Eup/5mzcHb4XJv93r8xO2xHMYBpyGLMzSdEd+Ky4r4cel+OUBuqYfqKYqm7qp5PnvaoB+0OfKFRpeTD+d01RJ6a0rGzwkw+KAPtCGKLuliaka0fDO49vuqFurS8xI55YItu3O6Atig1rXaWSfNmFKNh5MEgZQooWXR79W8XeR3Kb60sRyHKpWqxQwfs9UJyXDF6/PoloZ9BiUPT0e2uKCEWrxDYuLTOBpGWq4HHjftei57tZ3nn8BR6JcO4/+7Q7xu5eeMbGMHKHW5yHWs3wYC89Vi9JwVYJKjFclq0nwkYHayneILAmHCff0WIAuvTm/6scqA68u0UGiXwxBQu59++6gScaSts7hqVEUcjJuqTvEUipYegSBgtt2R/KECGICzotXdzLmEAjHCA9ReYgBwL7F7bCeEVVlcePvaV98JqSFeOqD/vmAspiYkwuGVQ4LEKslXYXWJuVqtnfEAhnU3rn/aZpE9qwR6+72Rd47fDNIxAynt5NSkwo6F4bEuK2CpNW8EJpObKAoyGherICu389Wjk9fmzxv8TNniJLqwGXNLvXuOcXdha+FqSgyWzW4R8hgC3cZRh+iWVZa2yGznXRKr6ED1M+DxmpIFxDJ3odBdGW4U/HRhOj+FkKW1/8x29lQm00uCU5xijRYBpgInugzZ1oNN6DD2Mm3jwqfi4QjoUtHuRR/xQyUOJngIkPzhH4kXnhziCivFTdOsEdaaFQVlGWSRfAJ8YIwkiFXDwUVtK4bLXkUUneHOI8TDn94PvXD4cHIiwSFBqaCW1fkbrFGUGnXIq1iEAUvvcIyjWtgZS9dqrwpYIzwPAidJiPefBGU9Z4lxXDGhDmVAVDAIJsGGhiySmkAUHpFK3lwJO13Y9XdyZU/znlxxDkduQpemMwqNNpdo21OMmhdyhKYHRSjpJF04pQKzTP/3/62QaWsTStWl4tP5PRWoO4bnmdLWgOqD2R5VhtaSFBWJxm7ARUA+2HVns48CUxQUyAR+5vDfAcRsyVg/RY7GcujifLnjxGjTl/M6d6WrnNvgAQFnWna7ijwNjsJPulQpYixhesQR6P/oXio+5SLtl8l16pxpfrej1TXA11xuTf93N6KVQ2vRl7JMH0KIzRwmWwNNCa9DF/TUbIXPBuGPqjI9yQTDcYlWmp9fcEHLCc601yVTFbkGsMXRKY5IpmqFdbU4PEk3JT0vqs0GSbJ3BcJVUdjMwXZhV05X7NTC2j8rE3IGDBB71514E58PCjViAn6geKKW1HZk/LVByb0h4dAG2bF4sDKvp/OX2tvtxqnqwetsDW4aZV9X2HfIGH9oEAgcOsfh/sDmqvbm+82SWpdUZIDtLT7RGMRAY3uqI6ACexDn3GwVTkt9j9CEOQ4+DokTKOUkT+JmctZiBjNScBvR3ErKuIWvxNyOF8XYUuo6ZF0ZEPKDKLKo6FK1w5wUqLIlADEJ9iLDxIFs8SvxrcDWEgyP656RWwd/mOx9FGTnFfwGIgfqILsJpr+5YzjpcOCsUy5lDqy70PR60MEdUAWJ//ufhIuryZDKkLSMAQvs/X/1snJyhM9pWZQObDF88vzn7JkdOlO8heXe+gj72/B+8f8HwdgsHxnpICmciAip7qzEkSYq7+dJcgxIWXh14Fg2pVTdbHfOpm+4HsyQVxAXp4/WyG+x0LikBI2A6ciO8mK6muK+3KnPbPKH1uXqQ5sf8YD/mDAHPQbbSiBXf8ojMjmOu2uDNr/VOsLd7EgN6utSInzC65QuoxoVXI8fOYahfo6wE5MZ/6i5K9mfFZVz5FrWJvcVcKXhqywmxiXUanbrut2J0U90AqaEdasEQmn2pV6/uC1iVeioWtchYrWK2eUXmHhzHFZRuGxBMfjcZVQt+iTw+vxa8/JV9zL5CIdJPOY0HqmkiZcWkTzm292ud9JHFBvth2eOiSiYfVZZuV6lO3H2tLJfZU7jvQ0I+TdpDdexccgYrCSFOI82jkI7zeYtCviFlvSHx42DXIt3cAnVyWKp+e+fxrXL5rh8EkUjjjvWZEqfT1kd2WQtFmnN6ZYklHgYvNE6wX8BMXhxKl2UcnbW5JN85HOFq6VyxIgnm02h+FTx0i/WNJsQVAOy76LsWDyhegsNelfXj2ZapAnZdCNGrFq+qi3eIldOyDZWV5nvS9Wwer/l6HHnKFECRh0gsWCwGpYFKTOwVY/huxf3IipHdj50VKcaeCwY/Z60/Y3LH9f78RHPjdgfXq0+M7lWj/R2gMorewZXbtrk4sL6YQCNeuGbR5kDU6gDP0BeYUSVfcW5YJBKvHMpVeMz9aItpkPGCEwwkNDntR47I9zUZymVY0ioAtfpct7ofxyziZlNtW9C1IYfOExwG0PjIQrlpAHMJOko=';
+    let cookie = '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';
     let user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) coc_coc_browser/95.0.150 Chrome/89.0.4389.150 Safari/537.36';
-    let spc_cds = '32582b2a-00dc-465e-894c-a169595549c0';
+    let spc_cds = '5f6690fe-3e8d-4627-b022-38fe2913a095';
     let proxy = null;
 
-    let last_cancel_time = 1629981607;
-    let last_cancel_page = 0;
-    
-    let cancel_page = (last_cancel_page == 0 ? 1 : last_cancel_page);
+    let last_cancel_time = 1630256668;
+    let last_cancel_page = 14;
+
+    let cancel_page = 1;
     let count_cancel_page = 0;
     let first_cancel_time = 0;
+    let disable_check_time = false;
     while (true) {
         let result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_all', 40, cancel_page, 0, false);
         if (result.code == 0 && result.data.code == 0) {
             if (result.data.data.orders.length > 0) {
                 let loop_status = 1;
-                let orders = result.data.data.orders;                
+                let orders = result.data.data.orders;
                 for (let i = 0; i < orders.length; i++) {
                     let order_id = orders[i].order_id;
                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
@@ -36,11 +37,18 @@ const axiosInstance = createAxios();
                         if (first_cancel_time == 0) {
                             first_cancel_time = cancel_time;
                         }
-                        if (last_cancel_page == 0 &&
+                        if (!disable_check_time &&
                             cancel_time < last_cancel_time) {
+                            disable_check_time = true;
                             last_cancel_time = first_cancel_time;
-                            console.log('update ws last_cancel_time', last_cancel_time, cancel_page);
-                            loop_status = 0;
+                            console.log('update ws last_cancel_time = first_cancel_time', last_cancel_time, cancel_page);
+                            if (last_cancel_page == 0) {
+                                loop_status = 0;
+                            } else {
+                                count_cancel_page = 0;
+                                cancel_page = last_cancel_page;
+                                loop_status = 3;
+                            }
                             break;
                         }
 
@@ -71,7 +79,7 @@ const axiosInstance = createAxios();
                                     }
                                 }
                                 console.log(order_id, 'OK', cancel_reason_ext, cancel_page);
-                                
+
 
                             } else {
                                 console.log('error');
@@ -88,8 +96,9 @@ const axiosInstance = createAxios();
                         break;
                     }
                 }
+
                 if (loop_status != 0) {
-                    if (last_cancel_page != 0) {
+                    if (last_cancel_page != 0 && cancel_page > last_cancel_page) {
                         last_cancel_page = cancel_page;
                         console.log('update ws last_cancel_page', last_cancel_page);
                     }
