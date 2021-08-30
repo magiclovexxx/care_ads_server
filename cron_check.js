@@ -405,7 +405,11 @@ check_all = async () => {
                                         result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                                         if (result.code == 0 && result.data.code == 0) {
                                             let get_package = result.data.data;
-                                            let last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                            let last_logistics_status = 0;
+                                            if (get_package.order_info.package_list.length > 0 &&
+                                                get_package.order_info.package_list[0].tracking_info.length > 0) {
+                                                last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                            }
                                             if (cancel_reason_ext == 202) {
                                                 if (last_logistics_status == 201) {
                                                     new_cancel_time = moment.unix(get_package.order_info.package_list[0].tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
