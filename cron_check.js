@@ -451,7 +451,7 @@ check_all = async () => {
                                                 status: status
                                             }]);
                                             if (result.code != 0) {
-                                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shop_name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
+                                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                 return;
                                             }
                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) OK cancel_reason_ext =', cancel_reason_ext, new_cancel_time);
@@ -601,7 +601,7 @@ check_all = async () => {
                                             status: status
                                         }]);
                                         if (result.code != 0) {
-                                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shop_name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
+                                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                             return;
                                         }
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + complete_page + ']) OK last_logistics_status =', last_logistics_status, new_complete_time);
