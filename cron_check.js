@@ -373,16 +373,18 @@ check_all = async () => {
                                     if (!disable_check_time &&
                                         cancel_time < last_cancel_time) {
                                         disable_check_time = true;
-                                        last_cancel_time = first_cancel_time;
-                                        result = await api_put_shopee_accounts({
-                                            id: account.sid,
-                                            last_cancel_time: last_cancel_time
-                                        });
-                                        if (result.code != 0) {
-                                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
-                                            return;
+                                        if (last_cancel_time != first_cancel_time) {
+                                            last_cancel_time = first_cancel_time;
+                                            result = await api_put_shopee_accounts({
+                                                id: account.sid,
+                                                last_cancel_time: last_cancel_time
+                                            });
+                                            if (result.code != 0) {
+                                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                                return;
+                                            }
+                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_time', last_cancel_time);
                                         }
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_time', last_cancel_time);
                                         if (last_cancel_page == 0) {
                                             loop_status = 0;
                                         } else {
