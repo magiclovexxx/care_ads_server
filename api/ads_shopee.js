@@ -1202,6 +1202,56 @@ const api_get_order_id_list = async (SPC_CDS, proxy, UserAgent, cookie, from_pag
     return result;
 }
 
+const api_get_wallet_transactions = async (SPC_CDS, proxy, UserAgent, cookie, wallet_type, page_number, page_size, start_date, end_date, transaction_types) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/v3/finance/get_wallet_transactions/';
+    Url += '?SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    Url += '&wallet_type=' + wallet_type;
+    Url += '&page_number=' + page_number;
+    Url += '&page_size=' + page_size;
+    if (start_date != null)
+        Url += '&start_date=' + start_date;
+    if (end_date != null)
+        Url += '&end_date=' + end_date;
+    if (transaction_types != null)
+        Url += '&transaction_types=' + transaction_types;
+
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://banhang.shopee.vn/'
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.cookie != null)
+            response.cookie = RSA.encrypt(response.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.cookie != null)
+                error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+        } else {
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            } else {
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
+                return api_get_wallet_transactions(SPC_CDS, proxy, UserAgent, cookie, wallet_type, page_number, page_size, start_date, end_date, transaction_types);
+            }
+        }
+    });
+    return result;
+}
+
 const api_get_package = async (SPC_CDS, proxy, UserAgent, cookie, order_id) => {
     if (cookie != null) {
         cookie = RSA.decrypt(cookie, 'utf8');
@@ -1781,5 +1831,6 @@ module.exports = {
     api_get_search_items_waiting,
     api_get_order_id_list,
     api_get_package,
-    api_get_one_order
+    api_get_one_order,
+    api_get_wallet_transactions
 }

@@ -131,6 +131,21 @@ function api_put_shopee_orders(data) {
     });
 }
 
+function api_put_shopee_payments(data) {
+    const Url = api_url + '/shopee_payments';
+    return axiosInstance.put(Url, data).then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+        }
+    });
+}
+
 async function php_update_placements(campaign, update_placements) {
     let result = await api_put_shopee_placements(update_placements);
     if (result.code != 0) {
@@ -313,6 +328,8 @@ check_all = async () => {
                 let last_cancel_page = account.last_cancel_page;
                 let last_complete_time = account.last_complete_time;
                 let last_complete_page = account.last_complete_page;
+                let last_pay_time = account.last_pay_time;
+                let last_pay_page = account.last_pay_page;
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
@@ -379,7 +396,7 @@ check_all = async () => {
                         if (result.data.data.orders.length > 0) {
                             let loop_status = 1;
                             let orders = result.data.data.orders;
-                            let total_page = Math.ceil(result.data.data.page_info.total / 40);
+                            let total_page = Math.ceil(result.data.data.page_info.total / result.data.data.page_info.page_size);
                             for (let i = 0; i < orders.length; i++) {
                                 let order_id = orders[i].order_id;
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
@@ -543,7 +560,7 @@ check_all = async () => {
                         if (result.data.data.orders.length > 0) {
                             let loop_status = 1;
                             let orders = result.data.data.orders;
-                            let total_page = Math.ceil(result.data.data.page_info.total / 40);
+                            let total_page = Math.ceil(result.data.data.page_info.total / result.data.data.page_info.page_size);
                             for (let i = 0; i < orders.length; i++) {
                                 let order_id = orders[i].order_id;
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
@@ -679,6 +696,137 @@ check_all = async () => {
                         break;
                     }
                 }
+
+                //Lấy thanh toán về ví
+                let pay_page = 1;
+                let count_pay_page = 0;
+                let first_pay_time = 0;
+                let disable_check_pay_time = false;
+
+                while (true) {
+                    result = await shopeeApi.api_get_wallet_transactions(spc_cds, proxy, user_agent, cookie, 0, pay_page, 20, null, null, '102,101,405,404,401,402');
+                    if (result.code == 0 && result.data.code == 0) {
+                        if (result.data.data.list.length > 0) {
+                            let loop_status = 1;
+                            let list = result.data.data.list;
+                            let total_page = Math.ceil(result.data.data.page_info.total / result.data.data.page_info.page_size);
+                            for (let i = 0; i < list.length; i++) {
+                                let get_wallet_transaction = list[i];
+                                let transaction_id = get_wallet_transaction.transaction_id;
+                                let pay_time = get_wallet_transaction.ctime;
+                                if (first_pay_time == 0) {
+                                    first_pay_time = pay_time;
+                                }
+                                if (!disable_check_pay_time &&
+                                    pay_time < last_pay_time) {
+                                    disable_check_pay_time = true;
+                                    if (last_pay_time != first_pay_time) {
+                                        last_pay_time = first_pay_time;
+                                        result = await api_put_shopee_accounts({
+                                            id: account.sid,
+                                            last_pay_time: last_pay_time,
+                                            pay_total_page: total_page
+                                        });
+                                        if (result.code != 0) {
+                                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                            return;
+                                        }
+                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_time', last_pay_time);
+                                    }
+                                    if (last_pay_page == 0) {
+                                        loop_status = 0;
+                                    } else {
+                                        count_pay_page = 0;
+                                        pay_page = last_pay_page;
+                                        loop_status = 3;
+                                    }
+                                    break;
+                                }
+
+                                if (last_pay_time == 0) {
+                                    last_pay_time = pay_time;
+                                    result = await api_put_shopee_accounts({
+                                        id: account.sid,
+                                        last_pay_time: last_pay_time,
+                                        pay_total_page: total_page
+                                    });
+                                    if (result.code != 0) {
+                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                        return;
+                                    }
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_time', last_pay_time);
+                                }
+
+                                let transaction_type = get_wallet_transaction.type;
+                                let order_sn = get_wallet_transaction.order_sn;
+                                let amount = get_wallet_transaction.amount;
+                                let target_id = get_wallet_transaction.target_id;
+                                let status = get_wallet_transaction.status;
+
+                                let new_pay_time = moment.unix(pay_time).format('YYYY-MM-DD HH:mm:ss');
+
+                                result = await api_put_shopee_payments([{
+                                    uid: account.uid,
+                                    shop_id: account.sid,
+                                    transaction_id: transaction_id,
+                                    transaction_type: transaction_type,                                    
+                                    order_sn: order_sn,
+                                    amount: amount,
+                                    target_id: target_id,                                    
+                                    payment_time: new_pay_time,
+                                    get_wallet_transaction: JSON.stringify(get_wallet_transaction),
+                                    status: status
+                                }]);
+                                if (result.code != 0) {
+                                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ') Lỗi api_put_shopee_payments', result);
+                                    return;
+                                }
+                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ' [' + pay_page + ']) OK order_sn =', order_sn, new_pay_time);
+                            }
+                            if (loop_status != 0) {
+                                if (last_pay_page != 0 && pay_page > last_pay_page) {
+                                    last_pay_page = pay_page;
+                                    result = await api_put_shopee_accounts({
+                                        id: account.sid,
+                                        last_pay_page: last_pay_page,
+                                        pay_total_page: total_page
+                                    });
+                                    if (result.code != 0) {
+                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                        return;
+                                    }
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
+                                }
+                            } else {
+                                break;
+                            }
+                        } else {
+                            if (last_pay_page != 0) {
+                                last_pay_page = 0;
+                                result = await api_put_shopee_accounts({
+                                    id: account.sid,
+                                    last_pay_page: last_pay_page
+                                });
+                                if (result.code != 0) {
+                                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                    return;
+                                }
+                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
+                            }
+                            break;
+                        }
+                    } else {
+                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_wallet_transactions', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                        break;
+                    }
+                    pay_page++;
+                    count_pay_page++;
+                    if (last_pay_page != 0 && count_pay_page >= 100) {
+                        is_restore_check = true;
+                        break;
+                    }
+                }
+
                 if (is_restore_check) {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Restore Check');
                     restore_check(account.sid);
