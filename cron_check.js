@@ -380,7 +380,7 @@ check_all = async () => {
                         return;
                     }
                 }
-                return;
+                
                 //Check restore
                 let is_restore_check = false;
 
