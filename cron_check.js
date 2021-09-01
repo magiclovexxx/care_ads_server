@@ -774,7 +774,6 @@ check_all = async () => {
                                     amount: amount,
                                     target_id: target_id,                                    
                                     payment_time: new_pay_time,
-                                    get_wallet_transaction: JSON.stringify(get_wallet_transaction),
                                     status: status
                                 }]);
                                 if (result.code != 0) {
