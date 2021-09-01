@@ -450,9 +450,10 @@ check_all = async () => {
                                     if (cancel_reason_ext == 202 || cancel_reason_ext == 5) {
                                         let order_sn = get_one_order.order_sn;
 
-                                        let buyer_user_id = get_one_order.buyer_user.user_id;
+                                        let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
                                         let buyer_user_name = get_one_order.buyer_user.user_name;
-                                        let buyer_shop_id = get_one_order.buyer_user.shop_id;
+                                        let buyer_shop_id = (get_one_order.buyer_user.shop_id != null ? get_one_order.buyer_user.shop_id : 0);
+    
                                         let buyer_portrait = get_one_order.buyer_user.portrait;
                                         let create_time = get_one_order.create_time;
                                         let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
@@ -674,9 +675,9 @@ check_all = async () => {
 
                                     let order_sn = get_one_order.order_sn;
 
-                                    let buyer_user_id = get_one_order.buyer_user.user_id;
+                                    let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
                                     let buyer_user_name = get_one_order.buyer_user.user_name;
-                                    let buyer_shop_id = get_one_order.buyer_user.shop_id;
+                                    let buyer_shop_id = (get_one_order.buyer_user.shop_id != null ? get_one_order.buyer_user.shop_id : 0);
                                     let buyer_portrait = get_one_order.buyer_user.portrait;
                                     let create_time = get_one_order.create_time;
                                     let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
