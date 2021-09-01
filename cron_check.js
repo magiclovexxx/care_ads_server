@@ -383,7 +383,7 @@ check_all = async () => {
 
                 //Check restore
                 let is_restore_check = false;
-                /*
+                
                 //Lấy đơn hàng hủy
                 let cancel_page = 1;
                 let count_cancel_page = 0;
@@ -815,7 +815,7 @@ check_all = async () => {
                         break;
                     }
                 }
-*/
+
                 //Lấy thanh toán về ví
                 let pay_page = 1;
                 let count_pay_page = 0;
