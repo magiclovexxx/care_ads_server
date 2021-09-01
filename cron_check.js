@@ -380,16 +380,15 @@ check_all = async () => {
                         return;
                     }
                 }
-
+                return;
                 //Check restore
                 let is_restore_check = false;
-                
+
                 //Lấy đơn hàng hủy
                 let cancel_page = 1;
                 let count_cancel_page = 0;
                 let first_cancel_time = 0;
                 let disable_check_cancel_time = false;
-
                 while (true) {
                     result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_complete', 40, cancel_page, 0, false);
                     if (result.code == 0 && result.data.code == 0) {
@@ -424,12 +423,16 @@ check_all = async () => {
                                         }
                                         if (last_cancel_page == 0) {
                                             loop_status = 0;
+                                            break;
                                         } else {
-                                            count_cancel_page = 0;
-                                            cancel_page = last_cancel_page;
-                                            loop_status = 3;
+                                            if (last_cancel_page > 1) {
+                                                count_cancel_page = 0;
+                                                cancel_page = last_cancel_page;
+                                                loop_status = 3;
+                                                break;
+                                            }
                                         }
-                                        break;
+
                                     }
 
                                     if (last_cancel_time == 0) {
@@ -453,7 +456,7 @@ check_all = async () => {
                                         let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
                                         let buyer_user_name = get_one_order.buyer_user.user_name;
                                         let buyer_shop_id = (get_one_order.buyer_user.shop_id != null ? get_one_order.buyer_user.shop_id : 0);
-    
+
                                         let buyer_portrait = get_one_order.buyer_user.portrait;
                                         let create_time = get_one_order.create_time;
                                         let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
@@ -651,12 +654,16 @@ check_all = async () => {
                                         }
                                         if (last_complete_page == 0) {
                                             loop_status = 0;
+                                            break;
                                         } else {
-                                            count_complete_page = 0;
-                                            complete_page = last_complete_page;
-                                            loop_status = 3;
+                                            if (last_complete_page > 1) {
+                                                count_complete_page = 0;
+                                                complete_page = last_complete_page;
+                                                loop_status = 3;
+                                                break;
+                                            }
                                         }
-                                        break;
+
                                     }
 
                                     if (last_complete_time == 0) {
@@ -729,7 +736,7 @@ check_all = async () => {
                                             });
                                         }
 
-                                        let final_total = total_amount - voucher_price + total_rebate_price - seller_service_fee - card_txn_fee;                                        
+                                        let final_total = total_amount - voucher_price + total_rebate_price - seller_service_fee - card_txn_fee;
 
                                         result = await api_put_shopee_orders([{
                                             uid: account.uid,
@@ -855,12 +862,15 @@ check_all = async () => {
                                     }
                                     if (last_pay_page == 0) {
                                         loop_status = 0;
+                                        break;
                                     } else {
-                                        count_pay_page = 0;
-                                        pay_page = last_pay_page;
-                                        loop_status = 3;
+                                        if (last_pay_page > 1) {
+                                            count_pay_page = 0;
+                                            pay_page = last_pay_page;
+                                            loop_status = 3;
+                                            break;
+                                        }
                                     }
-                                    break;
                                 }
 
                                 if (last_pay_time == 0) {
