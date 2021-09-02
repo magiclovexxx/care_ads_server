@@ -466,7 +466,7 @@ check_all = async () => {
 
                                         let status = get_one_order.status;
                                         let new_cancel_time = moment.unix(cancel_time).format('YYYY-MM-DD HH:mm:ss');
-                                        if (moment.unix(cancel_time).startOf('day').add(7, 'days') < moment().startOf('day')) {
+                                        if (moment.unix(cancel_time).startOf('month').add(3, 'months') < moment().startOf('month')) {
                                             last_cancel_page = 0;
                                             result = await api_put_shopee_accounts({
                                                 id: account.sid,
