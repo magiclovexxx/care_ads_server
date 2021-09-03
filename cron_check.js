@@ -447,11 +447,10 @@ check_all = async () => {
                                         }
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_time', last_cancel_time);
                                     }
-
+                                    let order_sn = get_one_order.order_sn;
                                     let cancel_reason_ext = get_one_order.cancel_reason_ext;
                                     if (cancel_reason_ext == 202 || cancel_reason_ext == 5) {
-                                        let order_sn = get_one_order.order_sn;
-
+                                        
                                         let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
                                         let buyer_user_name = get_one_order.buyer_user.user_name;
                                         let buyer_shop_id = (get_one_order.buyer_user.shop_id != null ? get_one_order.buyer_user.shop_id : 0);
@@ -503,7 +502,7 @@ check_all = async () => {
                                                     if (last_logistics_status == 201) {
                                                         new_cancel_time = moment.unix(get_package.order_info.package_list[0].tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
                                                     } else {
-                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) SKIP cancel_reason_ext =', cancel_reason_ext, new_cancel_time);
+                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel SKIP', order_sn, new_cancel_time);
                                                         continue;
                                                     }
                                                 }
@@ -568,7 +567,7 @@ check_all = async () => {
                                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                     return;
                                                 }
-                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) OK cancel_reason_ext =', cancel_reason_ext, new_cancel_time);
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel OK', order_sn, new_cancel_time);
                                             } else {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                                 loop_status = 0;
@@ -576,7 +575,7 @@ check_all = async () => {
                                             }
                                         }
                                     } else {
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) SKIP cancel_reason_ext =', cancel_reason_ext, cancel_time);
+                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel SKIP', order_sn, cancel_time);
                                     }
                                 } else {
                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_one_order', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -796,7 +795,7 @@ check_all = async () => {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                 return;
                                             }
-                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + complete_page + ']) OK last_logistics_status =', last_logistics_status, new_complete_time);
+                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + complete_page + ']) order complete', order_sn, new_complete_time);
                                         } else {
                                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                             loop_status = 0;
@@ -953,7 +952,7 @@ check_all = async () => {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ') Lỗi api_put_shopee_payments', result);
                                         return;
                                     }
-                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ' [' + pay_page + ']) OK order_sn =', order_sn, new_pay_time);
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ' [' + pay_page + ']) order payment OK', order_sn, new_pay_time);
                                 }
                             }
                             if (loop_status != 0) {
