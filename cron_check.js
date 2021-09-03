@@ -405,7 +405,7 @@ check_all = async () => {
                                         first_cancel_time = cancel_time;
                                     }
                                     if (!disable_check_cancel_time &&
-                                        cancel_time < last_cancel_time) {
+                                        cancel_time <= last_cancel_time) {
                                         disable_check_cancel_time = true;
                                         if (last_cancel_time != first_cancel_time) {
                                             last_cancel_time = first_cancel_time;
@@ -650,7 +650,7 @@ check_all = async () => {
                                         first_complete_time = complete_time;
                                     }
                                     if (!disable_check_complete_time &&
-                                        complete_time < last_complete_time) {
+                                        complete_time <= last_complete_time) {
                                         disable_check_complete_time = true;
                                         if (last_complete_time != first_complete_time) {
                                             last_complete_time = first_complete_time;
@@ -873,7 +873,7 @@ check_all = async () => {
                                     first_pay_time = pay_time;
                                 }
                                 if (!disable_check_pay_time &&
-                                    pay_time < last_pay_time) {
+                                    pay_time <= last_pay_time) {
                                     disable_check_pay_time = true;
                                     if (last_pay_time != first_pay_time) {
                                         last_pay_time = first_pay_time;
