@@ -382,7 +382,7 @@ check_all = async () => {
                 }
                 //Check restore
                 let is_restore_check = false;
-                
+
                 //Lấy đơn hàng hủy
                 let cancel_page = 1;
                 let count_cancel_page = 0;
@@ -450,7 +450,7 @@ check_all = async () => {
                                     let order_sn = get_one_order.order_sn;
                                     let cancel_reason_ext = get_one_order.cancel_reason_ext;
                                     if (cancel_reason_ext == 202 || cancel_reason_ext == 5) {
-                                        
+
                                         let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
                                         let buyer_user_name = get_one_order.buyer_user.user_name;
                                         let buyer_shop_id = (get_one_order.buyer_user.shop_id != null ? get_one_order.buyer_user.shop_id : 0);
@@ -487,12 +487,13 @@ check_all = async () => {
                                                 let package_number = null;
                                                 let third_party_tn = null;
                                                 let consignment_no = null;
-
+                                                let package_logistics_status = 0;
                                                 if (get_package.order_info.package_list != null &&
                                                     get_package.order_info.package_list.length > 0) {
                                                     package_number = get_package.order_info.package_list[0].package_number;
                                                     third_party_tn = get_package.order_info.package_list[0].third_party_tn;
                                                     consignment_no = get_package.order_info.package_list[0].consignment_no;
+                                                    package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
                                                     if (get_package.order_info.package_list[0].tracking_info != null &&
                                                         get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                         last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
@@ -512,7 +513,7 @@ check_all = async () => {
 
                                                 let order_items = [];
                                                 for (let n = 0; n < get_one_order.order_items.length; n++) {
-                                                    if (get_one_order.order_items[n].status != 4) {
+                                                    if (get_one_order.order_items[n].status == 1 || get_one_order.order_items[n].status == 2) {
                                                         total_amount += get_one_order.order_items[n].order_price * get_one_order.order_items[n].amount;
                                                         total_rebate_price += get_one_order.order_items[n].item_model.rebate_price * get_one_order.order_items[n].amount;
                                                     }
@@ -544,6 +545,7 @@ check_all = async () => {
                                                     cancel_time: new_cancel_time,
                                                     cancel_reason_ext: cancel_reason_ext,
                                                     last_logistics_status: last_logistics_status,
+                                                    package_logistics_status: package_logistics_status,
                                                     buyer_user_id: buyer_user_id,
                                                     buyer_user_name: buyer_user_name,
                                                     buyer_shop_id: buyer_shop_id,
@@ -729,12 +731,14 @@ check_all = async () => {
                                             let package_number = null;
                                             let third_party_tn = null;
                                             let consignment_no = null;
+                                            let package_logistics_status = 0;
 
                                             if (get_package.order_info.package_list != null &&
                                                 get_package.order_info.package_list.length > 0) {
                                                 package_number = get_package.order_info.package_list[0].package_number;
                                                 third_party_tn = get_package.order_info.package_list[0].third_party_tn;
                                                 consignment_no = get_package.order_info.package_list[0].consignment_no;
+                                                package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
                                                 if (get_package.order_info.package_list[0].tracking_info != null &&
                                                     get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                     last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
@@ -746,7 +750,7 @@ check_all = async () => {
 
                                             let order_items = [];
                                             for (let n = 0; n < get_one_order.order_items.length; n++) {
-                                                if (get_one_order.order_items[n].status != 4) {
+                                                if (get_one_order.order_items[n].status == 1 || get_one_order.order_items[n].status == 2) {
                                                     total_amount += get_one_order.order_items[n].order_price * get_one_order.order_items[n].amount;
                                                     total_rebate_price += get_one_order.order_items[n].item_model.rebate_price * get_one_order.order_items[n].amount;
                                                 }
@@ -772,6 +776,7 @@ check_all = async () => {
                                                 order_sn: order_sn,
                                                 complete_time: new_complete_time,
                                                 last_logistics_status: last_logistics_status,
+                                                package_logistics_status: package_logistics_status,
                                                 buyer_user_id: buyer_user_id,
                                                 buyer_user_name: buyer_user_name,
                                                 buyer_shop_id: buyer_shop_id,
@@ -851,7 +856,7 @@ check_all = async () => {
                         break;
                     }
                 }
-                
+
                 //Lấy thanh toán về ví
                 let pay_page = 1;
                 let count_pay_page = 0;
