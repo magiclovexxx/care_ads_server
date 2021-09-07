@@ -328,7 +328,7 @@ check_all = async () => {
                 let last_cancel_page = account.last_cancel_page;
                 if (last_cancel_page == -1)
                     last_cancel_page = 1;
-                    
+
                 let last_complete_time = account.last_complete_time;
                 let last_complete_page = account.last_complete_page;
                 if (last_complete_page == -1)
@@ -541,7 +541,7 @@ check_all = async () => {
 
                                                     let final_total = 0;
                                                     if (cancel_reason_ext == 5) {
-                                                        final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee;
+                                                        final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee;
                                                     }
 
                                                     result = await api_put_shopee_orders([{
