@@ -459,9 +459,6 @@ check_all = async () => {
                                         let create_time = get_one_order.create_time;
                                         let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
                                         let checkout_carrier_name = get_one_order.checkout_carrier_name;
-                                        let seller_service_fee = get_one_order.seller_service_fee;
-                                        let card_txn_fee = get_one_order.card_txn_fee_info.card_txn_fee;
-                                        let voucher_price = (get_one_order.voucher_absorbed_by_seller ? get_one_order.voucher_price : 0);
 
                                         let status = get_one_order.status;
                                         let new_cancel_time = moment.unix(cancel_time).format('YYYY-MM-DD HH:mm:ss');
@@ -482,94 +479,98 @@ check_all = async () => {
                                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                                             if (result.code == 0 && result.data.code == 0) {
                                                 let get_package = result.data.data;
-                                                let last_logistics_status = 0;
-
-                                                let package_number = null;
-                                                let third_party_tn = null;
-                                                let consignment_no = null;
-                                                let package_logistics_status = 0;
-                                                if (get_package.order_info.package_list != null &&
-                                                    get_package.order_info.package_list.length > 0) {
-                                                    package_number = get_package.order_info.package_list[0].package_number;
-                                                    third_party_tn = get_package.order_info.package_list[0].third_party_tn;
-                                                    consignment_no = get_package.order_info.package_list[0].consignment_no;
-                                                    package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
-                                                    if (get_package.order_info.package_list[0].tracking_info != null &&
-                                                        get_package.order_info.package_list[0].tracking_info.length > 0) {
-                                                        last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                                result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
+                                                if (result.code == 0 && result.data.code == 0) {
+                                                    let income_transaction_history_detail = result.data.data;
+                                                    let last_logistics_status = 0;
+                                                    let package_number = null;
+                                                    let third_party_tn = null;
+                                                    let consignment_no = null;
+                                                    let package_logistics_status = 0;
+                                                    if (get_package.order_info.package_list != null &&
+                                                        get_package.order_info.package_list.length > 0) {
+                                                        package_number = get_package.order_info.package_list[0].package_number;
+                                                        third_party_tn = get_package.order_info.package_list[0].third_party_tn;
+                                                        consignment_no = get_package.order_info.package_list[0].consignment_no;
+                                                        package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
+                                                        if (get_package.order_info.package_list[0].tracking_info != null &&
+                                                            get_package.order_info.package_list[0].tracking_info.length > 0) {
+                                                            last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                                        }
                                                     }
-                                                }
-                                                if (cancel_reason_ext == 202) {
-                                                    if (last_logistics_status == 201) {
-                                                        new_cancel_time = moment.unix(get_package.order_info.package_list[0].tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
-                                                    } else {
-                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel SKIP', order_sn, new_cancel_time);
-                                                        continue;
+                                                    if (cancel_reason_ext == 202) {
+                                                        if (last_logistics_status == 201) {
+                                                            new_cancel_time = moment.unix(get_package.order_info.package_list[0].tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
+                                                        } else {
+                                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel SKIP', order_sn, new_cancel_time);
+                                                            continue;
+                                                        }
                                                     }
-                                                }
 
-                                                let total_amount = 0;
-                                                let total_rebate_price = 0;
+                                                    let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
+                                                    let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
+                                                    let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
+                                                    let product_price = income_transaction_history_detail.payment_info.merchant_subtotal.product_price;
+                                                    let product_discount_rebate_from_shopee = income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee;
 
-                                                let order_items = [];
-                                                for (let n = 0; n < get_one_order.order_items.length; n++) {
-                                                    if (get_one_order.order_items[n].status == 1 || get_one_order.order_items[n].status == 2) {
-                                                        total_amount += get_one_order.order_items[n].order_price * get_one_order.order_items[n].amount;
-                                                        total_rebate_price += get_one_order.order_items[n].item_model.rebate_price * get_one_order.order_items[n].amount;
+                                                    let order_items = [];
+                                                    for (let n = 0; n < get_one_order.order_items.length; n++) {
+                                                        order_items.push({
+                                                            item_id: get_one_order.order_items[n].item_id,
+                                                            sku: get_one_order.order_items[n].item_model.sku,
+                                                            name: get_one_order.order_items[n].product.name,
+                                                            image: get_one_order.order_items[n].product.images.length > 0 ? get_one_order.order_items[n].product.images[0] : null,
+                                                            item_price: get_one_order.order_items[n].item_price,
+                                                            order_price: get_one_order.order_items[n].order_price,
+                                                            amount: get_one_order.order_items[n].amount,
+                                                            rebate_price: get_one_order.order_items[n].item_model.rebate_price,
+                                                            status: get_one_order.order_items[n].status
+                                                        });
                                                     }
-                                                    order_items.push({
-                                                        item_id: get_one_order.order_items[n].item_id,
-                                                        sku: get_one_order.order_items[n].item_model.sku,
-                                                        name: get_one_order.order_items[n].product.name,
-                                                        image: get_one_order.order_items[n].product.images.length > 0 ? get_one_order.order_items[n].product.images[0] : null,
-                                                        item_price: get_one_order.order_items[n].item_price,
-                                                        order_price: get_one_order.order_items[n].order_price,
-                                                        amount: get_one_order.order_items[n].amount,
-                                                        rebate_price: get_one_order.order_items[n].item_model.rebate_price,
-                                                        status: get_one_order.order_items[n].status
-                                                    });
-                                                }
 
-                                                let final_total = 0;
-                                                if (cancel_reason_ext == 5) {
-                                                    final_total = total_amount - voucher_price;
+                                                    let final_total = 0;
+                                                    if (cancel_reason_ext == 5) {
+                                                        final_total = product_price - seller_voucher;
+                                                    }
+
+                                                    result = await api_put_shopee_orders([{
+                                                        uid: account.uid,
+                                                        shop_id: account.sid,
+                                                        order_id: order_id,
+                                                        order_sn: order_sn,
+                                                        cancel_time: new_cancel_time,
+                                                        cancel_reason_ext: cancel_reason_ext,
+                                                        last_logistics_status: last_logistics_status,
+                                                        package_logistics_status: package_logistics_status,
+                                                        buyer_user_id: buyer_user_id,
+                                                        buyer_user_name: buyer_user_name,
+                                                        buyer_shop_id: buyer_shop_id,
+                                                        buyer_portrait: buyer_portrait,
+                                                        create_time: create_time,
+                                                        fulfillment_carrier_name: fulfillment_carrier_name,
+                                                        checkout_carrier_name: checkout_carrier_name,
+                                                        service_fee: service_fee,
+                                                        transaction_fee: transaction_fee,
+                                                        seller_voucher: seller_voucher,
+                                                        package_number: package_number,
+                                                        third_party_tn: third_party_tn,
+                                                        consignment_no: consignment_no,
+                                                        product_price: product_price,
+                                                        product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
+                                                        final_total: final_total,
+                                                        order_items: JSON.stringify(order_items),
+                                                        status: status
+                                                    }]);
+                                                    if (result.code != 0) {
+                                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
+                                                        return;
+                                                    }
+                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel OK', order_sn, new_cancel_time);
                                                 } else {
-                                                    final_total = total_amount - voucher_price + total_rebate_price - seller_service_fee - card_txn_fee;
+                                                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                                                    loop_status = 0;
+                                                    break;
                                                 }
-
-                                                result = await api_put_shopee_orders([{
-                                                    uid: account.uid,
-                                                    shop_id: account.sid,
-                                                    order_id: order_id,
-                                                    order_sn: order_sn,
-                                                    cancel_time: new_cancel_time,
-                                                    cancel_reason_ext: cancel_reason_ext,
-                                                    last_logistics_status: last_logistics_status,
-                                                    package_logistics_status: package_logistics_status,
-                                                    buyer_user_id: buyer_user_id,
-                                                    buyer_user_name: buyer_user_name,
-                                                    buyer_shop_id: buyer_shop_id,
-                                                    buyer_portrait: buyer_portrait,
-                                                    create_time: create_time,
-                                                    fulfillment_carrier_name: fulfillment_carrier_name,
-                                                    checkout_carrier_name: checkout_carrier_name,
-                                                    seller_service_fee: seller_service_fee,
-                                                    card_txn_fee: card_txn_fee,
-                                                    voucher_price: voucher_price,
-                                                    package_number: package_number,
-                                                    third_party_tn: third_party_tn,
-                                                    consignment_no: consignment_no,
-                                                    total_amount: total_amount,
-                                                    total_rebate_price: total_rebate_price,
-                                                    final_total: final_total,
-                                                    order_items: JSON.stringify(order_items),
-                                                    status: status
-                                                }]);
-                                                if (result.code != 0) {
-                                                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
-                                                    return;
-                                                }
-                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel OK', order_sn, new_cancel_time);
                                             } else {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                                 loop_status = 0;
@@ -704,9 +705,6 @@ check_all = async () => {
                                     let create_time = get_one_order.create_time;
                                     let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
                                     let checkout_carrier_name = get_one_order.checkout_carrier_name;
-                                    let seller_service_fee = get_one_order.seller_service_fee;
-                                    let card_txn_fee = get_one_order.card_txn_fee_info.card_txn_fee;
-                                    let voucher_price = (get_one_order.voucher_absorbed_by_seller ? get_one_order.voucher_price : 0);
 
                                     let status = get_one_order.status;
                                     let new_complete_time = moment.unix(complete_time).format('YYYY-MM-DD HH:mm:ss');
@@ -727,80 +725,87 @@ check_all = async () => {
                                         result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                                         if (result.code == 0 && result.data.code == 0) {
                                             let get_package = result.data.data;
-                                            let last_logistics_status = 0;
-                                            let package_number = null;
-                                            let third_party_tn = null;
-                                            let consignment_no = null;
-                                            let package_logistics_status = 0;
+                                            result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
+                                            if (result.code == 0 && result.data.code == 0) {
+                                                let income_transaction_history_detail = result.data.data;
+                                                let last_logistics_status = 0;
+                                                let package_number = null;
+                                                let third_party_tn = null;
+                                                let consignment_no = null;
+                                                let package_logistics_status = 0;
 
-                                            if (get_package.order_info.package_list != null &&
-                                                get_package.order_info.package_list.length > 0) {
-                                                package_number = get_package.order_info.package_list[0].package_number;
-                                                third_party_tn = get_package.order_info.package_list[0].third_party_tn;
-                                                consignment_no = get_package.order_info.package_list[0].consignment_no;
-                                                package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
-                                                if (get_package.order_info.package_list[0].tracking_info != null &&
-                                                    get_package.order_info.package_list[0].tracking_info.length > 0) {
-                                                    last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                                if (get_package.order_info.package_list != null &&
+                                                    get_package.order_info.package_list.length > 0) {
+                                                    package_number = get_package.order_info.package_list[0].package_number;
+                                                    third_party_tn = get_package.order_info.package_list[0].third_party_tn;
+                                                    consignment_no = get_package.order_info.package_list[0].consignment_no;
+                                                    package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
+                                                    if (get_package.order_info.package_list[0].tracking_info != null &&
+                                                        get_package.order_info.package_list[0].tracking_info.length > 0) {
+                                                        last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                                    }
                                                 }
-                                            }
 
-                                            let total_amount = 0;
-                                            let total_rebate_price = 0;
+                                                let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
+                                                let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
+                                                let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
+                                                let product_price = income_transaction_history_detail.payment_info.merchant_subtotal.product_price;
+                                                let product_discount_rebate_from_shopee = income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee;
 
-                                            let order_items = [];
-                                            for (let n = 0; n < get_one_order.order_items.length; n++) {
-                                                if (get_one_order.order_items[n].status == 1 || get_one_order.order_items[n].status == 2) {
-                                                    total_amount += get_one_order.order_items[n].order_price * get_one_order.order_items[n].amount;
-                                                    total_rebate_price += get_one_order.order_items[n].item_model.rebate_price * get_one_order.order_items[n].amount;
+                                                let order_items = [];
+                                                for (let n = 0; n < get_one_order.order_items.length; n++) {
+                                                    order_items.push({
+                                                        item_id: get_one_order.order_items[n].item_id,
+                                                        sku: get_one_order.order_items[n].item_model.sku,
+                                                        name: get_one_order.order_items[n].product.name,
+                                                        image: get_one_order.order_items[n].product.images.length > 0 ? get_one_order.order_items[n].product.images[0] : null,
+                                                        item_price: get_one_order.order_items[n].item_price,
+                                                        order_price: get_one_order.order_items[n].order_price,
+                                                        amount: get_one_order.order_items[n].amount,
+                                                        rebate_price: get_one_order.order_items[n].item_model.rebate_price,
+                                                        status: get_one_order.order_items[n].status
+                                                    });
                                                 }
-                                                order_items.push({
-                                                    item_id: get_one_order.order_items[n].item_id,
-                                                    sku: get_one_order.order_items[n].item_model.sku,
-                                                    name: get_one_order.order_items[n].product.name,
-                                                    image: get_one_order.order_items[n].product.images.length > 0 ? get_one_order.order_items[n].product.images[0] : null,
-                                                    item_price: get_one_order.order_items[n].item_price,
-                                                    order_price: get_one_order.order_items[n].order_price,
-                                                    amount: get_one_order.order_items[n].amount,
-                                                    rebate_price: get_one_order.order_items[n].item_model.rebate_price,
-                                                    status: get_one_order.order_items[n].status
-                                                });
-                                            }
 
-                                            let final_total = total_amount - voucher_price + total_rebate_price - seller_service_fee - card_txn_fee;
+                                                let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee;
 
-                                            result = await api_put_shopee_orders([{
-                                                uid: account.uid,
-                                                shop_id: account.sid,
-                                                order_id: order_id,
-                                                order_sn: order_sn,
-                                                complete_time: new_complete_time,
-                                                last_logistics_status: last_logistics_status,
-                                                package_logistics_status: package_logistics_status,
-                                                buyer_user_id: buyer_user_id,
-                                                buyer_user_name: buyer_user_name,
-                                                buyer_shop_id: buyer_shop_id,
-                                                buyer_portrait: buyer_portrait,
-                                                create_time: create_time,
-                                                fulfillment_carrier_name: fulfillment_carrier_name,
-                                                checkout_carrier_name: checkout_carrier_name,
-                                                seller_service_fee: seller_service_fee,
-                                                card_txn_fee: card_txn_fee,
-                                                voucher_price: voucher_price,
-                                                package_number: package_number,
-                                                third_party_tn: third_party_tn,
-                                                consignment_no: consignment_no,
-                                                total_amount: total_amount,
-                                                total_rebate_price: total_rebate_price,
-                                                final_total: final_total,
-                                                order_items: JSON.stringify(order_items),
-                                                status: status
-                                            }]);
-                                            if (result.code != 0) {
-                                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
-                                                return;
+                                                result = await api_put_shopee_orders([{
+                                                    uid: account.uid,
+                                                    shop_id: account.sid,
+                                                    order_id: order_id,
+                                                    order_sn: order_sn,
+                                                    complete_time: new_complete_time,
+                                                    last_logistics_status: last_logistics_status,
+                                                    package_logistics_status: package_logistics_status,
+                                                    buyer_user_id: buyer_user_id,
+                                                    buyer_user_name: buyer_user_name,
+                                                    buyer_shop_id: buyer_shop_id,
+                                                    buyer_portrait: buyer_portrait,
+                                                    create_time: create_time,
+                                                    fulfillment_carrier_name: fulfillment_carrier_name,
+                                                    checkout_carrier_name: checkout_carrier_name,
+                                                    service_fee: service_fee,
+                                                    transaction_fee: transaction_fee,
+                                                    seller_voucher: seller_voucher,
+                                                    package_number: package_number,
+                                                    third_party_tn: third_party_tn,
+                                                    consignment_no: consignment_no,
+                                                    product_price: product_price,
+                                                    product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
+                                                    final_total: final_total,
+                                                    order_items: JSON.stringify(order_items),
+                                                    status: status
+                                                }]);
+                                                if (result.code != 0) {
+                                                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
+                                                    return;
+                                                }
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + complete_page + ']) order complete', order_sn, new_complete_time);
+                                            } else {
+                                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                                                loop_status = 0;
+                                                break;
                                             }
-                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + complete_page + ']) order complete', order_sn, new_complete_time);
                                         } else {
                                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                             loop_status = 0;

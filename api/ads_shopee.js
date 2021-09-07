@@ -1334,6 +1334,48 @@ const api_get_one_order = async (SPC_CDS, proxy, UserAgent, cookie, order_id) =>
     return result;
 }
 
+const api_get_income_transaction_history_detail = async (SPC_CDS, proxy, UserAgent, cookie, order_id) => {
+    if (cookie != null) {
+        cookie = RSA.decrypt(cookie, 'utf8');
+    }
+    let Url = 'https://banhang.shopee.vn/api/v3/finance/income_transaction_history_detail/';    
+    Url += '?order_id=' + order_id;
+    Url += '&SPC_CDS=' + SPC_CDS;
+    Url += '&SPC_CDS_VER=2';
+    const result = await axiosInstance.get(Url, {
+        headers: {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://banhang.shopee.vn/'
+        },
+        proxy: proxy
+    }).then(function (response) {
+        response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+        if (response.cookie != null)
+            response.cookie = RSA.encrypt(response.cookie, 'base64');
+        return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+    }).catch(function (error) {
+        if (error.response) {
+            error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+            if (error.response.cookie != null)
+                error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+            return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+        } else {
+            if (proxy == null) {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            } else {
+                console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                if (cookie != null) {
+                    cookie = RSA.encrypt(cookie, 'base64');
+                }
+                return api_get_income_transaction_history_detail(SPC_CDS, null, UserAgent, cookie, order_id);
+            }
+        }
+    });
+    return result;
+}
+
+
 const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, start_time, end_time, agg_interval) => {
     if (cookie != null) {
         cookie = RSA.decrypt(cookie, 'utf8');
@@ -1832,5 +1874,6 @@ module.exports = {
     api_get_order_id_list,
     api_get_package,
     api_get_one_order,
-    api_get_wallet_transactions
+    api_get_wallet_transactions,
+    api_get_income_transaction_history_detail
 }
