@@ -326,10 +326,18 @@ check_all = async () => {
                 let cookie = account.cookie;
                 let last_cancel_time = account.last_cancel_time;
                 let last_cancel_page = account.last_cancel_page;
+                if (last_cancel_page == -1)
+                    last_cancel_page = 1;
+                    
                 let last_complete_time = account.last_complete_time;
                 let last_complete_page = account.last_complete_page;
+                if (last_complete_page == -1)
+                    last_complete_page = 1;
+
                 let last_pay_time = account.last_pay_time;
                 let last_pay_page = account.last_pay_page;
+                if (last_pay_page == -1)
+                    last_pay_page = 1;
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
