@@ -510,8 +510,11 @@ check_all = async () => {
                                                     let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
                                                     let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
                                                     let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
-                                                    let product_price = income_transaction_history_detail.payment_info.merchant_subtotal.product_price;
-                                                    let product_discount_rebate_from_shopee = income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee;
+                                                    let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
+                                                    let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
+                                                    let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
+                                                    let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
+                                                    let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
 
                                                     let order_items = [];
                                                     for (let n = 0; n < get_one_order.order_items.length; n++) {
@@ -530,7 +533,7 @@ check_all = async () => {
 
                                                     let final_total = 0;
                                                     if (cancel_reason_ext == 5) {
-                                                        final_total = product_price - seller_voucher;
+                                                        final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee;
                                                     }
 
                                                     result = await api_put_shopee_orders([{
@@ -556,6 +559,9 @@ check_all = async () => {
                                                         third_party_tn: third_party_tn,
                                                         consignment_no: consignment_no,
                                                         product_price: product_price,
+                                                        cancel_amount: cancel_amount,
+                                                        refund_amount: refund_amount,
+                                                        merchant_subtotal: merchant_subtotal,
                                                         product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
                                                         final_total: final_total,
                                                         order_items: JSON.stringify(order_items),
@@ -749,8 +755,11 @@ check_all = async () => {
                                                 let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
                                                 let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
                                                 let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
-                                                let product_price = income_transaction_history_detail.payment_info.merchant_subtotal.product_price;
-                                                let product_discount_rebate_from_shopee = income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee;
+                                                let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
+                                                let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
+                                                let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
+                                                let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
+                                                let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
 
                                                 let order_items = [];
                                                 for (let n = 0; n < get_one_order.order_items.length; n++) {
@@ -767,7 +776,7 @@ check_all = async () => {
                                                     });
                                                 }
 
-                                                let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee;
+                                                let final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - refund_amount;
 
                                                 result = await api_put_shopee_orders([{
                                                     uid: account.uid,
@@ -791,6 +800,9 @@ check_all = async () => {
                                                     third_party_tn: third_party_tn,
                                                     consignment_no: consignment_no,
                                                     product_price: product_price,
+                                                    cancel_amount: cancel_amount,
+                                                    refund_amount: refund_amount,
+                                                    merchant_subtotal: merchant_subtotal,
                                                     product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
                                                     final_total: final_total,
                                                     order_items: JSON.stringify(order_items),
