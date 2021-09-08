@@ -541,7 +541,7 @@ check_all = async () => {
 
                                                     let final_total = 0;
                                                     if (cancel_reason_ext == 5) {
-                                                        final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee;
+                                                        final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee;
                                                     }
 
                                                     result = await api_put_shopee_orders([{
