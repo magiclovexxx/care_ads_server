@@ -521,7 +521,7 @@ check_all = async () => {
                                                     let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
                                                     let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
                                                     let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
-                                                    let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
+                                                    let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
                                                     let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
 
                                                     let order_items = [];
@@ -766,7 +766,7 @@ check_all = async () => {
                                                 let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
                                                 let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
                                                 let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
-                                                let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
+                                                let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
                                                 let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
 
                                                 let order_items = [];
