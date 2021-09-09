@@ -456,6 +456,7 @@ check_all = async () => {
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_time', last_cancel_time);
                                     }
                                     let order_sn = get_one_order.order_sn;
+                                    let delivery_time = get_one_order.delivery_time;
                                     let cancel_reason_ext = get_one_order.cancel_reason_ext;
                                     if (cancel_reason_ext == 202 || cancel_reason_ext == 5) {
 
@@ -561,6 +562,7 @@ check_all = async () => {
                                                         shop_id: account.sid,
                                                         order_id: order_id,
                                                         order_sn: order_sn,
+                                                        delivery_time: moment.unix(delivery_time).format('MM/DD/YYYY HH:mm:ss'),
                                                         cancel_time: new_cancel_time,
                                                         cancel_reason_ext: cancel_reason_ext,
                                                         last_logistics_status: last_logistics_status,
@@ -726,6 +728,7 @@ check_all = async () => {
                                     }
 
                                     let order_sn = get_one_order.order_sn;
+                                    let delivery_time = get_one_order.delivery_time;
 
                                     let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
                                     let buyer_user_name = get_one_order.buyer_user.user_name;
@@ -816,6 +819,7 @@ check_all = async () => {
                                                     shop_id: account.sid,
                                                     order_id: order_id,
                                                     order_sn: order_sn,
+                                                    delivery_time: moment.unix(delivery_time).format('MM/DD/YYYY HH:mm:ss'),
                                                     complete_time: new_complete_time,
                                                     last_logistics_status: last_logistics_status,
                                                     last_logistics_ctime: last_logistics_ctime,
