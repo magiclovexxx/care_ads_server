@@ -413,7 +413,7 @@ check_all = async () => {
                                         first_cancel_time = cancel_time;
                                     }
                                     if (!disable_check_cancel_time &&
-                                        cancel_time <= last_cancel_time) {
+                                        cancel_time < last_cancel_time) {
                                         disable_check_cancel_time = true;
                                         if (last_cancel_time != first_cancel_time) {
                                             last_cancel_time = first_cancel_time;
@@ -490,11 +490,17 @@ check_all = async () => {
                                                 result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
                                                 if (result.code == 0 && result.data.code == 0) {
                                                     let income_transaction_history_detail = result.data.data;
+
                                                     let last_logistics_status = 0;
+                                                    let last_logistics_ctime = 0;
+                                                    let last_logistics_description = null;
+                                                    let tracking_info = null;
+
                                                     let package_number = null;
                                                     let third_party_tn = null;
                                                     let consignment_no = null;
                                                     let package_logistics_status = 0;
+
                                                     if (get_package.order_info.package_list != null &&
                                                         get_package.order_info.package_list.length > 0) {
                                                         package_number = get_package.order_info.package_list[0].package_number;
@@ -503,9 +509,15 @@ check_all = async () => {
                                                         package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
                                                         if (get_package.order_info.package_list[0].tracking_info != null &&
                                                             get_package.order_info.package_list[0].tracking_info.length > 0) {
-                                                            last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                                            tracking_info = get_package.order_info.package_list[0].tracking_info;
+                                                            tracking_info.sort((a, b) => { return b.ctime - a.ctime });
+                                                            tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
+                                                            last_logistics_status = tracking_info[0].logistics_status;
+                                                            last_logistics_ctime = tracking_info[0].ctime;
+                                                            last_logistics_description = tracking_info[0].description;
                                                         }
                                                     }
+
                                                     if (cancel_reason_ext == 202) {
                                                         if (last_logistics_status == 201) {
                                                             new_cancel_time = moment.unix(get_package.order_info.package_list[0].tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
@@ -552,6 +564,8 @@ check_all = async () => {
                                                         cancel_time: new_cancel_time,
                                                         cancel_reason_ext: cancel_reason_ext,
                                                         last_logistics_status: last_logistics_status,
+                                                        last_logistics_ctime: last_logistics_ctime,
+                                                        last_logistics_description: last_logistics_description,
                                                         package_logistics_status: package_logistics_status,
                                                         buyer_user_id: buyer_user_id,
                                                         buyer_user_name: buyer_user_name,
@@ -573,6 +587,7 @@ check_all = async () => {
                                                         product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
                                                         final_total: final_total,
                                                         order_items: JSON.stringify(order_items),
+                                                        tracking_info: JSON.stringify(tracking_info),
                                                         status: status
                                                     }]);
                                                     if (result.code != 0) {
@@ -667,7 +682,7 @@ check_all = async () => {
                                         first_complete_time = complete_time;
                                     }
                                     if (!disable_check_complete_time &&
-                                        complete_time <= last_complete_time) {
+                                        complete_time < last_complete_time) {
                                         disable_check_complete_time = true;
                                         if (last_complete_time != first_complete_time) {
                                             last_complete_time = first_complete_time;
@@ -742,7 +757,12 @@ check_all = async () => {
                                             result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
                                             if (result.code == 0 && result.data.code == 0) {
                                                 let income_transaction_history_detail = result.data.data;
+
                                                 let last_logistics_status = 0;
+                                                let last_logistics_ctime = 0;
+                                                let last_logistics_description = null;
+                                                let tracking_info = null;
+
                                                 let package_number = null;
                                                 let third_party_tn = null;
                                                 let consignment_no = null;
@@ -756,7 +776,12 @@ check_all = async () => {
                                                     package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
                                                     if (get_package.order_info.package_list[0].tracking_info != null &&
                                                         get_package.order_info.package_list[0].tracking_info.length > 0) {
-                                                        last_logistics_status = get_package.order_info.package_list[0].tracking_info[0].logistics_status;
+                                                        tracking_info = get_package.order_info.package_list[0].tracking_info;
+                                                        tracking_info.sort((a, b) => { return b.ctime - a.ctime });
+                                                        tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
+                                                        last_logistics_status = tracking_info[0].logistics_status;
+                                                        last_logistics_ctime = tracking_info[0].ctime;
+                                                        last_logistics_description = tracking_info[0].description;
                                                     }
                                                 }
 
@@ -793,6 +818,8 @@ check_all = async () => {
                                                     order_sn: order_sn,
                                                     complete_time: new_complete_time,
                                                     last_logistics_status: last_logistics_status,
+                                                    last_logistics_ctime: last_logistics_ctime,
+                                                    last_logistics_description: last_logistics_description,
                                                     package_logistics_status: package_logistics_status,
                                                     buyer_user_id: buyer_user_id,
                                                     buyer_user_name: buyer_user_name,
@@ -814,6 +841,7 @@ check_all = async () => {
                                                     product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
                                                     final_total: final_total,
                                                     order_items: JSON.stringify(order_items),
+                                                    tracking_info: JSON.stringify(tracking_info),
                                                     status: status
                                                 }]);
                                                 if (result.code != 0) {
@@ -903,7 +931,7 @@ check_all = async () => {
                                     first_pay_time = pay_time;
                                 }
                                 if (!disable_check_pay_time &&
-                                    pay_time <= last_pay_time) {
+                                    pay_time < last_pay_time) {
                                     disable_check_pay_time = true;
                                     if (last_pay_time != first_pay_time) {
                                         last_pay_time = first_pay_time;
