@@ -519,6 +519,7 @@ check_all = async () => {
                                                         }
                                                     }
 
+                                                    /*
                                                     if (cancel_reason_ext == 202) {
                                                         if (last_logistics_status == 201) {
                                                             new_cancel_time = moment.unix(get_package.order_info.package_list[0].tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
@@ -527,6 +528,7 @@ check_all = async () => {
                                                             continue;
                                                         }
                                                     }
+                                                    */
 
                                                     let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
                                                     let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
