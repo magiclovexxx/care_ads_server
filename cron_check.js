@@ -630,6 +630,10 @@ check_all = async () => {
                                         return;
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_page', last_cancel_page);
+                                } else {
+                                    if (last_cancel_page == 0) {
+                                        break;
+                                    }
                                 }
                             } else {
                                 break;
@@ -710,7 +714,6 @@ check_all = async () => {
                                                 break;
                                             }
                                         }
-
                                     }
 
                                     if (last_complete_time == 0) {
@@ -883,6 +886,10 @@ check_all = async () => {
                                         return;
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_complete_page', last_complete_page);
+                                } else {
+                                    if (last_complete_page == 0) {
+                                        break;
+                                    }
                                 }
                             } else {
                                 break;
@@ -1030,6 +1037,10 @@ check_all = async () => {
                                         return;
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
+                                } else {
+                                    if (last_pay_page == 0) {
+                                        break;
+                                    }
                                 }
                             } else {
                                 break;
