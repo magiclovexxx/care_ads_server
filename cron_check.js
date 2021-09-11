@@ -470,7 +470,6 @@ check_all = async () => {
                                         let checkout_carrier_name = get_one_order.checkout_carrier_name;
 
                                         let status = get_one_order.status;
-                                        let new_cancel_time = moment.unix(cancel_time).format('YYYY-MM-DD HH:mm:ss');
                                         if (moment.unix(cancel_time).startOf('month').add(3, 'months') < moment().startOf('month')) {
                                             last_cancel_page = 0;
                                             result = await api_put_shopee_accounts({
@@ -501,6 +500,7 @@ check_all = async () => {
                                                     let third_party_tn = null;
                                                     let consignment_no = null;
                                                     let package_logistics_status = 0;
+                                                    let refund_time = null;
 
                                                     if (get_package.order_info.package_list != null &&
                                                         get_package.order_info.package_list.length > 0) {
@@ -521,7 +521,7 @@ check_all = async () => {
 
                                                     if (cancel_reason_ext == 202) {
                                                         if (last_logistics_status == 201) {
-                                                            new_cancel_time = moment.unix(get_package.order_info.package_list[0].tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
+                                                            refund_time = moment.unix(tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
                                                         }
                                                     }
 
@@ -560,7 +560,8 @@ check_all = async () => {
                                                         order_id: order_id,
                                                         order_sn: order_sn,
                                                         delivery_time: moment.unix(delivery_time).format('YYYY-MM-DD HH:mm:ss'),
-                                                        cancel_time: new_cancel_time,
+                                                        cancel_time: moment.unix(cancel_time).format('YYYY-MM-DD HH:mm:ss'),
+                                                        refund_time: refund_time,
                                                         cancel_reason_ext: cancel_reason_ext,
                                                         last_logistics_status: last_logistics_status,
                                                         last_logistics_ctime: last_logistics_ctime,
@@ -593,7 +594,7 @@ check_all = async () => {
                                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                         return;
                                                     }
-                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel OK', order_sn, new_cancel_time);
+                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel OK', order_sn, moment.unix(cancel_time).format('YYYY-MM-DD HH:mm:ss'));
                                                 } else {
                                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                                     loop_status = 0;
@@ -739,7 +740,6 @@ check_all = async () => {
                                     let checkout_carrier_name = get_one_order.checkout_carrier_name;
 
                                     let status = get_one_order.status;
-                                    let new_complete_time = moment.unix(complete_time).format('YYYY-MM-DD HH:mm:ss');
                                     if (moment.unix(complete_time).startOf('month').add(3, 'months') < moment().startOf('month')) {
                                         last_complete_page = 0;
                                         result = await api_put_shopee_accounts({
@@ -820,7 +820,7 @@ check_all = async () => {
                                                     order_id: order_id,
                                                     order_sn: order_sn,
                                                     delivery_time: moment.unix(delivery_time).format('YYYY-MM-DD HH:mm:ss'),
-                                                    complete_time: new_complete_time,
+                                                    complete_time: moment.unix(complete_time).format('YYYY-MM-DD HH:mm:ss'),
                                                     last_logistics_status: last_logistics_status,
                                                     last_logistics_ctime: last_logistics_ctime,
                                                     last_logistics_description: last_logistics_description,
@@ -852,7 +852,7 @@ check_all = async () => {
                                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                     return;
                                                 }
-                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + complete_page + ']) order complete', order_sn, new_complete_time);
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + complete_page + ']) order complete', order_sn, moment.unix(complete_time).format('YYYY-MM-DD HH:mm:ss'));
                                             } else {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                                 loop_status = 0;
@@ -987,8 +987,6 @@ check_all = async () => {
                                 let target_id = get_wallet_transaction.target_id;
                                 let status = get_wallet_transaction.status;
 
-                                let new_pay_time = moment.unix(pay_time).format('YYYY-MM-DD HH:mm:ss');
-
                                 if (moment.unix(pay_time).startOf('month').add(3, 'months') < moment().startOf('month')) {
                                     last_pay_page = 0;
                                     result = await api_put_shopee_accounts({
@@ -1011,14 +1009,14 @@ check_all = async () => {
                                         order_sn: order_sn,
                                         amount: amount,
                                         target_id: target_id,
-                                        payment_time: new_pay_time,
+                                        payment_time: moment.unix(pay_time).format('YYYY-MM-DD HH:mm:ss'),
                                         status: status
                                     }]);
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ') Lỗi api_put_shopee_payments', result);
                                         return;
                                     }
-                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ' [' + pay_page + ']) order payment OK', order_sn, new_pay_time);
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ' [' + pay_page + ']) order payment OK', order_sn, moment.unix(pay_time).format('YYYY-MM-DD HH:mm:ss'));
                                 }
                             }
                             if (loop_status != 0) {
