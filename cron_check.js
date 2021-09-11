@@ -511,7 +511,7 @@ check_all = async () => {
                                                         if (get_package.order_info.package_list[0].tracking_info != null &&
                                                             get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                             tracking_info = get_package.order_info.package_list[0].tracking_info;
-                                                            tracking_info.sort((a, b) => { return b.ctime - a.ctime });
+                                                            //tracking_info.sort((a, b) => { return b.ctime - a.ctime });
                                                             tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
                                                             last_logistics_status = tracking_info[0].logistics_status;
                                                             last_logistics_ctime = tracking_info[0].ctime;
@@ -780,7 +780,7 @@ check_all = async () => {
                                                     if (get_package.order_info.package_list[0].tracking_info != null &&
                                                         get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                         tracking_info = get_package.order_info.package_list[0].tracking_info;
-                                                        tracking_info.sort((a, b) => { return b.ctime - a.ctime });
+                                                        //tracking_info.sort((a, b) => { return b.ctime - a.ctime });
                                                         tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
                                                         last_logistics_status = tracking_info[0].logistics_status;
                                                         last_logistics_ctime = tracking_info[0].ctime;
