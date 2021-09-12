@@ -511,7 +511,7 @@ check_all = async () => {
                                                         if (get_package.order_info.package_list[0].tracking_info != null &&
                                                             get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                             tracking_info = get_package.order_info.package_list[0].tracking_info;
-                                                            //tracking_info.sort((a, b) => { return b.ctime - a.ctime });
+                                                            tracking_info.sort((a, b) => { return b.id - a.id });
                                                             tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
                                                             last_logistics_status = tracking_info[0].logistics_status;
                                                             last_logistics_ctime = tracking_info[0].ctime;
@@ -532,7 +532,7 @@ check_all = async () => {
                                                     let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
                                                     let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
                                                     let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
-                                                    let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
+                                                    let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
 
                                                     let order_items = [];
                                                     for (let n = 0; n < get_one_order.order_items.length; n++) {
@@ -551,7 +551,7 @@ check_all = async () => {
 
                                                     let final_total = 0;
                                                     if (cancel_reason_ext == 5) {
-                                                        final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee;
+                                                        final_total = product_price - seller_voucher + product_discount_rebate_from_shopee;
                                                     }
 
                                                     result = await api_put_shopee_orders([{
@@ -780,7 +780,7 @@ check_all = async () => {
                                                     if (get_package.order_info.package_list[0].tracking_info != null &&
                                                         get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                         tracking_info = get_package.order_info.package_list[0].tracking_info;
-                                                        //tracking_info.sort((a, b) => { return b.ctime - a.ctime });
+                                                        tracking_info.sort((a, b) => { return b.id - a.id });
                                                         tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
                                                         last_logistics_status = tracking_info[0].logistics_status;
                                                         last_logistics_ctime = tracking_info[0].ctime;
@@ -795,7 +795,7 @@ check_all = async () => {
                                                 let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
                                                 let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
                                                 let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
-                                                let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
+                                                let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
 
                                                 let order_items = [];
                                                 for (let n = 0; n < get_one_order.order_items.length; n++) {
@@ -812,7 +812,7 @@ check_all = async () => {
                                                     });
                                                 }
 
-                                                let final_total = merchant_subtotal - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - refund_amount;
+                                                let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - refund_amount;
 
                                                 result = await api_put_shopee_orders([{
                                                     uid: account.uid,
