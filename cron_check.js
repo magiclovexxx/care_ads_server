@@ -501,6 +501,7 @@ check_all = async () => {
                                                     let consignment_no = null;
                                                     let package_logistics_status = 0;
                                                     let refund_time = null;
+                                                    let package_logistics_complete = 1;
 
                                                     if (get_package.order_info.package_list != null &&
                                                         get_package.order_info.package_list.length > 0) {
@@ -511,7 +512,7 @@ check_all = async () => {
                                                         if (get_package.order_info.package_list[0].tracking_info != null &&
                                                             get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                             tracking_info = get_package.order_info.package_list[0].tracking_info;
-                                                            tracking_info.sort((a, b) => { return b.id - a.id });
+                                                            //tracking_info.sort((a, b) => { return b.id - a.id });
                                                             tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
                                                             last_logistics_status = tracking_info[0].logistics_status;
                                                             last_logistics_ctime = tracking_info[0].ctime;
@@ -520,8 +521,16 @@ check_all = async () => {
                                                     }
 
                                                     if (cancel_reason_ext == 202) {
-                                                        if (last_logistics_status == 201) {
-                                                            refund_time = moment.unix(tracking_info[0].ctime).format('YYYY-MM-DD HH:mm:ss');
+                                                        package_logistics_complete = 0;
+                                                        if (last_logistics_status != 0) {
+                                                            let tracking_info_filter = tracking_info.filter(x => x.logistics_status == 201);
+                                                            if (tracking_info_filter.length > 0) {
+                                                                package_logistics_complete = 1;
+                                                                last_logistics_status = tracking_info_filter[0].logistics_status;
+                                                                last_logistics_ctime = tracking_info_filter[0].ctime;
+                                                                last_logistics_description = tracking_info_filter[0].description;
+                                                                refund_time = moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss');
+                                                            }
                                                         }
                                                     }
 
@@ -567,6 +576,7 @@ check_all = async () => {
                                                         last_logistics_ctime: last_logistics_ctime,
                                                         last_logistics_description: last_logistics_description,
                                                         package_logistics_status: package_logistics_status,
+                                                        package_logistics_complete: package_logistics_complete,
                                                         buyer_user_id: buyer_user_id,
                                                         buyer_user_name: buyer_user_name,
                                                         buyer_shop_id: buyer_shop_id,
@@ -770,6 +780,7 @@ check_all = async () => {
                                                 let third_party_tn = null;
                                                 let consignment_no = null;
                                                 let package_logistics_status = 0;
+                                                let package_logistics_complete = 0;
 
                                                 if (get_package.order_info.package_list != null &&
                                                     get_package.order_info.package_list.length > 0) {
@@ -780,11 +791,21 @@ check_all = async () => {
                                                     if (get_package.order_info.package_list[0].tracking_info != null &&
                                                         get_package.order_info.package_list[0].tracking_info.length > 0) {
                                                         tracking_info = get_package.order_info.package_list[0].tracking_info;
-                                                        tracking_info.sort((a, b) => { return b.id - a.id });
+                                                        //tracking_info.sort((a, b) => { return b.id - a.id });
                                                         tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
                                                         last_logistics_status = tracking_info[0].logistics_status;
                                                         last_logistics_ctime = tracking_info[0].ctime;
                                                         last_logistics_description = tracking_info[0].description;
+                                                    }
+                                                }
+
+                                                if (last_logistics_status != 0) {
+                                                    let tracking_info_filter = tracking_info.filter(x => x.logistics_status == 8);
+                                                    if (tracking_info_filter.length > 0) {
+                                                        package_logistics_complete = 1;
+                                                        last_logistics_status = tracking_info_filter[0].logistics_status;
+                                                        last_logistics_ctime = tracking_info_filter[0].ctime;
+                                                        last_logistics_description = tracking_info_filter[0].description;
                                                     }
                                                 }
 
@@ -825,6 +846,7 @@ check_all = async () => {
                                                     last_logistics_ctime: last_logistics_ctime,
                                                     last_logistics_description: last_logistics_description,
                                                     package_logistics_status: package_logistics_status,
+                                                    package_logistics_complete: package_logistics_complete,
                                                     buyer_user_id: buyer_user_id,
                                                     buyer_user_name: buyer_user_name,
                                                     buyer_shop_id: buyer_shop_id,
