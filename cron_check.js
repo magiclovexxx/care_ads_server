@@ -501,7 +501,6 @@ check_all = async () => {
                                                     let consignment_no = null;
                                                     let package_logistics_status = 0;
                                                     let refund_time = null;
-                                                    let package_logistics_complete = 1;
 
                                                     if (get_package.order_info.package_list != null &&
                                                         get_package.order_info.package_list.length > 0) {
@@ -521,11 +520,9 @@ check_all = async () => {
                                                     }
 
                                                     if (cancel_reason_ext == 202) {
-                                                        package_logistics_complete = 0;
                                                         if (last_logistics_status != 0) {
                                                             let tracking_info_filter = tracking_info.filter(x => x.logistics_status == 201);
                                                             if (tracking_info_filter.length > 0) {
-                                                                package_logistics_complete = 1;
                                                                 last_logistics_status = tracking_info_filter[0].logistics_status;
                                                                 last_logistics_ctime = tracking_info_filter[0].ctime;
                                                                 last_logistics_description = tracking_info_filter[0].description;
@@ -576,7 +573,6 @@ check_all = async () => {
                                                         last_logistics_ctime: last_logistics_ctime,
                                                         last_logistics_description: last_logistics_description,
                                                         package_logistics_status: package_logistics_status,
-                                                        package_logistics_complete: package_logistics_complete,
                                                         buyer_user_id: buyer_user_id,
                                                         buyer_user_name: buyer_user_name,
                                                         buyer_shop_id: buyer_shop_id,
@@ -780,7 +776,6 @@ check_all = async () => {
                                                 let third_party_tn = null;
                                                 let consignment_no = null;
                                                 let package_logistics_status = 0;
-                                                let package_logistics_complete = 0;
 
                                                 if (get_package.order_info.package_list != null &&
                                                     get_package.order_info.package_list.length > 0) {
@@ -802,7 +797,6 @@ check_all = async () => {
                                                 if (last_logistics_status != 0) {
                                                     let tracking_info_filter = tracking_info.filter(x => x.logistics_status == 8);
                                                     if (tracking_info_filter.length > 0) {
-                                                        package_logistics_complete = 1;
                                                         last_logistics_status = tracking_info_filter[0].logistics_status;
                                                         last_logistics_ctime = tracking_info_filter[0].ctime;
                                                         last_logistics_description = tracking_info_filter[0].description;
@@ -846,7 +840,6 @@ check_all = async () => {
                                                     last_logistics_ctime: last_logistics_ctime,
                                                     last_logistics_description: last_logistics_description,
                                                     package_logistics_status: package_logistics_status,
-                                                    package_logistics_complete: package_logistics_complete,
                                                     buyer_user_id: buyer_user_id,
                                                     buyer_user_name: buyer_user_name,
                                                     buyer_shop_id: buyer_shop_id,
