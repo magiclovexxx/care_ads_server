@@ -309,7 +309,7 @@ check_all = async () => {
             setInterval(function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
-                    last_connection(slave_ip, port);                    
+                    last_connection(slave_ip, port);
                     console.log('===== Hoàn thành tiến trình =====');
                     try {
                         exec('pm2 restart cron_check');
@@ -607,8 +607,8 @@ check_all = async () => {
                                                         merchant_subtotal: merchant_subtotal,
                                                         product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
                                                         final_total: final_total,
-                                                        order_items: JSON.stringify(order_items),
-                                                        tracking_info: JSON.stringify(tracking_info),
+                                                        order_items: (order_items != null ? JSON.stringify(order_items) : null),
+                                                        tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null),
                                                         status: status
                                                     }]);
                                                     if (result.code != 0) {
@@ -874,8 +874,8 @@ check_all = async () => {
                                                     merchant_subtotal: merchant_subtotal,
                                                     product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
                                                     final_total: final_total,
-                                                    order_items: JSON.stringify(order_items),
-                                                    tracking_info: JSON.stringify(tracking_info),
+                                                    order_items: (order_items != null ? JSON.stringify(order_items) : null),
+                                                    tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null),
                                                     status: status
                                                 }]);
                                                 if (result.code != 0) {
