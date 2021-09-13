@@ -260,7 +260,12 @@ check_all = async () => {
         //Khởi động nếu bị treo
         setTimeout(async function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
-            exec('pm2 restart cron_check');
+            try {
+                exec('pm2 restart cron_check');
+            }
+            catch (ex) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+            }
         }, 1200000);
 
         let slave_ip = await publicIp.v4();
@@ -280,7 +285,12 @@ check_all = async () => {
         if (checkVersion.toString() != version) {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
-            exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check;');
+            try {
+                exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check;');
+            }
+            catch (ex) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+            }
             return;
         }
 
@@ -299,9 +309,14 @@ check_all = async () => {
             setInterval(function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
-                    last_connection(slave_ip, port);
+                    last_connection(slave_ip, port);                    
                     console.log('===== Hoàn thành tiến trình =====');
-                    exec('pm2 restart cron_check');
+                    try {
+                        exec('pm2 restart cron_check');
+                    }
+                    catch (ex) {
+                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+                    }
                 }
             }, 3000);
         } else {
@@ -564,7 +579,7 @@ check_all = async () => {
                                                         uid: account.uid,
                                                         shop_id: account.sid,
                                                         order_id: order_id,
-                                                        order_sn: order_sn,                                                        
+                                                        order_sn: order_sn,
                                                         create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
                                                         delivery_time: moment.unix(delivery_time).format('YYYY-MM-DD HH:mm:ss'),
                                                         cancel_time: moment.unix(cancel_time).format('YYYY-MM-DD HH:mm:ss'),
@@ -833,7 +848,7 @@ check_all = async () => {
                                                     uid: account.uid,
                                                     shop_id: account.sid,
                                                     order_id: order_id,
-                                                    order_sn: order_sn,                                                    
+                                                    order_sn: order_sn,
                                                     create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
                                                     delivery_time: moment.unix(delivery_time).format('YYYY-MM-DD HH:mm:ss'),
                                                     complete_time: moment.unix(complete_time).format('YYYY-MM-DD HH:mm:ss'),
@@ -1805,14 +1820,24 @@ check_all = async () => {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
         setTimeout(async function () {
-            exec('pm2 restart cron_check');
+            try {
+                exec('pm2 restart cron_check');
+            }
+            catch (ex) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+            }
         }, (slave_type == 'CRON' ? 3000 : 300000));
     }
     finally {
         if (!is_wait) {
             console.log('===== Hoàn thành tiến trình =====');
             setTimeout(async function () {
-                exec('pm2 restart cron_check');
+                try {
+                    exec('pm2 restart cron_check');
+                }
+                catch (ex) {
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+                }
             }, (slave_type == 'CRON' ? 3000 : 300000));
         }
     }
