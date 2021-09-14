@@ -542,13 +542,6 @@ check_all = async () => {
                                                                 last_logistics_ctime = tracking_info_filter[0].ctime;
                                                                 last_logistics_description = tracking_info_filter[0].description;
                                                                 refund_time = moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss');
-                                                            } else {
-                                                                tracking_info_filter = tracking_info.filter(x => x.logistics_status == 8);
-                                                                if (tracking_info_filter.length > 0) {
-                                                                    last_logistics_status = tracking_info_filter[0].logistics_status;
-                                                                    last_logistics_ctime = tracking_info_filter[0].ctime;
-                                                                    last_logistics_description = tracking_info_filter[0].description;
-                                                                }
                                                             }
                                                         }
                                                     }
@@ -823,11 +816,7 @@ check_all = async () => {
                                                         last_logistics_ctime = tracking_info_filter[0].ctime;
                                                         last_logistics_description = tracking_info_filter[0].description;
                                                     } else {
-                                                        racking_info_filter = tracking_info.filter(x => x.logistics_status == 201);
-                                                        if (tracking_info_filter.length > 0) {
-                                                            last_logistics_status = tracking_info_filter[0].logistics_status;
-                                                            last_logistics_ctime = tracking_info_filter[0].ctime;
-                                                            last_logistics_description = tracking_info_filter[0].description;
+                                                        if (last_logistics_status == 201) {
                                                             refund_time = moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss');
                                                         }
                                                     }
