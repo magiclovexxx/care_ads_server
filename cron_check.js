@@ -296,11 +296,13 @@ check_all = async () => {
 
         slave_type = result.data.type;
 
+        let data_accounts = result.data.accounts;
+        let total_orders = result.data.total_orders;
         let data_campaigns = result.data.campaigns;
-        let data_accounts = result.data.accounts;        
         let total_placements = result.data.total_placements;
 
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng tài khoản:', data_accounts.length);
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng đơn hàng:', total_orders);
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng quảng cáo:', data_campaigns.length);
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng từ khóa/vị trí:', total_placements);
 
@@ -403,6 +405,93 @@ check_all = async () => {
                         return;
                     }
                 }
+
+                //Kiểm tra đơn hàng treo
+                for (let i = 0; i < account.orders.length; i++) {
+                    let order_id = account.orders[i].order_id;
+                    let order_sn = account.orders[i].order_sn;
+                    
+                    result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+                    if (result.code == 0 && result.data.code == 0) {
+                        let get_package = result.data.data;
+                        let last_logistics_status = 0;
+                        let last_logistics_ctime = 0;
+                        let last_logistics_description = null;
+                        let tracking_info = null;
+
+                        let package_number = null;
+                        let third_party_tn = null;
+                        let consignment_no = null;
+                        let package_logistics_status = 0;
+                        let refund_time = null;
+
+                        if (get_package.order_info.package_list != null &&
+                            get_package.order_info.package_list.length > 0) {
+                            package_number = get_package.order_info.package_list[0].package_number;
+                            third_party_tn = get_package.order_info.package_list[0].third_party_tn;
+                            consignment_no = get_package.order_info.package_list[0].consignment_no;
+                            package_logistics_status = get_package.order_info.package_list[0].package_logistics_status;
+                            if (get_package.order_info.package_list[0].tracking_info != null &&
+                                get_package.order_info.package_list[0].tracking_info.length > 0) {
+                                tracking_info = get_package.order_info.package_list[0].tracking_info;
+                                //tracking_info.sort((a, b) => { return b.id - a.id });
+                                tracking_info.forEach((v) => { delete v.flag; delete v.type; delete v.status; delete v.logid; delete v.system_time; });
+                                last_logistics_status = tracking_info[0].logistics_status;
+                                last_logistics_ctime = tracking_info[0].ctime;
+                                last_logistics_description = tracking_info[0].description;
+                            }
+                        }
+
+                        if (last_logistics_status != 0) {
+                            if (account.orders[i].status == 4) {
+                                let tracking_info_filter = tracking_info.filter(x => x.logistics_status == 8);
+                                if (tracking_info_filter.length > 0) {
+                                    last_logistics_status = tracking_info_filter[0].logistics_status;
+                                    last_logistics_ctime = tracking_info_filter[0].ctime;
+                                    last_logistics_description = tracking_info_filter[0].description;
+                                } else {
+                                    if (last_logistics_status == 201) {
+                                        refund_time = moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss');
+                                    }
+                                }
+                            } else {
+                                let tracking_info_filter = tracking_info.filter(x => x.logistics_status == 201);
+                                if (tracking_info_filter.length > 0) {
+                                    last_logistics_status = tracking_info_filter[0].logistics_status;
+                                    last_logistics_ctime = tracking_info_filter[0].ctime;
+                                    last_logistics_description = tracking_info_filter[0].description;
+                                    refund_time = moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss');
+                                }
+                            }
+                        }
+                        if(last_logistics_status != account.orders[i].last_logistics_status){
+                            result = await api_put_shopee_orders([{
+                                uid: account.uid,
+                                shop_id: account.sid,
+                                order_id: order_id,
+                                refund_time: refund_time,
+                                last_logistics_status: last_logistics_status,
+                                last_logistics_ctime: (last_logistics_ctime != 0 ? moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss') : null),
+                                last_logistics_description: last_logistics_description,
+                                package_logistics_status: package_logistics_status,
+                                package_number: package_number,
+                                third_party_tn: third_party_tn,
+                                consignment_no: consignment_no,
+                                tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null)
+                            }]);
+                            if (result.code != 0) {
+                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
+                                continue;
+                            }
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') check update OK', order_sn);
+                        } else {
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') check update SKIP', order_sn);
+                        }
+                    } else {
+                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                    }
+                }
+
                 //Check restore
                 let is_restore_check = false;
 
