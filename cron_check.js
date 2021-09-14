@@ -297,7 +297,7 @@ check_all = async () => {
         slave_type = result.data.type;
 
         let data_campaigns = result.data.campaigns;
-        let data_accounts = result.data.accounts;
+        let data_accounts = result.data.accounts;        
         let total_placements = result.data.total_placements;
 
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng tài khoản:', data_accounts.length);
