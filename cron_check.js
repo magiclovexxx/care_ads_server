@@ -542,10 +542,16 @@ check_all = async () => {
                                                                 last_logistics_ctime = tracking_info_filter[0].ctime;
                                                                 last_logistics_description = tracking_info_filter[0].description;
                                                                 refund_time = moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss');
+                                                            } else {
+                                                                tracking_info_filter = tracking_info.filter(x => x.logistics_status == 8);
+                                                                if (tracking_info_filter.length > 0) {
+                                                                    last_logistics_status = tracking_info_filter[0].logistics_status;
+                                                                    last_logistics_ctime = tracking_info_filter[0].ctime;
+                                                                    last_logistics_description = tracking_info_filter[0].description;
+                                                                }
                                                             }
                                                         }
                                                     }
-
                                                     let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
                                                     let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
                                                     let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
@@ -791,6 +797,7 @@ check_all = async () => {
                                                 let third_party_tn = null;
                                                 let consignment_no = null;
                                                 let package_logistics_status = 0;
+                                                let refund_time = null;
 
                                                 if (get_package.order_info.package_list != null &&
                                                     get_package.order_info.package_list.length > 0) {
@@ -815,6 +822,14 @@ check_all = async () => {
                                                         last_logistics_status = tracking_info_filter[0].logistics_status;
                                                         last_logistics_ctime = tracking_info_filter[0].ctime;
                                                         last_logistics_description = tracking_info_filter[0].description;
+                                                    } else {
+                                                        racking_info_filter = tracking_info.filter(x => x.logistics_status == 201);
+                                                        if (tracking_info_filter.length > 0) {
+                                                            last_logistics_status = tracking_info_filter[0].logistics_status;
+                                                            last_logistics_ctime = tracking_info_filter[0].ctime;
+                                                            last_logistics_description = tracking_info_filter[0].description;
+                                                            refund_time = moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss');
+                                                        }
                                                     }
                                                 }
 
@@ -852,6 +867,7 @@ check_all = async () => {
                                                     create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
                                                     delivery_time: moment.unix(delivery_time).format('YYYY-MM-DD HH:mm:ss'),
                                                     complete_time: moment.unix(complete_time).format('YYYY-MM-DD HH:mm:ss'),
+                                                    refund_time: refund_time,
                                                     last_logistics_status: last_logistics_status,
                                                     last_logistics_ctime: (last_logistics_ctime != 0 ? moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss') : null),
                                                     last_logistics_description: last_logistics_description,
