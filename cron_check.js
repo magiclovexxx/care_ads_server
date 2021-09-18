@@ -636,6 +636,7 @@ check_all = async () => {
                                                     }
                                                     let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
                                                     let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
+                                                    let commission_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.commission_fee);
                                                     let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
                                                     let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
                                                     let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
@@ -685,6 +686,7 @@ check_all = async () => {
                                                         checkout_carrier_name: checkout_carrier_name,
                                                         service_fee: service_fee,
                                                         transaction_fee: transaction_fee,
+                                                        commission_fee: commission_fee,
                                                         seller_voucher: seller_voucher,
                                                         package_number: package_number,
                                                         third_party_tn: third_party_tn,
@@ -913,6 +915,7 @@ check_all = async () => {
 
                                                 let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
                                                 let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
+                                                let commission_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.commission_fee);
                                                 let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
                                                 let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
                                                 let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
@@ -935,7 +938,7 @@ check_all = async () => {
                                                     });
                                                 }
 
-                                                let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - refund_amount;
+                                                let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - commission_fee - refund_amount;
 
                                                 result = await api_put_shopee_orders([{
                                                     uid: account.uid,
@@ -958,6 +961,7 @@ check_all = async () => {
                                                     checkout_carrier_name: checkout_carrier_name,
                                                     service_fee: service_fee,
                                                     transaction_fee: transaction_fee,
+                                                    commission_fee: commission_fee,
                                                     seller_voucher: seller_voucher,
                                                     package_number: package_number,
                                                     third_party_tn: third_party_tn,
