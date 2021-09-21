@@ -1606,7 +1606,8 @@ check_all = async () => {
                                                         is_next_step = await php_update_placements(campaign, [{
                                                             id: care_keyword.id,
                                                             last_click: click,
-                                                            last_update_click: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                            last_update_click: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                                            last_up_price: moment().format('YYYY-MM-DD HH:mm:ss')
                                                         }]);
                                                         if (!is_next_step) {
                                                             return;
@@ -1921,7 +1922,8 @@ check_all = async () => {
                                             update_placements.push({
                                                 id: care_placement.id,
                                                 last_click: click,
-                                                last_update_click: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                last_update_click: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                                last_up_price: moment().format('YYYY-MM-DD HH:mm:ss')
                                             });
                                         }
                                     } else {
