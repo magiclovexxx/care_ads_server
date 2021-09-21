@@ -1558,7 +1558,8 @@ check_all = async () => {
                                                 if (care_keyword.last_update_loss == null) {
                                                     is_next_step = await php_update_placements(campaign, [{
                                                         id: care_keyword.id,
-                                                        last_update_loss: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                        last_update_loss: moment().format('YYYY-MM-DD HH:mm:ss'),
+                                                        debug_click: click
                                                     }]);
                                                     if (!is_next_step) {
                                                         return;
