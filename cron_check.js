@@ -410,7 +410,7 @@ check_all = async () => {
                 for (let i = 0; i < account.orders.length; i++) {
                     let order_id = account.orders[i].order_id;
                     let order_sn = account.orders[i].order_sn;
-                    
+
                     result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                     if (result.code == 0 && result.data.code == 0) {
                         let get_package = result.data.data;
@@ -464,7 +464,7 @@ check_all = async () => {
                                 }
                             }
                         }
-                        if(last_logistics_status != account.orders[i].last_logistics_status){
+                        if (last_logistics_status != account.orders[i].last_logistics_status) {
                             result = await api_put_shopee_orders([{
                                 uid: account.uid,
                                 shop_id: account.sid,
@@ -1553,60 +1553,86 @@ check_all = async () => {
 
                                         } else {
                                             //Từ khóa cáo lỗ
-                                            let is_down_price = false;
-                                            if (care_keyword.last_update_loss == null) {
-                                                is_next_step = await php_update_placements(campaign, [{
-                                                    id: care_keyword.id,
-                                                    last_update_loss: moment().format('YYYY-MM-DD HH:mm:ss')
-                                                }]);
-                                                if (!is_next_step) {
-                                                    return;
-                                                }
-                                                is_down_price = true;
-                                            } else {
-                                                if (moment(care_keyword.last_update_loss).add(max_hour, 'hours') > moment()) {
-                                                    is_down_price = true;
-                                                } else {
-                                                    //Tắt từ khóa không hiệu quả
-                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tắt từ khóa không hiệu quả');
-                                                    keyword.status = 0;
-                                                    is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
-                                                    if (!is_next_step) {
-                                                        return;
-                                                    }
+                                            let is_down_price = true;
+                                            if (max_hour != 0) {
+                                                if (care_keyword.last_update_loss == null) {
                                                     is_next_step = await php_update_placements(campaign, [{
                                                         id: care_keyword.id,
-                                                        care_status: 2
+                                                        last_update_loss: moment().format('YYYY-MM-DD HH:mm:ss')
                                                     }]);
                                                     if (!is_next_step) {
                                                         return;
                                                     }
-                                                    is_down_price = false;
-                                                }
-                                            }
-
-                                            if (keyword.price > min_price && is_down_price) {
-                                                if (last_click != click) {
-                                                    //Có click mới
-                                                    let old_price = keyword.price;
-                                                    keyword.price = Math.round(keyword.price * 0.9);
-                                                    if (keyword.price < min_price)
-                                                        keyword.price = min_price;
-
-                                                    if (keyword.price != old_price) {
+                                                    is_down_price = true;
+                                                } else {
+                                                    if (moment(care_keyword.last_update_loss).add(max_hour, 'hours') > moment()) {
+                                                        is_down_price = true;
+                                                    } else {
+                                                        //Tắt từ khóa không hiệu quả
+                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tắt từ khóa không hiệu quả');
+                                                        keyword.status = 0;
                                                         is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                         if (!is_next_step) {
                                                             return;
                                                         }
-                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
+                                                        is_next_step = await php_update_placements(campaign, [{
+                                                            id: care_keyword.id,
+                                                            care_status: 2
+                                                        }]);
+                                                        if (!is_next_step) {
+                                                            return;
+                                                        }
+                                                        is_down_price = false;
                                                     }
-                                                    is_next_step = await php_update_placements(campaign, [{
-                                                        id: care_keyword.id,
-                                                        last_click: click,
-                                                        last_update_click: moment().format('YYYY-MM-DD HH:mm:ss')
-                                                    }]);
-                                                    if (!is_next_step) {
-                                                        return;
+                                                }
+                                            }
+
+                                            if (is_down_price) {
+                                                if (last_click != click) {
+                                                    if (keyword.price > min_price) {
+                                                        //Có click mới
+                                                        let old_price = keyword.price;
+                                                        keyword.price = Math.round(keyword.price * 0.9);
+                                                        if (keyword.price < min_price)
+                                                            keyword.price = min_price;
+
+                                                        if (keyword.price != old_price) {
+                                                            is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
+                                                            if (!is_next_step) {
+                                                                return;
+                                                            }
+                                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
+                                                        }
+                                                        is_next_step = await php_update_placements(campaign, [{
+                                                            id: care_keyword.id,
+                                                            last_click: click,
+                                                            last_update_click: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                        }]);
+                                                        if (!is_next_step) {
+                                                            return;
+                                                        }
+                                                    }
+                                                } else {
+                                                    let old_price = keyword.price;
+                                                    let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                    if (ads_location != -1) {
+                                                        if (ads_location == 1) {
+                                                            keyword.price = Math.round(keyword.price * 0.9);
+                                                            if (keyword.price < min_price)
+                                                                keyword.price = min_price;
+                                                        } else {
+                                                            keyword.price = Math.round(keyword.price * 1.1);
+                                                            if (keyword.price > max_price)
+                                                                keyword.price = max_price;
+                                                        }
+
+                                                        if (keyword.price != old_price) {
+                                                            is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
+                                                            if (!is_next_step) {
+                                                                return;
+                                                            }
+                                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
+                                                        }
                                                     }
                                                 }
                                             }
@@ -1847,43 +1873,54 @@ check_all = async () => {
                                 }
                             } else {
                                 //Vị trí cáo lỗ
-                                let is_down_price = false;
-                                if (care_placement.last_update_loss == null) {
-                                    update_placements.push({
-                                        id: care_placement.id,
-                                        last_update_loss: moment().format('YYYY-MM-DD HH:mm:ss')
-                                    });
-                                    is_down_price = true;
-                                } else {
-                                    if (moment(care_placement.last_update_loss).add(max_hour, 'hours') > moment()) {
+                                let is_down_price = true;
+                                if (max_hour != 0) {
+                                    if (care_placement.last_update_loss == null) {
+                                        update_placements.push({
+                                            id: care_placement.id,
+                                            last_update_loss: moment().format('YYYY-MM-DD HH:mm:ss')
+                                        });
                                         is_down_price = true;
                                     } else {
-                                        //Tắt ví trí không hiệu quả
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Tắt vị trí không hiệu quả');
-                                        placement.status = 2;
-                                        is_update_campaign = true;
-                                        is_down_price = false;
-                                        update_placements.push({
-                                            id: care_placement.id,
-                                            care_status: 2
-                                        });
+                                        if (moment(care_placement.last_update_loss).add(max_hour, 'hours') > moment()) {
+                                            is_down_price = true;
+                                        } else {
+                                            //Tắt ví trí không hiệu quả
+                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Tắt vị trí không hiệu quả');
+                                            placement.status = 2;
+                                            is_update_campaign = true;
+                                            update_placements.push({
+                                                id: care_placement.id,
+                                                care_status: 2
+                                            });
+                                            is_down_price = false;
+                                        }
                                     }
                                 }
-
-                                if (placement.premium_rate > 0 && is_down_price) {
+                                if (is_down_price) {
                                     if (last_click != click) {
-                                        //Có click mới
-                                        placement.extinfo.target.premium_rate = placement.extinfo.target.premium_rate - 10;
-                                        if (placement.extinfo.target.premium_rate < 0)
-                                            placement.extinfo.target.premium_rate = 0;
+                                        if (placement.premium_rate > 0) {
+                                            //Có click mới
+                                            placement.extinfo.target.premium_rate = placement.extinfo.target.premium_rate - 10;
+                                            if (placement.extinfo.target.premium_rate < 0)
+                                                placement.extinfo.target.premium_rate = 0;
+                                            placement.extinfo.target.price = Math.round(placement.extinfo.target.base_price * (placement.extinfo.target.premium_rate / 100 + 1));
+                                            is_update_campaign = true;
+                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Giảm giá thầu: ', placement.extinfo.target.price, '(' + placement.extinfo.target.premium_rate + '%)', 'Base:', placement.extinfo.target.base_price);
+                                            update_placements.push({
+                                                id: care_placement.id,
+                                                last_click: click,
+                                                last_update_click: moment().format('YYYY-MM-DD HH:mm:ss')
+                                            });
+                                        }
+                                    } else {
+                                        //Không có click
+                                        placement.extinfo.target.premium_rate = placement.extinfo.target.premium_rate + 10;
+                                        if (placement.extinfo.target.premium_rate > care_placement.max_price)
+                                            placement.extinfo.target.premium_rate = care_placement.max_price;
                                         placement.extinfo.target.price = Math.round(placement.extinfo.target.base_price * (placement.extinfo.target.premium_rate / 100 + 1));
                                         is_update_campaign = true;
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Giảm giá thầu: ', placement.extinfo.target.price, '(' + placement.extinfo.target.premium_rate + '%)', 'Base:', placement.extinfo.target.base_price);
-                                        update_placements.push({
-                                            id: care_placement.id,
-                                            last_click: click,
-                                            last_update_click: moment().format('YYYY-MM-DD HH:mm:ss')
-                                        });
+                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Tăng giá thầu:', placement.extinfo.target.price, '(' + placement.extinfo.target.premium_rate + '%)', 'Base:', placement.extinfo.target.base_price);
                                     }
                                 }
                             }
