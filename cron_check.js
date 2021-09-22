@@ -1064,7 +1064,7 @@ check_all = async () => {
                                 let transaction_id = get_wallet_transaction.transaction_id;
                                 let pay_time = get_wallet_transaction.ctime;
                                 if (first_pay_time == 0) {
-                                    first_pay_time = pay_time;
+                                    first_pay_time = transaction_id;
                                 }
                                 if (!disable_check_pay_time &&
                                     pay_time < last_pay_time) {
@@ -1096,7 +1096,7 @@ check_all = async () => {
                                 }
 
                                 if (last_pay_time == 0) {
-                                    last_pay_time = pay_time;
+                                    last_pay_time = transaction_id;
                                     result = await api_put_shopee_accounts({
                                         id: account.sid,
                                         last_pay_time: last_pay_time,
