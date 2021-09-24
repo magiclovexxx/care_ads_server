@@ -1511,7 +1511,7 @@ check_all = async () => {
                                                 let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                 if (ads_location != -1) {
                                                     if (ads_location == 1) {
-                                                        keyword.price = Math.round(keyword.price * 0.9);
+                                                        keyword.price = Math.round(keyword.price * 0.99);
                                                         if (keyword.price < min_price)
                                                             keyword.price = min_price;
                                                     } else {
@@ -1621,7 +1621,7 @@ check_all = async () => {
                                                         let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                         if (ads_location != -1) {
                                                             if (ads_location == 1) {
-                                                                keyword.price = Math.round(keyword.price * 0.9);
+                                                                keyword.price = Math.round(keyword.price * 0.99);
                                                                 if (keyword.price < min_price)
                                                                     keyword.price = min_price;
                                                             } else {
