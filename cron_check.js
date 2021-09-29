@@ -255,7 +255,6 @@ function sleep(ms) {
 
 check_all = async () => {
     var is_wait = false;
-    var slave_type = 'CRON';
     try {
         //Khởi động nếu bị treo
         setTimeout(async function () {
@@ -293,8 +292,6 @@ check_all = async () => {
             }
             return;
         }
-
-        slave_type = result.data.type;
 
         let data_accounts = result.data.accounts;
         let total_orders = result.data.total_orders;
@@ -1982,7 +1979,7 @@ check_all = async () => {
             catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
-        }, (slave_type == 'CRON' ? 3000 : 300000));
+        }, 3000);
     }
     finally {
         if (!is_wait) {
@@ -1994,7 +1991,7 @@ check_all = async () => {
                 catch (ex) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
                 }
-            }, (slave_type == 'CRON' ? 3000 : 300000));
+            }, 3000);
         }
     }
 }
