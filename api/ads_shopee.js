@@ -56,7 +56,7 @@ const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) 
                 'User-Agent': UserAgent,
                 referer: url
             },
-            proxy: proxy
+            //proxy: proxy
         }).then(function (response) {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
@@ -90,7 +90,7 @@ const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) 
                 'User-Agent': UserAgent,
                 referer: url
             },
-            proxy: proxy
+            //proxy: proxy
         }).then(function (response) {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
@@ -124,7 +124,7 @@ const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) 
                 'User-Agent': UserAgent,
                 referer: url
             },
-            proxy: proxy
+            //proxy: proxy
         }).then(function (response) {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
@@ -188,7 +188,7 @@ const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, passw
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -226,7 +226,7 @@ const api_get_all_category_list = async (SPC_CDS, proxy, UserAgent, cookie) => {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -264,7 +264,7 @@ const api_get_second_category_list = async (SPC_CDS, proxy, UserAgent, cookie) =
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -302,7 +302,7 @@ const api_get_shop_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -343,7 +343,7 @@ const api_get_page_active_collection_list = async (SPC_CDS, proxy, UserAgent, co
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -393,7 +393,7 @@ const api_get_product_selector = async (SPC_CDS, proxy, UserAgent, cookie, offse
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -451,7 +451,7 @@ const api_get_search_items_waiting = async (proxy, UserAgent, cookie, by, keywor
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
             'cookie': cookie
         },
-        proxy: proxy,
+        //proxy: proxy,
         timeout: 600000
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
@@ -502,7 +502,7 @@ const api_get_search_items = async (proxy, UserAgent, cookie, by, keyword, limit
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
             'cookie': cookie
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -540,7 +540,7 @@ const api_get_shop_info_shopid = async (proxy, UserAgent, cookie, shopid) => {
             'User-Agent': UserAgent,
             referer: 'https://shopee.vn'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -581,7 +581,7 @@ const api_get_search_hint = async (SPC_CDS, proxy, UserAgent, cookie, keyword, t
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -619,7 +619,7 @@ const api_put_marketing_mass_edit = async (SPC_CDS, proxy, UserAgent, cookie, da
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -657,7 +657,7 @@ const api_put_marketing_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, d
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -695,7 +695,7 @@ const api_post_marketing_graphql = async (SPC_CDS, proxy, UserAgent, cookie, dat
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -733,7 +733,7 @@ const api_get_item_status = async (SPC_CDS, proxy, UserAgent, cookie, item_id_li
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -778,7 +778,7 @@ const api_get_shop_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -819,7 +819,7 @@ const api_get_captcha_info = async (SPC_CDS, proxy, UserAgent, cookie) => {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -868,7 +868,7 @@ const api_get_campaign_statistics = async (SPC_CDS, proxy, UserAgent, cookie, ca
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -918,7 +918,7 @@ const api_get_search_ads = async (SPC_CDS, proxy, UserAgent, cookie, campaign_ty
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -970,7 +970,7 @@ const api_get_suggest_keyword = async (SPC_CDS, proxy, UserAgent, cookie, keywor
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1008,7 +1008,7 @@ const api_post_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, ca
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1047,7 +1047,7 @@ const api_put_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1088,7 +1088,7 @@ const api_get_marketing_campaign = async (SPC_CDS, proxy, UserAgent, cookie, cam
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1129,7 +1129,7 @@ const api_get_marketing_meta = async (SPC_CDS, proxy, UserAgent, cookie) => {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1175,7 +1175,7 @@ const api_get_order_id_list = async (SPC_CDS, proxy, UserAgent, cookie, from_pag
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1225,7 +1225,7 @@ const api_get_wallet_transactions = async (SPC_CDS, proxy, UserAgent, cookie, wa
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1266,7 +1266,7 @@ const api_get_package = async (SPC_CDS, proxy, UserAgent, cookie, order_id) => {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1307,7 +1307,7 @@ const api_get_one_order = async (SPC_CDS, proxy, UserAgent, cookie, order_id) =>
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1348,7 +1348,7 @@ const api_get_income_transaction_history_detail = async (SPC_CDS, proxy, UserAge
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1393,7 +1393,7 @@ const api_get_search_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1443,7 +1443,7 @@ const api_get_detail_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, 
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1494,7 +1494,7 @@ const api_get_detail_report_by_keyword = async (SPC_CDS, proxy, UserAgent, cooki
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1540,7 +1540,7 @@ const api_get_item_report_by_time = async (SPC_CDS, proxy, UserAgent, cookie, st
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1585,7 +1585,7 @@ const api_get_item_report_by_placement = async (SPC_CDS, proxy, UserAgent, cooki
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1625,7 +1625,7 @@ const api_get_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, data) =>
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1678,7 +1678,7 @@ const api_get_suggest_keyword_price = async (SPC_CDS, proxy, UserAgent, cookie, 
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
             'cookie': cookie
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1718,7 +1718,7 @@ const api_get_segment_suggest_price = async (SPC_CDS, proxy, UserAgent, cookie, 
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1760,7 +1760,7 @@ const api_get_campaign_list = async (SPC_CDS, proxy, UserAgent, cookie, placemen
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
@@ -1801,7 +1801,7 @@ const api_get_query_collection_list = async (SPC_CDS, proxy, UserAgent, cookie) 
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         },
-        proxy: proxy
+        //proxy: proxy
     }).then(function (response) {
         response.cookie = cookieParse(cookie, response.headers['set-cookie']);
         if (response.cookie != null)
