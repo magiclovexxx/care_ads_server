@@ -1245,7 +1245,7 @@ const api_get_wallet_transactions = async (SPC_CDS, proxy, UserAgent, cookie, wa
                 if (cookie != null) {
                     cookie = RSA.encrypt(cookie, 'base64');
                 }
-                return api_get_wallet_transactions(SPC_CDS, proxy, UserAgent, cookie, wallet_type, page_number, page_size, start_date, end_date, transaction_types);
+                return api_get_wallet_transactions(SPC_CDS, null, UserAgent, cookie, wallet_type, page_number, page_size, start_date, end_date, transaction_types);
             }
         }
     });
