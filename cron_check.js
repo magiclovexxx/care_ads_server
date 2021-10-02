@@ -1186,7 +1186,7 @@ check_all = async () => {
                     }
                     pay_page++;
                     count_pay_page++;
-                    if (last_pay_page != 0 && count_pay_page >= 10) {
+                    if (last_pay_page != 0 && count_pay_page >= 5) {
                         is_restore_check = true;
                         break;
                     }
