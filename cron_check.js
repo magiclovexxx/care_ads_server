@@ -765,7 +765,7 @@ check_all = async () => {
                     }
                     cancel_page++;
                     count_cancel_page++;
-                    if (last_cancel_page != 0 && count_cancel_page >= 5) {
+                    if (last_cancel_page != 0 && count_cancel_page >= 3) {
                         is_restore_check = true;
                         break;
                     }
@@ -1037,7 +1037,7 @@ check_all = async () => {
                     }
                     complete_page++;
                     count_complete_page++;
-                    if (last_complete_page != 0 && count_complete_page >= 5) {
+                    if (last_complete_page != 0 && count_complete_page >= 3) {
                         is_restore_check = true;
                         break;
                     }
@@ -1186,7 +1186,7 @@ check_all = async () => {
                     }
                     pay_page++;
                     count_pay_page++;
-                    if (last_pay_page != 0 && count_pay_page >= 5) {
+                    if (last_pay_page != 0 && count_pay_page >= 3) {
                         is_restore_check = true;
                         break;
                     }
