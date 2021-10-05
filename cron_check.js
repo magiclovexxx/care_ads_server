@@ -334,6 +334,7 @@ check_all = async () => {
                         password: account.proxy_password
                     }
                 };
+                proxy = null;
                 let user_agent = account.user_agent;
                 let username = account.username;
                 let password = account.password;
@@ -1214,6 +1215,7 @@ check_all = async () => {
                         password: campaign.proxy_password
                     }
                 };
+                proxy = null;
                 let user_agent = campaign.user_agent;
                 let username = campaign.username;
                 let password = campaign.password;
@@ -1600,7 +1602,7 @@ check_all = async () => {
                                                                 return;
                                                             }
                                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
-                                                        }                                                        
+                                                        }
                                                     }
                                                     is_next_step = await php_update_placements(campaign, [{
                                                         id: care_keyword.id,
