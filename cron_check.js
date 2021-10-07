@@ -1051,7 +1051,7 @@ check_all = async () => {
                 let disable_check_pay_time = false;
 
                 while (true) {
-                    result = await shopeeApi.api_get_wallet_transactions(spc_cds, proxy, user_agent, cookie, 0, pay_page, 20, null, null, '102,101,405,404,401,402,302,504,505,301');
+                    result = await shopeeApi.api_get_wallet_transactions(spc_cds, proxy, user_agent, cookie, 0, pay_page, 50, null, null, '102,101,405,404,401,402,302,504,505,301');
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.list.length > 0) {
                             let loop_status = 1;
