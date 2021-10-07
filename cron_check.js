@@ -1082,12 +1082,14 @@ check_all = async () => {
                                     }
                                     if (last_pay_page == 0) {
                                         loop_status = 0;
+                                        console.log('break 1');
                                         break;
                                     } else {
                                         if (last_pay_page > 1) {
                                             count_pay_page = 0;
                                             pay_page = last_pay_page;
                                             loop_status = 3;
+                                            console.log('break 2');
                                             break;
                                         }
                                     }
@@ -1125,6 +1127,7 @@ check_all = async () => {
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
                                     loop_status = 1;
+                                    console.log('break 3');
                                     break;
                                 } else {
                                     result = await api_put_shopee_payments([{
@@ -1160,10 +1163,12 @@ check_all = async () => {
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
                                 } else {
                                     if (last_pay_page == 0) {
+                                        console.log('break 4');
                                         break;
                                     }
                                 }
                             } else {
+                                console.log('break 5');
                                 break;
                             }
                         } else {
@@ -1179,16 +1184,19 @@ check_all = async () => {
                                 }
                                 console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
                             }
+                            console.log('break 6');
                             break;
                         }
                     } else {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_wallet_transactions', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                        console.log('break 7');
                         break;
                     }
                     pay_page++;
                     count_pay_page++;
                     if (last_pay_page != 0 && count_pay_page >= 3) {
                         is_restore_check = true;
+                        console.log('break 8');
                         break;
                     }
                 }
