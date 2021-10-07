@@ -738,7 +738,7 @@ check_all = async () => {
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_page', last_cancel_page);
                                 } else {
-                                    if (last_cancel_page == 0) {
+                                    if (last_cancel_page == 0 && loop_status != 1) {
                                         break;
                                     }
                                 }
@@ -1010,7 +1010,7 @@ check_all = async () => {
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_complete_page', last_complete_page);
                                 } else {
-                                    if (last_complete_page == 0) {
+                                    if (last_complete_page == 0 && loop_status != 1) {
                                         break;
                                     }
                                 }
@@ -1159,9 +1159,7 @@ check_all = async () => {
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
                                 } else {
-                                    if (last_pay_page == 0) {
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') loop_status', loop_status);
-                                        //Check
+                                    if (last_pay_page == 0 && loop_status != 1) {
                                         break;
                                     }
                                 }
