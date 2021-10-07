@@ -583,7 +583,7 @@ check_all = async () => {
                                                 return;
                                             }
                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_page', last_cancel_page);
-                                            loop_status = 1;
+                                            loop_status = 2;
                                             break;
                                         } else {
                                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
@@ -860,7 +860,7 @@ check_all = async () => {
                                             return;
                                         }
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_complete_page', last_complete_page);
-                                        loop_status = 1;
+                                        loop_status = 2;
                                         break;
                                     } else {
                                         result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
@@ -1124,7 +1124,7 @@ check_all = async () => {
                                         return;
                                     }
                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pay_page', last_pay_page);
-                                    loop_status = 1;
+                                    loop_status = 2;
                                     break;
                                 } else {
                                     result = await api_put_shopee_payments([{
