@@ -1862,19 +1862,37 @@ check_all = async () => {
                             let direct_gmv = 0;
                             let direct_order_amount = 0;
                             let click = 0;
+                            let broad_cir = 0;
+                            let direct_cir = 0;
+
                             let last_click = parseInt(care_placement.last_click);
                             let max_hour = parseInt(care_placement.max_hour);
+                            let cir_type = parseInt(care_placement.cir_type);
+                            let cir_value = parseFloat(care_placement.cir_value);
+                            cir_value = (cir_value * 80) / 100; //Hệ số an toàn
+
                             if (filter_placement_reports.length > 0) {
                                 cost = filter_placement_reports[0].cost;
                                 direct_gmv = filter_placement_reports[0].direct_gmv;
                                 direct_order_amount = filter_placement_reports[0].direct_order_amount;
                                 cost = filter_placement_reports[0].cost;
                                 click = filter_placement_reports[0].click;
+                                broad_cir = filter_placement_reports[0].broad_cir * 100;
+                                direct_cir = filter_placement_reports[0].direct_cir * 100;
                             }
 
-                            let product_cost = campaign.product_cost * direct_order_amount;
-                            let check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
-                            if (check_profit >= 0) {
+                            let check_win = false;
+                            if (care_placement.care_type == 0) {
+                                let product_cost = campaign.product_cost * direct_order_amount;
+                                let check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
+                                if (check_profit >= 0) {
+                                    check_win = true;
+                                }
+                            } else {
+                                if (cir_value <= (cir_type == 0 ? broad_cir : direct_cir))
+                                    check_win = true;
+                            }
+                            if (check_win) {
                                 //Quảng cáo lãi/hòa
                                 if (placement.extinfo.target.premium_rate < care_placement.max_price || placement.extinfo.target.premium_rate > care_placement.max_price) {
                                     if (click == last_click) {
