@@ -1466,15 +1466,21 @@ check_all = async () => {
                                         }]);
                                         return;
                                     }
-                                    if (care_keyword.care_type == 0) {
-                                        //Đấu thầu lãi lỗ
+                                    if (care_keyword.care_type == 0 || care_keyword.care_type == 2) {
+                                        //Đấu thầu lãi lỗ & Đấu thầu CIR
                                         let filter_keyword_reports = keyword_reports.filter(x => x.keyword == keyword.keyword);
                                         let cost = 0;
                                         let direct_gmv = 0;
                                         let direct_order_amount = 0;
                                         let click = 0;
+                                        let broad_cir = 0;
+                                        let direct_cir = 0;
+
                                         let last_click = parseInt(care_keyword.last_click);
                                         let max_hour = parseInt(care_keyword.max_hour);
+                                        let cir_type = parseInt(care_keyword.cir_type);
+                                        let cir_value = parseFloat(care_keyword.cir_value);
+                                        cir_value = (cir_value * 80) / 100; //Hệ số an toàn 80%
 
                                         if (filter_keyword_reports.length > 0) {
                                             cost = filter_keyword_reports[0].cost;
@@ -1482,14 +1488,23 @@ check_all = async () => {
                                             direct_order_amount = filter_keyword_reports[0].direct_order_amount;
                                             cost = filter_keyword_reports[0].cost;
                                             click = filter_keyword_reports[0].click;
+                                            broad_cir = filter_keyword_reports[0].broad_cir * 100;
+                                            direct_cir = filter_keyword_reports[0].direct_cir * 100;
                                         }
 
                                         let check_win = false;
                                         if (campaign.campaign_type == 'keyword') {
-                                            let product_cost = campaign.product_cost * direct_order_amount;
-                                            let check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
-                                            if (check_profit >= 0)
-                                                check_win = true;
+                                            if (care_keyword.care_type == 0) {
+                                                //Đấu thầu lãi lỗ
+                                                let product_cost = campaign.product_cost * direct_order_amount;
+                                                let check_profit = campaign.profit_num * (direct_gmv - ((direct_gmv * campaign.fix_cost) / 100) - product_cost) - cost;
+                                                if (check_profit >= 0)
+                                                    check_win = true;
+                                            } else {
+                                                //Đấu thầu CIR
+                                                if (cir_value <= (cir_type == 0 ? broad_cir : direct_cir))
+                                                    check_win = true;
+                                            }
                                         } else {
                                             if (cost == 0) {
                                                 check_win = true;
@@ -1502,6 +1517,8 @@ check_all = async () => {
                                                 }
                                             }
                                         }
+
+
                                         if (check_win) {
                                             //Quảng cáo lãi/hòa
                                             if (click == last_click) {
