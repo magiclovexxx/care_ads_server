@@ -35,7 +35,8 @@ router.post("/api_post_login", async (req, res) => {
         let vcode = req.body.vcode;
         let captcha = req.body.captcha;
         let captcha_id = req.body.captcha_id;
-        let result = await shopeeApi.api_post_login(SPC_CDS, proxy, UserAgent, null, username, password, vcode, captcha, captcha_id);
+        let cookie = req.body.cookie;
+        let result = await shopeeApi.api_post_login(SPC_CDS, proxy, UserAgent, cookie, username, password, vcode, captcha, captcha_id);
         res.send(result);
     }
     catch (ex) {
