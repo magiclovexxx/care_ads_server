@@ -154,7 +154,8 @@ const api_dynamic_request = async (proxy, UserAgent, cookie, url, method, data) 
 
 const api_post_login = async (SPC_CDS, proxy, UserAgent, cookie, username, password, vcode, captcha, captcha_id) => {
     if (cookie != null) {
-        cookie = RSA.decrypt(cookie, 'utf8');
+        if (cookie.indexOf('[ROOT]') == -1)
+            cookie = RSA.decrypt(cookie, 'utf8');
     }
     const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
     const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
@@ -1338,7 +1339,7 @@ const api_get_income_transaction_history_detail = async (SPC_CDS, proxy, UserAge
     if (cookie != null) {
         cookie = RSA.decrypt(cookie, 'utf8');
     }
-    let Url = 'https://banhang.shopee.vn/api/v3/finance/income_transaction_history_detail/';    
+    let Url = 'https://banhang.shopee.vn/api/v3/finance/income_transaction_history_detail/';
     Url += '?order_id=' + order_id;
     Url += '&SPC_CDS=' + SPC_CDS;
     Url += '&SPC_CDS_VER=2';
