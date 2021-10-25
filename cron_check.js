@@ -1744,10 +1744,11 @@ check_all = async () => {
                             }
                             finally {
                                 //if (index === array.length - 1) {
-                                campaign.job_done = true;
+                                //
                                 //}
                             }
                         }
+                        campaign.job_done = true;
                         //});
                     }
                 } else {
