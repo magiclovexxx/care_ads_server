@@ -256,7 +256,7 @@ function sleep(ms) {
 }
 
 check_all = async () => {
-    var is_wait = false;
+    let is_wait = false;
     try {
         //Khởi động nếu bị treo
         setTimeout(async function () {
@@ -2030,7 +2030,7 @@ check_all = async () => {
                     exec('pm2 restart cron_check');
                 }
                 catch (ex) {
-                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ 1 <' + ex + '>');
                 }
             }, 3000);
         }
