@@ -259,7 +259,7 @@ check_all = async () => {
     let is_wait = false;
     try {
         //Khởi động nếu bị treo
-        setTimeout(async function () {
+        setTimeout(function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             try {
                 exec('pm2 restart cron_check');
@@ -309,10 +309,10 @@ check_all = async () => {
 
         if ((data_accounts.length + data_campaigns.length) > 0) {
             is_wait = true;
-            setInterval(function () {
+            setInterval(async function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
-                    last_connection(slave_ip, port);
+                    result = await last_connection(slave_ip, port);
                     console.log('===== Hoàn thành tiến trình =====');
                     try {
                         exec('pm2 restart cron_check');
@@ -323,7 +323,7 @@ check_all = async () => {
                 }
             }, 3000);
         } else {
-            last_connection(slave_ip, port);
+            result = await last_connection(slave_ip, port);
             return;
         }
 
@@ -2013,7 +2013,7 @@ check_all = async () => {
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
-        setTimeout(async function () {
+        setTimeout(function () {
             try {
                 exec('pm2 restart cron_check');
             }
@@ -2025,12 +2025,12 @@ check_all = async () => {
     finally {
         if (!is_wait) {
             console.log('===== Hoàn thành tiến trình =====');
-            setTimeout(async function () {
+            setTimeout(function () {
                 try {
                     exec('pm2 restart cron_check');
                 }
                 catch (ex) {
-                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ 1 <' + ex + '>');
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
                 }
             }, 3000);
         }
