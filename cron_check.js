@@ -6,6 +6,7 @@ const exec = require('child_process').exec;
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
 const NodeRSA = require('node-rsa');
+const os = require("os");
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -25,7 +26,7 @@ const axiosInstance = createAxios();
 
 const port = process.env.PORT;
 const use_host = process.env.USE_HOST;
-const hostname = process.env.HOSTNAME;
+const hostname = os.hostname();
 const api_url = "http://api.sacuco.com/api_user";
 
 function api_get_shopee_campaigns(slave_ip, slave_port) {
