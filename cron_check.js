@@ -24,6 +24,8 @@ function createAxios() {
 const axiosInstance = createAxios();
 
 const port = process.env.PORT;
+const use_host = process.env.USE_HOST;
+const hostname = process.env.HOSTNAME;
 const api_url = "http://api.sacuco.com/api_user";
 
 function api_get_shopee_campaigns(slave_ip, slave_port) {
@@ -56,8 +58,8 @@ function last_connection(slave_ip, slave_port) {
     });
 }
 
-function restore_check(id) {
-    const Url = api_url + '/restore_check?id=' + id;
+function restore_check(id, slave_ip, slave_port) {
+    const Url = api_url + '/restore_check?id=' + id + '&slave_ip=' + slave_ip + '&slave_port=' + slave_port;;
     return axiosInstance.get(Url).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -71,8 +73,8 @@ function restore_check(id) {
     });
 }
 
-function api_put_shopee_accounts(data) {
-    const Url = api_url + '/shopee_accounts';
+function api_put_shopee_accounts(data, slave_ip, slave_port) {
+    const Url = api_url + '/shopee_accounts?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.put(Url, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -86,8 +88,8 @@ function api_put_shopee_accounts(data) {
     });
 }
 
-function api_put_shopee_campaigns(data) {
-    const Url = api_url + '/shopee_campaigns';
+function api_put_shopee_campaigns(data, slave_ip, slave_port) {
+    const Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.put(Url, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -101,8 +103,8 @@ function api_put_shopee_campaigns(data) {
     });
 }
 
-function api_put_shopee_placements(data) {
-    const Url = api_url + '/shopee_placements';
+function api_put_shopee_placements(data, slave_ip, slave_port) {
+    const Url = api_url + '/shopee_placements?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.put(Url, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -116,8 +118,8 @@ function api_put_shopee_placements(data) {
     });
 }
 
-function api_put_shopee_orders(data) {
-    const Url = api_url + '/shopee_orders';
+function api_put_shopee_orders(data, slave_ip, slave_port) {
+    const Url = api_url + '/shopee_orders?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.put(Url, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -131,8 +133,8 @@ function api_put_shopee_orders(data) {
     });
 }
 
-function api_put_shopee_payments(data) {
-    const Url = api_url + '/shopee_payments';
+function api_put_shopee_payments(data, slave_ip, slave_port) {
+    const Url = api_url + '/shopee_payments?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     return axiosInstance.put(Url, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -146,8 +148,8 @@ function api_put_shopee_payments(data) {
     });
 }
 
-async function php_update_placements(campaign, update_placements) {
-    let result = await api_put_shopee_placements(update_placements);
+async function php_update_placements(campaign, update_placements, slave_ip, slave_port) {
+    let result = await api_put_shopee_placements(update_placements, slave_ip, slave_port);
     if (result.code != 0) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_placements', result);
         return false;
@@ -268,6 +270,8 @@ check_all = async () => {
         }, 1200000);
 
         let slave_ip = await publicIp.v4();
+        if (use_host)
+            slave_ip = hostname;
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
         let result = await api_get_shopee_campaigns(slave_ip, port);
         if (result.code != 0) {
@@ -384,7 +388,7 @@ check_all = async () => {
                                     id: account.sid,
                                     options: JSON.stringify(result),
                                     status: 0
-                                });
+                                }, slave_ip, port);
                             }
                         }
                         return;
@@ -397,7 +401,7 @@ check_all = async () => {
                         cookie: cookie,
                         options: JSON.stringify(result),
                         last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
-                    });
+                    }, slave_ip, port);
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                         return;
@@ -476,7 +480,7 @@ check_all = async () => {
                                 third_party_tn: third_party_tn,
                                 consignment_no: consignment_no,
                                 tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null)
-                            }]);
+                            }], slave_ip, port);
                             if (result.code != 0) {
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                 continue;
@@ -523,7 +527,7 @@ check_all = async () => {
                                                 id: account.sid,
                                                 last_cancel_time: last_cancel_time,
                                                 cancel_total_page: total_page
-                                            });
+                                            }, slave_ip, port);
                                             if (result.code != 0) {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                                 return;
@@ -550,7 +554,7 @@ check_all = async () => {
                                             id: account.sid,
                                             last_cancel_time: last_cancel_time,
                                             cancel_total_page: total_page
-                                        });
+                                        }, slave_ip, port);
                                         if (result.code != 0) {
                                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                             return;
@@ -577,7 +581,7 @@ check_all = async () => {
                                             result = await api_put_shopee_accounts({
                                                 id: account.sid,
                                                 last_cancel_page: last_cancel_page
-                                            });
+                                            }, slave_ip, port);
                                             if (result.code != 0) {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                                 return;
@@ -698,7 +702,7 @@ check_all = async () => {
                                                         order_items: (order_items != null ? JSON.stringify(order_items) : null),
                                                         tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null),
                                                         status: status
-                                                    }]);
+                                                    }], slave_ip, port);
                                                     if (result.code != 0) {
                                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                         return;
@@ -731,7 +735,7 @@ check_all = async () => {
                                         id: account.sid,
                                         last_cancel_page: last_cancel_page,
                                         cancel_total_page: total_page
-                                    });
+                                    }, slave_ip, port);
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                         return;
@@ -751,7 +755,7 @@ check_all = async () => {
                                 result = await api_put_shopee_accounts({
                                     id: account.sid,
                                     last_cancel_page: last_cancel_page
-                                });
+                                }, slave_ip, port);
                                 if (result.code != 0) {
                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                     return;
@@ -803,7 +807,7 @@ check_all = async () => {
                                                 id: account.sid,
                                                 last_complete_time: last_complete_time,
                                                 complete_total_page: total_page
-                                            });
+                                            }, slave_ip, port);
                                             if (result.code != 0) {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                                 return;
@@ -829,7 +833,7 @@ check_all = async () => {
                                             id: account.sid,
                                             last_complete_time: last_complete_time,
                                             complete_total_page: total_page
-                                        });
+                                        }, slave_ip, port);
                                         if (result.code != 0) {
                                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                             return;
@@ -854,7 +858,7 @@ check_all = async () => {
                                         result = await api_put_shopee_accounts({
                                             id: account.sid,
                                             last_complete_page: last_complete_page
-                                        });
+                                        }, slave_ip, port);
                                         if (result.code != 0) {
                                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                             return;
@@ -973,7 +977,7 @@ check_all = async () => {
                                                     order_items: (order_items != null ? JSON.stringify(order_items) : null),
                                                     tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null),
                                                     status: status
-                                                }]);
+                                                }], slave_ip, port);
                                                 if (result.code != 0) {
                                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                     return;
@@ -1003,7 +1007,7 @@ check_all = async () => {
                                         id: account.sid,
                                         last_complete_page: last_complete_page,
                                         complete_total_page: total_page
-                                    });
+                                    }, slave_ip, port);
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                         return;
@@ -1023,7 +1027,7 @@ check_all = async () => {
                                 result = await api_put_shopee_accounts({
                                     id: account.sid,
                                     last_complete_page: last_complete_page
-                                });
+                                }, slave_ip, port);
                                 if (result.code != 0) {
                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                     return;
@@ -1073,7 +1077,7 @@ check_all = async () => {
                                             id: account.sid,
                                             last_pay_time: last_pay_time,
                                             pay_total_page: total_page
-                                        });
+                                        }, slave_ip, port);
                                         if (result.code != 0) {
                                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                             return;
@@ -1099,7 +1103,7 @@ check_all = async () => {
                                         id: account.sid,
                                         last_pay_time: last_pay_time,
                                         pay_total_page: total_page
-                                    });
+                                    }, slave_ip, port);
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                         return;
@@ -1118,7 +1122,7 @@ check_all = async () => {
                                     result = await api_put_shopee_accounts({
                                         id: account.sid,
                                         last_pay_page: last_pay_page
-                                    });
+                                    }, slave_ip, port);
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                         return;
@@ -1137,7 +1141,7 @@ check_all = async () => {
                                         target_id: target_id,
                                         payment_time: moment.unix(pay_time).format('YYYY-MM-DD HH:mm:ss'),
                                         status: status
-                                    }]);
+                                    }], slave_ip, port);
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + transaction_id + ') Lỗi api_put_shopee_payments', result);
                                         return;
@@ -1152,7 +1156,7 @@ check_all = async () => {
                                         id: account.sid,
                                         last_pay_page: last_pay_page,
                                         pay_total_page: total_page
-                                    });
+                                    }, slave_ip, port);
                                     if (result.code != 0) {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                         return;
@@ -1172,7 +1176,7 @@ check_all = async () => {
                                 result = await api_put_shopee_accounts({
                                     id: account.sid,
                                     last_pay_page: last_pay_page
-                                });
+                                }, slave_ip, port);
                                 if (result.code != 0) {
                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                     return;
@@ -1195,7 +1199,7 @@ check_all = async () => {
 
                 if (is_restore_check) {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Restore Check');
-                    restore_check(account.sid);
+                    restore_check(account.sid, slave_ip, port);
                 }
             } catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
@@ -1255,7 +1259,7 @@ check_all = async () => {
                                     id: campaign.sid,
                                     options: JSON.stringify(result),
                                     status: 0
-                                });
+                                }, slave_ip, port);
                             }
                         }
                         campaign.job_done = true;
@@ -1269,7 +1273,7 @@ check_all = async () => {
                         cookie: cookie,
                         options: JSON.stringify(result),
                         last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
-                    });
+                    }, slave_ip, port);
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_put_shopee_accounts', result.message);
                         campaign.job_done = true;
@@ -1304,7 +1308,7 @@ check_all = async () => {
                     result = await api_put_shopee_campaigns({
                         id: campaign.cid,
                         care_status: 0
-                    });
+                    }, slave_ip, port);
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_campaigns', result.message);
                         campaign.job_done = true;
@@ -1339,7 +1343,7 @@ check_all = async () => {
                                 result = await api_put_shopee_campaigns({
                                     id: campaign.cid,
                                     care_status: 0
-                                });
+                                }, slave_ip, port);
                                 if (result.code != 0) {
                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_campaigns ', result.message);
                                 }
@@ -1352,7 +1356,7 @@ check_all = async () => {
                             result = await api_put_shopee_campaigns({
                                 id: campaign.cid,
                                 care_status: 0
-                            });
+                            }, slave_ip, port);
                             if (result.code != 0) {
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_campaigns', result.message);
                             }
@@ -1427,7 +1431,7 @@ check_all = async () => {
                                             is_next_step = await php_update_placements(campaign, [{
                                                 id: care_keyword.id,
                                                 care_status: 1
-                                            }]);
+                                            }], slave_ip, port);
                                             if (!is_next_step) {
                                                 return;
                                             }
@@ -1463,7 +1467,7 @@ check_all = async () => {
                                         await php_update_placements(campaign, [{
                                             id: care_keyword.id,
                                             care_status: 3
-                                        }]);
+                                        }], slave_ip, port);
                                         return;
                                     }
                                     if (care_keyword.care_type == 0 || care_keyword.care_type == 2) {
@@ -1548,7 +1552,7 @@ check_all = async () => {
                                                         is_next_step = await php_update_placements(campaign, [{
                                                             id: care_keyword.id,
                                                             last_update_loss: null
-                                                        }]);
+                                                        }], slave_ip, port);
                                                         if (!is_next_step) {
                                                             return;
                                                         }
@@ -1561,7 +1565,7 @@ check_all = async () => {
                                                     last_click: click,
                                                     last_update_click: moment().format('YYYY-MM-DD HH:mm:ss'),
                                                     last_update_loss: null
-                                                }]);
+                                                }], slave_ip, port);
                                                 if (!is_next_step) {
                                                     return;
                                                 }
@@ -1576,7 +1580,7 @@ check_all = async () => {
                                                         id: care_keyword.id,
                                                         last_update_loss: moment().format('YYYY-MM-DD HH:mm:ss'),
                                                         last_click: click
-                                                    }]);
+                                                    }], slave_ip, port);
                                                     if (!is_next_step) {
                                                         return;
                                                     }
@@ -1595,7 +1599,7 @@ check_all = async () => {
                                                         is_next_step = await php_update_placements(campaign, [{
                                                             id: care_keyword.id,
                                                             care_status: 2
-                                                        }]);
+                                                        }], slave_ip, port);
                                                         if (!is_next_step) {
                                                             return;
                                                         }
@@ -1626,7 +1630,7 @@ check_all = async () => {
                                                         last_click: click,
                                                         last_update_click: moment().format('YYYY-MM-DD HH:mm:ss'),
                                                         last_up_price: moment().format('YYYY-MM-DD HH:mm:ss')
-                                                    }]);
+                                                    }], slave_ip, port);
                                                     if (!is_next_step) {
                                                         return;
                                                     }
@@ -1656,7 +1660,7 @@ check_all = async () => {
                                                             is_next_step = await php_update_placements(campaign, [{
                                                                 id: care_keyword.id,
                                                                 last_up_price: moment().format('YYYY-MM-DD HH:mm:ss')
-                                                            }]);
+                                                            }], slave_ip, port);
                                                             if (!is_next_step) {
                                                                 return;
                                                             }
@@ -1726,7 +1730,7 @@ check_all = async () => {
                                     is_next_step = await php_update_placements(campaign, [{
                                         id: care_keyword.id,
                                         status: -1
-                                    }]);
+                                    }], slave_ip, port);
                                     if (!is_next_step) {
                                         return;
                                     }
@@ -1749,7 +1753,7 @@ check_all = async () => {
                         result = await api_put_shopee_campaigns({
                             id: campaign.cid,
                             care_status: 0
-                        });
+                        }, slave_ip, port);
                         if (result.code != 0) {
                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi function api_put_shopee_campaigns', result.message);
                         }
@@ -1764,7 +1768,7 @@ check_all = async () => {
                         result = await api_put_shopee_campaigns({
                             id: campaign.cid,
                             care_status: 0
-                        });
+                        }, slave_ip, port);
                         if (result.code != 0) {
                             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_campaigns', result.message);
                         }
@@ -1997,7 +2001,7 @@ check_all = async () => {
                         }
                     }
                     if (update_placements.length > 0) {
-                        await php_update_placements(campaign, update_placements);
+                        await php_update_placements(campaign, update_placements, slave_ip, port);
                     }
                     campaign.job_done = true;
                 }
