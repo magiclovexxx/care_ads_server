@@ -1,6 +1,6 @@
 const publicIp = require('public-ip');
 require('dotenv').config();
-const shopeeApi = require('./api/ads_shopee.js');
+const shopeeApi = require('./api/ads_shopee_cron.js');
 const fs = require('fs');
 const exec = require('child_process').exec;
 const moment = require('moment');
@@ -309,7 +309,7 @@ check_all = async () => {
 
         if ((data_accounts.length + data_campaigns.length) > 0) {
             is_wait = true;
-            setInterval(async function () {
+            let interval = setInterval(async function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
                     result = await last_connection(slave_ip, port);
@@ -320,6 +320,7 @@ check_all = async () => {
                     catch (ex) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
                     }
+                    clearInterval(interval);
                 }
             }, 3000);
         } else {
