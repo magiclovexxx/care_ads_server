@@ -1399,8 +1399,10 @@ check_all = async () => {
                     if (campaign.placements == 0) {
                         campaign.job_done = true;
                     } else {
-                        campaign.placements.forEach(async function (care_keyword, index, array) {
+                        //campaign.placements.forEach(async function (care_keyword, index, array) {
+                        for (let c = 0; c < campaign.placements.length; c++) {
                             try {
+                                let care_keyword = campaign.placements[c];
                                 let filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
                                 let is_next_step = false;
                                 if (filter_keywords.length > 0) {
@@ -1741,11 +1743,12 @@ check_all = async () => {
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
                             }
                             finally {
-                                if (index === array.length - 1) {
-                                    campaign.job_done = true;
-                                }
+                                //if (index === array.length - 1) {
+                                campaign.job_done = true;
+                                //}
                             }
-                        });
+                        }
+                        //});
                     }
                 } else {
                     //Quảng cáo khám phá
