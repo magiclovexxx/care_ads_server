@@ -1,12 +1,15 @@
 const publicIp = require('public-ip');
 require('dotenv').config();
-const shopeeApi = require('./api/ads_shopee_cron.js');
 const fs = require('fs');
 const exec = require('child_process').exec;
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
 const NodeRSA = require('node-rsa');
 const os = require("os");
+const ShopeeAPI = require('./api/ShopeeAPI.js');
+const shopeeApi = new ShopeeAPI(600000);
+const HttpClient = require('./api/HttpClient.js');
+const httpClient = new HttpClient(600000);
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -18,12 +21,6 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'gNatFAx7DU7oXKCDHZ9DR4XlVVj0N0fcWI39Oow=\n' +
     '-----END RSA PRIVATE KEY-----');
 
-function createAxios() {
-    const axios = require('axios');
-    return axios.create({ withCredentials: true, timeout: 600000 });
-}
-const axiosInstance = createAxios();
-
 const port = process.env.PORT;
 const use_host = process.env.USE_HOST;
 const hostname = os.hostname();
@@ -31,10 +28,10 @@ const api_url = "http://api.sacuco.com/api_user";
 
 function api_get_shopee_campaigns(slave_ip, slave_port) {
     const Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.get(Url).then(function (response) {
+    return httpClient.http_request(Url, 'GET').then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
@@ -46,105 +43,105 @@ function api_get_shopee_campaigns(slave_ip, slave_port) {
 
 function last_connection(slave_ip, slave_port) {
     const Url = api_url + '/last_connection?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.get(Url).then(function (response) {
+    return httpClient.http_request(Url, 'GET').then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
 
 function restore_check(id, slave_ip, slave_port) {
     const Url = api_url + '/restore_check?id=' + id + '&slave_ip=' + slave_ip + '&slave_port=' + slave_port;;
-    return axiosInstance.get(Url).then(function (response) {
+    return httpClient.http_request(Url, 'GET').then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
 
 function api_put_shopee_accounts(data, slave_ip, slave_port) {
     const Url = api_url + '/shopee_accounts?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.put(Url, data).then(function (response) {
+    return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
 
 function api_put_shopee_campaigns(data, slave_ip, slave_port) {
     const Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.put(Url, data).then(function (response) {
+    return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
 
 function api_put_shopee_placements(data, slave_ip, slave_port) {
     const Url = api_url + '/shopee_placements?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.put(Url, data).then(function (response) {
+    return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
 
 function api_put_shopee_orders(data, slave_ip, slave_port) {
     const Url = api_url + '/shopee_orders?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.put(Url, data).then(function (response) {
+    return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
 
 function api_put_shopee_payments(data, slave_ip, slave_port) {
     const Url = api_url + '/shopee_payments?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    return axiosInstance.put(Url, data).then(function (response) {
+    return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }).catch(function (error) {
+    }, function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message, status: 1000 };
+            return { code: 1000, message: error.code + ' ' + error.message };
         }
     });
 }
@@ -204,7 +201,7 @@ function getMaxPage(max_location) {
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order) {
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
     let start_unix = moment().unix();
-    let result = await shopeeApi.api_get_search_items_waiting(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
+    let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000) {
@@ -259,17 +256,6 @@ function sleep(ms) {
 check_all = async () => {
     let is_wait = false;
     try {
-        //Khởi động nếu bị treo
-        setTimeout(function () {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
-            try {
-                exec('pm2 restart cron_check');
-            }
-            catch (ex) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-            }
-        }, 1200000);
-
         let slave_ip = await publicIp.v4();
         if (use_host)
             slave_ip = hostname;
@@ -313,15 +299,11 @@ check_all = async () => {
             let interval = setInterval(async function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
+                    clearInterval(interval);
                     result = await last_connection(slave_ip, port);
                     console.log('===== Hoàn thành tiến trình =====');
-                    try {
-                        exec('pm2 restart cron_check');
-                    }
-                    catch (ex) {
-                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-                    }
-                    clearInterval(interval);
+                    await sleep(3000);
+                    check_all();
                 }
             }, 3000);
         } else {
@@ -2019,30 +2001,15 @@ check_all = async () => {
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log('===== Hoàn thành tiến trình =====');
-        setTimeout(function () {
-            try {
-                exec('pm2 restart cron_check');
-            }
-            catch (ex) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-            }
-        }, 3000);
+        await sleep(3000);
+        check_all();
     }
     finally {
         if (!is_wait) {
             console.log('===== Hoàn thành tiến trình =====');
-            setTimeout(function () {
-                try {
-                    exec('pm2 restart cron_check');
-                }
-                catch (ex) {
-                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-                }
-            }, 3000);
+            await sleep(3000);
+            check_all();
         }
     }
 }
-
-(async () => {
-    await check_all();
-})();
+check_all();

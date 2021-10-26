@@ -1,7 +1,8 @@
 const express = require('express');
-const shopeeApi = require('../api/ads_shopee.js');
+const ShopeeAPI = require('../api/ShopeeAPI.js');
 const router = express.Router();
 const moment = require('moment');
+const shopeeApi = new ShopeeAPI(30000);
 
 router.use(express.json({ limit: "5000mb", extended: true }));
 
