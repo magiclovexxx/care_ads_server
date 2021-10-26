@@ -486,10 +486,11 @@ class ShopeeAPI {
             else
                 cookie = cookie.replace('[ROOT]', '');
         }
+        let Url = `https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=${SPC_CDS}&SPC_CDS_VER=2&keyword=${encodeURI(keyword)}&type=${type}`;
         const result = this.http_client.http_request(Url, 'GET', null, {
             cookie: cookie,
             'User-Agent': UserAgent,
-            referer: 'https://banhang.shopee.vn/'
+            referer: 'https://mall.shopee.vn'
         }, null).then(function (response) {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
@@ -1569,7 +1570,7 @@ class ShopeeAPI {
         Url += '?SPC_CDS=' + SPC_CDS;
         Url += '&SPC_CDS_VER=2';
 
-        const result = this.http_client.http_request(Url, 'GET', null, {
+        const result = this.http_client.http_request(Url, 'POST', null, {
             'authority': 'banhang.shopee.vn',
             'sec-ch-ua': '"Google Chrome";v="93", " Not;A Brand";v="99", "Chromium";v="93"',
             'sc-fe-ver': '30988',
@@ -1586,7 +1587,7 @@ class ShopeeAPI {
             'referer': 'https://banhang.shopee.vn/portal/marketing/pas/assembly/',
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
             'cookie': cookie
-        }, null).then(function (response) {
+        }, data).then(function (response) {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
                 response.cookie = RSA.encrypt(response.cookie, 'base64');
