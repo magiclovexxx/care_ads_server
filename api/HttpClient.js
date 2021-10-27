@@ -1,7 +1,8 @@
 const axios = require('axios');
 createAxiosInstance = (REQUEST_TIME_OUT) => {
     return axios.create({
-        timeout: REQUEST_TIME_OUT
+        timeout: REQUEST_TIME_OUT,
+        withCredentials: true
     });
 };
 class HttpClient {
