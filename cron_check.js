@@ -1514,7 +1514,23 @@ check_all = async () => {
                                             if (click == last_click) {
                                                 //Không có click
                                                 let old_price = keyword.price;
-                                                let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                let ads_location = 999;
+                                                if (keyword.price == max_price) {
+                                                    if (moment(care_keyword.last_check_time).add(30, 'minutes') < moment()) {
+                                                        ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                        is_next_step = await php_update_placements(campaign, [{
+                                                            id: care_keyword.id,
+                                                            last_check_time: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                        }], slave_ip, port);
+                                                        if (!is_next_step) {
+                                                            return;
+                                                        }
+                                                    } else {
+                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Skip check location Price:', keyword.price, 'Max:', max_price);
+                                                    }
+                                                } else {
+                                                    ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                }
                                                 if (ads_location != -1) {
                                                     if (ads_location == 1) {
                                                         keyword.price = Math.round(keyword.price * 0.99);
@@ -1624,7 +1640,23 @@ check_all = async () => {
                                                     //Không có click
                                                     if (moment(care_keyword.last_up_price).add(10, 'minutes') <= moment()) {
                                                         let old_price = keyword.price;
-                                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                        let ads_location = 999;
+                                                        if (keyword.price == max_price) {
+                                                            if (moment(care_keyword.last_check_time).add(30, 'minutes') < moment()) {
+                                                                ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                                is_next_step = await php_update_placements(campaign, [{
+                                                                    id: care_keyword.id,
+                                                                    last_check_time: moment().format('YYYY-MM-DD HH:mm:ss')
+                                                                }], slave_ip, port);
+                                                                if (!is_next_step) {
+                                                                    return;
+                                                                }
+                                                            } else {
+                                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Skip check location Price:', keyword.price, 'Max:', max_price);
+                                                            }
+                                                        } else {
+                                                            ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                        }
                                                         if (ads_location != -1) {
                                                             if (ads_location == 1) {
                                                                 keyword.price = Math.round(keyword.price * 0.99);
