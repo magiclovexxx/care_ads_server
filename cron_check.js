@@ -256,6 +256,17 @@ function sleep(ms) {
 check_all = async () => {
     let is_wait = false;
     try {
+        //Khởi động nếu bị treo
+        setTimeout(async function () {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
+            try {
+                exec('pm2 restart cron_check');
+            }
+            catch (ex) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+            }
+        }, 1800000);
+
         let slave_ip = await publicIp.v4();
         if (use_host)
             slave_ip = hostname;
