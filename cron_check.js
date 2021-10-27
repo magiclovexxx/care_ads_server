@@ -1415,14 +1415,16 @@ check_all = async () => {
                                                 is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                             }
                                             if (!is_next_step) {
-                                                return;
+                                                continue;
+                                                //return;
                                             }
                                             is_next_step = await php_update_placements(campaign, [{
                                                 id: care_keyword.id,
                                                 care_status: 1
                                             }], slave_ip, port);
                                             if (!is_next_step) {
-                                                return;
+                                                continue;
+                                                //return;
                                             }
                                         }
                                     }
@@ -1439,7 +1441,8 @@ check_all = async () => {
                                                 keyword.price = min_price;
                                                 is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                 if (!is_next_step) {
-                                                    return;
+                                                    continue;
+                                                    //return;
                                                 }
                                             }
                                         } else {
@@ -1449,7 +1452,8 @@ check_all = async () => {
                                                 keyword.status = 0;
                                                 is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                 if (!is_next_step) {
-                                                    return;
+                                                    continue;
+                                                    //return;
                                                 }
                                             }
                                         }
@@ -1457,7 +1461,7 @@ check_all = async () => {
                                             id: care_keyword.id,
                                             care_status: 3
                                         }], slave_ip, port);
-                                        return;
+                                        continue;
                                     }
                                     if (care_keyword.care_type == 0 || care_keyword.care_type == 2) {
                                         //Đấu thầu lãi lỗ & Đấu thầu CIR
@@ -1526,7 +1530,8 @@ check_all = async () => {
                                                             last_check_time: moment().format('YYYY-MM-DD HH:mm:ss')
                                                         }], slave_ip, port);
                                                         if (!is_next_step) {
-                                                            return;
+                                                            continue;
+                                                            //return;
                                                         }
                                                     }
                                                 } else {
@@ -1546,7 +1551,8 @@ check_all = async () => {
                                                     if (keyword.price != old_price) {
                                                         is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                         if (!is_next_step) {
-                                                            return;
+                                                            continue;
+                                                            //return;
                                                         }
                                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
                                                     }
@@ -1557,7 +1563,8 @@ check_all = async () => {
                                                             last_update_loss: null
                                                         }], slave_ip, port);
                                                         if (!is_next_step) {
-                                                            return;
+                                                            continue;
+                                                            //return;
                                                         }
                                                     }
                                                 }
@@ -1570,7 +1577,8 @@ check_all = async () => {
                                                     last_update_loss: null
                                                 }], slave_ip, port);
                                                 if (!is_next_step) {
-                                                    return;
+                                                    continue;
+                                                    //return;
                                                 }
                                             }
 
@@ -1585,7 +1593,8 @@ check_all = async () => {
                                                         last_click: click
                                                     }], slave_ip, port);
                                                     if (!is_next_step) {
-                                                        return;
+                                                        continue;
+                                                        //return;
                                                     }
                                                     is_down_price = true;
                                                 } else {
@@ -1597,14 +1606,16 @@ check_all = async () => {
                                                         keyword.status = 0;
                                                         is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                         if (!is_next_step) {
-                                                            return;
+                                                            continue;
+                                                            //return;
                                                         }
                                                         is_next_step = await php_update_placements(campaign, [{
                                                             id: care_keyword.id,
                                                             care_status: 2
                                                         }], slave_ip, port);
                                                         if (!is_next_step) {
-                                                            return;
+                                                            continue;
+                                                            //return;
                                                         }
                                                         is_down_price = false;
                                                     }
@@ -1623,7 +1634,8 @@ check_all = async () => {
                                                         if (keyword.price != old_price) {
                                                             is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                             if (!is_next_step) {
-                                                                return;
+                                                                continue;
+                                                                //return;
                                                             }
                                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
                                                         }
@@ -1635,7 +1647,8 @@ check_all = async () => {
                                                         last_up_price: moment().format('YYYY-MM-DD HH:mm:ss')
                                                     }], slave_ip, port);
                                                     if (!is_next_step) {
-                                                        return;
+                                                        continue;
+                                                        //return;
                                                     }
                                                 } else {
                                                     //Không có click
@@ -1650,7 +1663,8 @@ check_all = async () => {
                                                                     last_check_time: moment().format('YYYY-MM-DD HH:mm:ss')
                                                                 }], slave_ip, port);
                                                                 if (!is_next_step) {
-                                                                    return;
+                                                                    continue;
+                                                                    //return;
                                                                 }
                                                             }
                                                         } else {
@@ -1670,7 +1684,8 @@ check_all = async () => {
                                                             if (keyword.price != old_price) {
                                                                 is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                                 if (!is_next_step) {
-                                                                    return;
+                                                                    continue;
+                                                                    //return;
                                                                 }
                                                                 console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price);
                                                             }
@@ -1679,7 +1694,8 @@ check_all = async () => {
                                                                 last_up_price: moment().format('YYYY-MM-DD HH:mm:ss')
                                                             }], slave_ip, port);
                                                             if (!is_next_step) {
-                                                                return;
+                                                                continue;
+                                                                //return;
                                                             }
 
                                                         }
@@ -1703,7 +1719,8 @@ check_all = async () => {
                                                 if (keyword.price != old_price) {
                                                     is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                     if (!is_next_step) {
-                                                        return;
+                                                        continue;
+                                                        //return;
                                                     }
                                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Tăng giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '>', max_location);
                                                 }
@@ -1718,7 +1735,8 @@ check_all = async () => {
                                                         if (keyword.price != old_price) {
                                                             is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                             if (!is_next_step) {
-                                                                return;
+                                                                continue;
+                                                                //return;
                                                             }
                                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giảm giá thầu: ', old_price, '->', keyword.price, 'Max:', max_price, 'Location:', ads_location, '<', care_keyword.min_location);
                                                         }
@@ -1733,7 +1751,8 @@ check_all = async () => {
                                                     if (keyword.price != old_price) {
                                                         is_next_step = await shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, campaign, [keyword]);
                                                         if (!is_next_step) {
-                                                            return;
+                                                            continue;
+                                                            //return;
                                                         }
                                                     }
                                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Giữ vị trí:', old_price, '->', keyword.price, 'Max:', max_price, care_keyword.min_location, '<=', ads_location, '<=', care_keyword.max_location);
@@ -1749,7 +1768,8 @@ check_all = async () => {
                                         status: -1
                                     }], slave_ip, port);
                                     if (!is_next_step) {
-                                        return;
+                                        continue;
+                                        //return;
                                     }
                                 }
                             } catch (ex) {
