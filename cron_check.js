@@ -253,20 +253,12 @@ function sleep(ms) {
     });
 }
 
+let last_run = moment();
+
 check_all = async () => {
     let is_wait = false;
     try {
-        //Khởi động nếu bị treo
-        setTimeout(async function () {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
-            try {
-                exec('pm2 restart cron_check');
-            }
-            catch (ex) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-            }
-        }, 1800000);
-
+        last_run = moment();
         let slave_ip = await publicIp.v4();
         if (use_host)
             slave_ip = hostname;
@@ -287,7 +279,7 @@ check_all = async () => {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
             try {
-                exec('git stash; git pull origin master; npm install; pm2 restart server; pm2 restart cron_check;');
+                exec('git stash; git pull origin master; npm install; pm2 restart all;');
             }
             catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
@@ -2051,4 +2043,17 @@ check_all = async () => {
         }
     }
 }
+
+setInterval(async function () {
+    try {
+        if (moment(last_run).add(30, 'minutes') < moment()) {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
+            exec('pm2 restart cron_check');
+        }
+    }
+    catch (ex) {
+        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+    }
+}, 3000);
+
 check_all();
