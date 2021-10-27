@@ -7,9 +7,9 @@ const { v4: uuidv4 } = require('uuid');
 const NodeRSA = require('node-rsa');
 const os = require("os");
 const ShopeeAPI = require('./api/ShopeeAPI.js');
-const shopeeApi = new ShopeeAPI(600000);
+const shopeeApi = new ShopeeAPI(60000);
 const HttpClient = require('./api/HttpClient.js');
-const httpClient = new HttpClient(600000);
+const httpClient = new HttpClient(60000);
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -1392,10 +1392,10 @@ check_all = async () => {
                     if (campaign.placements == 0) {
                         campaign.job_done = true;
                     } else {
-                        campaign.placements.forEach(async function (care_keyword, index, array) {
-                            //for (let c = 0; c < campaign.placements.length; c++) {
+                        //campaign.placements.forEach(async function (care_keyword, index, array) {
+                        for (let c = 0; c < campaign.placements.length; c++) {
                             try {
-                                //let care_keyword = campaign.placements[c];
+                                let care_keyword = campaign.placements[c];
                                 let filter_keywords = advertisement_keyword.extinfo.keywords.filter(x => x.keyword == care_keyword.keyword_str);
                                 let is_next_step = false;
                                 if (filter_keywords.length > 0) {
@@ -1536,8 +1536,6 @@ check_all = async () => {
                                                         if (!is_next_step) {
                                                             return;
                                                         }
-                                                    } else {
-                                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Skip check location Price:', keyword.price, 'Max:', max_price);
                                                     }
                                                 } else {
                                                     ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
@@ -1662,8 +1660,6 @@ check_all = async () => {
                                                                 if (!is_next_step) {
                                                                     return;
                                                                 }
-                                                            } else {
-                                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Skip check location Price:', keyword.price, 'Max:', max_price);
                                                             }
                                                         } else {
                                                             ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
@@ -1768,13 +1764,13 @@ check_all = async () => {
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
                             }
                             finally {
-                                if (index === array.length - 1) {
-                                    campaign.job_done = true;
-                                }
+                                //if (index === array.length - 1) {
+                                //    campaign.job_done = true;
+                                //}
                             }
-                            //}
-                            //campaign.job_done = true;
-                        });
+                        }
+                        campaign.job_done = true;
+                        //});
                     }
                 } else {
                     //Quảng cáo khám phá
