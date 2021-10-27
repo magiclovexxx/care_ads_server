@@ -25,6 +25,7 @@ const port = process.env.PORT;
 const use_host = process.env.USE_HOST;
 const hostname = os.hostname();
 const api_url = "http://api.sacuco.com/api_user";
+let last_run = moment();
 
 function api_get_shopee_campaigns(slave_ip, slave_port) {
     const Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
@@ -199,6 +200,7 @@ function getMaxPage(max_location) {
 }
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order) {
+    last_run = moment();
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
@@ -253,7 +255,6 @@ function sleep(ms) {
     });
 }
 
-let last_run = moment();
 
 check_all = async () => {
     let is_wait = false;
