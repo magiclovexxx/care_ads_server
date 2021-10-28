@@ -1393,6 +1393,16 @@ check_all = async () => {
                                 let is_next_step = false;
                                 if (filter_keywords.length > 0) {
                                     let keyword = filter_keywords[0];
+                                    if (care_keyword.match_type != keyword.match_type) {
+                                        is_next_step = await php_update_placements(campaign, [{
+                                            id: care_keyword.id,
+                                            match_type: keyword.match_type
+                                        }], slave_ip, port);
+                                        if (!is_next_step) {
+                                            continue;
+                                            //return;
+                                        }
+                                    }
                                     let is_in_schedule = true;
                                     if (care_keyword.care_schedule != null) {
                                         let care_schedule = JSON.parse(care_keyword.care_schedule);
