@@ -7,9 +7,9 @@ const { v4: uuidv4 } = require('uuid');
 const NodeRSA = require('node-rsa');
 const os = require("os");
 const ShopeeAPI = require('./api/ShopeeAPI.js');
-const shopeeApi = new ShopeeAPI(60000);
+const shopeeApi = new ShopeeAPI(180000);
 const HttpClient = require('./api/HttpClient.js');
-const httpClient = new HttpClient(60000);
+const httpClient = new HttpClient(180000);
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
