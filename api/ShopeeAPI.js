@@ -119,6 +119,7 @@ class ShopeeAPI {
                 cookie = RSA.decrypt(cookie, 'utf8');
             else
                 cookie = cookie.replace('[ROOT]', '');
+
         }
         const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
         const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';

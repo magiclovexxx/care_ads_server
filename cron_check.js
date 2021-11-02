@@ -27,8 +27,10 @@ const hostname = os.hostname();
 const api_url = "http://api.sacuco.com/api_user";
 let last_run = moment();
 
-function api_get_shopee_campaigns(slave_ip, slave_port) {
-    const Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
+function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
+    let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
+    if (uid)
+        Url += '&uid=' + uid;
     return httpClient.http_request(Url, 'GET').then(function (response) {
         response.data.status = response.status;
         return response.data;
@@ -259,12 +261,13 @@ function sleep(ms) {
 check_all = async () => {
     let is_wait = false;
     try {
+        const uid = null;
         last_run = moment();
         let slave_ip = await publicIp.v4();
         if (use_host)
             slave_ip = hostname;
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
-        let result = await api_get_shopee_campaigns(slave_ip, port);
+        let result = await api_get_shopee_campaigns(slave_ip, port, uid);
         if (result.code != 0) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_shopee_campaigns', result.message);
             return;
