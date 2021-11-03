@@ -7,9 +7,9 @@ const { v4: uuidv4 } = require('uuid');
 const NodeRSA = require('node-rsa');
 const os = require("os");
 const ShopeeAPI = require('./api/ShopeeAPI.js');
-const shopeeApi = new ShopeeAPI(1800000);
+const shopeeApi = new ShopeeAPI(1200000);
 const HttpClient = require('./api/HttpClient.js');
-const httpClient = new HttpClient(1800000);
+const httpClient = new HttpClient(1200000);
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -2080,7 +2080,7 @@ check_all = async () => {
 
 setInterval(async function () {
     try {
-        if (moment(last_run).add(30, 'minutes') < moment()) {
+        if (moment(last_run).add(20, 'minutes') < moment()) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
         }
