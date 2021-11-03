@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 const NodeRSA = require('node-rsa');
 const os = require("os");
 const ShopeeAPI = require('./api/ShopeeAPI.js');
-const shopeeApi = new ShopeeAPI(60000);
+const shopeeApi = new ShopeeAPI(1800000);
 const HttpClient = require('./api/HttpClient.js');
 const httpClient = new HttpClient(1800000);
 
