@@ -339,7 +339,7 @@ class ShopeeAPI {
             else
                 cookie = cookie.replace('[ROOT]', '');
         }
-        let Url = 'https://banhang.shopee.vn/api/marketing/v3/public/product_selector/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+        let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/product_selector/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         Url += '&offset=' + offset;
         Url += '&limit=' + limit;
         Url += '&is_ads=' + is_ads;
