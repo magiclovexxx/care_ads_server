@@ -265,12 +265,14 @@ check_all = async () => {
             const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
             if (((size / 1024) / 1024) > 100) {
                 fs.unlinkSync('/root/.pm2/logs/cron-check-error.log');
+                exec('pm2 restart all;');
             }
         }
         if (fs.existsSync('/root/.pm2/logs/server-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/server-error.log');
             if (((size / 1024) / 1024) > 100) {
                 fs.unlinkSync('/root/.pm2/logs/server-error.log');
+                exec('pm2 restart all;');
             }
         }
         const uid = null;
