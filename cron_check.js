@@ -283,7 +283,7 @@ check_all = async () => {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
             try {
-                exec('git stash; git pull origin master; npm install; pm2 restart all;');
+                exec('git stash; git pull origin master; npm install; pm2 restart all; rm -f /root/.pm2/logs/*;');
             }
             catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
