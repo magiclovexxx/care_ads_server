@@ -261,6 +261,18 @@ function sleep(ms) {
 check_all = async () => {
     let is_wait = false;
     try {
+        if (fs.existsSync('/root/.pm2/logs/cron-check-error.log')) {
+            const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
+            if (((size / 1024) / 1024) > 100) {
+                fs.unlinkSync('/root/.pm2/logs/cron-check-error.log');
+            }
+        }
+        if (fs.existsSync('/root/.pm2/logs/server-error.log')) {
+            const { size } = fs.statSync('/root/.pm2/logs/server-error.log');
+            if (((size / 1024) / 1024) > 100) {
+                fs.unlinkSync('/root/.pm2/logs/server-error.log');
+            }
+        }
         const uid = null;
         last_run = moment();
         let slave_ip = await publicIp.v4();
@@ -283,7 +295,7 @@ check_all = async () => {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
             try {
-                exec('git stash; git pull origin master; npm install; pm2 restart all; rm -f /root/.pm2/logs/*;');
+                exec('git stash; git pull origin master; npm install; pm2 restart all;');
             }
             catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
