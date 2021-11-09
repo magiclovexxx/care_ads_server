@@ -497,7 +497,16 @@ check_all = async () => {
                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') check update SKIP', order_sn);
                         }
                     } else {
-                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                        if (result.status == 403) {
+                            await api_put_shopee_accounts({
+                                id: account.sid,
+                                options: JSON.stringify(result),
+                                status: 0
+                            }, slave_ip, port);
+                            return;
+                        } else {
+                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                        }
                     }
                 }
 
@@ -772,8 +781,17 @@ check_all = async () => {
                             break;
                         }
                     } else {
-                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_order_id_list', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                        break;
+                        if (result.status == 403) {
+                            await api_put_shopee_accounts({
+                                id: account.sid,
+                                options: JSON.stringify(result),
+                                status: 0
+                            }, slave_ip, port);
+                            return;
+                        } else {
+                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_order_id_list', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                            break;
+                        }
                     }
                     cancel_page++;
                     count_cancel_page++;
@@ -1044,8 +1062,17 @@ check_all = async () => {
                             break;
                         }
                     } else {
-                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_order_id_list', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                        break;
+                        if (result.status == 403) {
+                            await api_put_shopee_accounts({
+                                id: account.sid,
+                                options: JSON.stringify(result),
+                                status: 0
+                            }, slave_ip, port);
+                            return;
+                        } else {
+                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_order_id_list', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                            break;
+                        }
                     }
                     complete_page++;
                     count_complete_page++;
@@ -1193,8 +1220,17 @@ check_all = async () => {
                             break;
                         }
                     } else {
-                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_wallet_transactions', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                        break;
+                        if (result.status == 403) {
+                            await api_put_shopee_accounts({
+                                id: account.sid,
+                                options: JSON.stringify(result),
+                                status: 0
+                            }, slave_ip, port);
+                            return;
+                        } else {
+                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_wallet_transactions', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                            break;
+                        }
                     }
                     pay_page++;
                     count_pay_page++;
@@ -1292,9 +1328,19 @@ check_all = async () => {
                 //sleep(100);
                 result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
                 if (result.code != 0) {
-                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                    campaign.job_done = true;
-                    return;
+                    if (result.status == 403) {
+                        await api_put_shopee_accounts({
+                            id: account.sid,
+                            options: JSON.stringify(result),
+                            status: 0
+                        }, slave_ip, port);
+                        campaign.job_done = true;
+                        return;
+                    } else {
+                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                        campaign.job_done = true;
+                        return;
+                    }
                 }
                 if (result.data != null && result.data != '' && result.data.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', result.data.message);
