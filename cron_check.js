@@ -172,6 +172,22 @@ async function shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, ca
     return true;
 }
 
+async function shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, ads_list) {
+    let result = await shopeeApi.api_dynamic_request(proxy, user_agent, cookie,
+        'https://banhang.shopee.vn/api/marketing/v3/pas/target_ads/?SPC_CDS=' + spc_cds + '&SPC_CDS_VER=2',
+        'PUT',
+        { campaignid: campaign.campaignid, ads_list: ads_list })
+    if (result.code != 0) {
+        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi shopee_update_ads_list', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+        return false;
+    }
+    if (result.data != null && result.data != '' && result.data.code != 0) {
+        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi shopee_update_ads_list', result.data.message);
+        return false;
+    }
+    return true;
+}
+
 async function shopee_campaign_ads_list(spc_cds, proxy, user_agent, cookie, campaign, campaign_ads_list) {
     let result = await shopeeApi.api_put_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign_ads_list);
     if (result.code != 0) {
@@ -1915,7 +1931,7 @@ check_all = async () => {
                     }
 
                     let placement_reports = result.data.data;
-                    let is_update_campaign = false;
+                    //let is_update_campaign = false;
                     let update_placements = [];
 
                     for (let i = 0; i < campaign.placements.length; i++) {
@@ -1946,7 +1962,11 @@ check_all = async () => {
                                     //Bật lại vị trí nếu đang bị tắt
                                     if (placement.status == 2) {
                                         placement.status = 1;
-                                        is_update_campaign = true;
+                                        is_next_step = await shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, [{ placement: placement.placement, status: 1 }]);
+                                        if (!is_next_step) {
+                                            break;
+                                        }
+                                        //is_update_campaign = true;
                                     }
                                 }
                             }
@@ -1959,14 +1979,22 @@ check_all = async () => {
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') [Lập lịch] Premium 0%');
                                         placement.extinfo.target.premium_rate = 0;
                                         placement.extinfo.target.price = placement.extinfo.target.base_price;
-                                        is_update_campaign = true;
+                                        is_next_step = await shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, [{ placement: placement.placement, premium_rate: 0 }]);
+                                        if (!is_next_step) {
+                                            break;
+                                        }
+                                        //is_update_campaign = true;
                                     }
                                 } else {
                                     //Tạm dừng vị trí
                                     if (placement.status == 1) {
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.filter_placements + ') [Lập lịch] Tạm dừng vị trí');
                                         placement.status = 2;
-                                        is_update_campaign = true;
+                                        is_next_step = await shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, [{ placement: placement.placement, status: 2 }]);
+                                        if (!is_next_step) {
+                                            break;
+                                        }
+                                        //is_update_campaign = true;
                                     }
                                 }
                                 update_placements.push({
@@ -2020,7 +2048,11 @@ check_all = async () => {
                                         if (placement.extinfo.target.premium_rate > care_placement.max_price)
                                             placement.extinfo.target.premium_rate = care_placement.max_price;
                                         placement.extinfo.target.price = Math.round(placement.extinfo.target.base_price * (placement.extinfo.target.premium_rate / 100 + 1));
-                                        is_update_campaign = true;
+                                        is_next_step = await shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, [{ placement: placement.placement, premium_rate: placement.extinfo.target.premium_rate }]);
+                                        if (!is_next_step) {
+                                            break;
+                                        }
+                                        //is_update_campaign = true;
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Tăng giá thầu:', placement.extinfo.target.price, '(' + placement.extinfo.target.premium_rate + '%)', 'Base:', placement.extinfo.target.base_price);
                                         if (care_placement.last_update_loss != null) {
                                             update_placements.push({
@@ -2055,7 +2087,11 @@ check_all = async () => {
                                             //Tắt ví trí không hiệu quả
                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Tắt vị trí không hiệu quả');
                                             placement.status = 2;
-                                            is_update_campaign = true;
+                                            is_next_step = await shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, [{ placement: placement.placement, status: 2 }]);
+                                            if (!is_next_step) {
+                                                break;
+                                            }
+                                            //is_update_campaign = true;
                                             update_placements.push({
                                                 id: care_placement.id,
                                                 care_status: 2
@@ -2072,7 +2108,11 @@ check_all = async () => {
                                             if (placement.extinfo.target.premium_rate < 0)
                                                 placement.extinfo.target.premium_rate = 0;
                                             placement.extinfo.target.price = Math.round(placement.extinfo.target.base_price * (placement.extinfo.target.premium_rate / 100 + 1));
-                                            is_update_campaign = true;
+                                            is_next_step = await shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, [{ placement: placement.placement, premium_rate: placement.extinfo.target.premium_rate }]);
+                                            if (!is_next_step) {
+                                                break;
+                                            }
+                                            //is_update_campaign = true;
                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Giảm giá thầu: ', placement.extinfo.target.price, '(' + placement.extinfo.target.premium_rate + '%)', 'Base:', placement.extinfo.target.base_price);
                                         }
                                         update_placements.push({
@@ -2088,7 +2128,11 @@ check_all = async () => {
                                             if (placement.extinfo.target.premium_rate > care_placement.max_price)
                                                 placement.extinfo.target.premium_rate = care_placement.max_price;
                                             placement.extinfo.target.price = Math.round(placement.extinfo.target.base_price * (placement.extinfo.target.premium_rate / 100 + 1));
-                                            is_update_campaign = true;
+                                            is_next_step = await shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, [{ placement: placement.placement, premium_rate: placement.extinfo.target.premium_rate }]);
+                                            if (!is_next_step) {
+                                                break;
+                                            }
+                                            //is_update_campaign = true;
                                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + placement.placement + ') Tăng giá thầu:', placement.extinfo.target.price, '(' + placement.extinfo.target.premium_rate + '%)', 'Base:', placement.extinfo.target.base_price);
                                             update_placements.push({
                                                 id: care_placement.id,
@@ -2108,13 +2152,14 @@ check_all = async () => {
                         }
                     }
 
-                    if (is_update_campaign) {
+                    /*if (is_update_campaign) {
                         let is_next_step = await shopee_campaign_ads_list(spc_cds, proxy, user_agent, cookie, campaign, campaign_ads_list);
                         if (!is_next_step) {
                             campaign.job_done = true;
                             return;
                         }
-                    }
+                    }*/
+
                     if (update_placements.length > 0) {
                         await php_update_placements(campaign, update_placements, slave_ip, port);
                     }
