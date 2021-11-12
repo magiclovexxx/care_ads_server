@@ -281,7 +281,7 @@ check_all = async () => {
             const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
             if (((size / 1024) / 1024) > 100) {
                 fs.unlinkSync('/root/.pm2/logs/cron-check-error.log');
-                exec('pm2 restart all;');
+                exec('pm2 restart cron_check;');
                 return;
             }
         }
@@ -289,7 +289,7 @@ check_all = async () => {
             const { size } = fs.statSync('/root/.pm2/logs/server-error.log');
             if (((size / 1024) / 1024) > 100) {
                 fs.unlinkSync('/root/.pm2/logs/server-error.log');
-                exec('pm2 restart all;');
+                exec('pm2 restart server;');
                 return;
             }
         }
@@ -2187,6 +2187,7 @@ check_all = async () => {
 
 setInterval(async function () {
     try {
+        console.log("Last running:", last_run.format('MM/DD/YYYY HH:mm:ss'));
         if (moment(last_run).add(20, 'minutes') < moment()) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
