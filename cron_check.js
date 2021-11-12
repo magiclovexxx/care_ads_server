@@ -279,7 +279,7 @@ check_all = async () => {
     try {
         if (fs.existsSync('/root/.pm2/logs/cron-check-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
-            if (((size / 1024) / 1024) > 100) {
+            if (((size / 1024) / 1024) > 10) {
                 fs.unlinkSync('/root/.pm2/logs/cron-check-error.log');
                 exec('pm2 restart cron_check;');
                 return;
@@ -287,7 +287,7 @@ check_all = async () => {
         }
         if (fs.existsSync('/root/.pm2/logs/server-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/server-error.log');
-            if (((size / 1024) / 1024) > 100) {
+            if (((size / 1024) / 1024) > 10) {
                 fs.unlinkSync('/root/.pm2/logs/server-error.log');
                 exec('pm2 restart server;');
                 return;
