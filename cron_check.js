@@ -188,19 +188,6 @@ async function shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, 
     return true;
 }
 
-async function shopee_campaign_ads_list(spc_cds, proxy, user_agent, cookie, campaign, campaign_ads_list) {
-    let result = await shopeeApi.api_put_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign_ads_list);
-    if (result.code != 0) {
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_campaign', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-        return false;
-    }
-    if (result.data != null && result.data != '' && result.data.code != 0) {
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_marketing_campaign', result.data.message);
-        return false;
-    }
-    return true;
-}
-
 function getMaxPage(max_location) {
     if (max_location <= 10)
         return 0;
@@ -224,7 +211,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
     if (result.code != 0) {
-        if (result.code == 1000) {
+        if (result.code == 1000 || result.status == 403) {
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
