@@ -266,6 +266,7 @@ function sleep(ms) {
 
 check_all = async () => {
     let is_wait = false;
+    let ps_start_time = moment();
     try {
         if (fs.existsSync('/root/.pm2/logs/cron-check-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
@@ -332,7 +333,7 @@ check_all = async () => {
                     clearInterval(interval);
                     result = await last_connection(slave_ip, port);
                     last_request_success = moment();
-                    console.log('===== Hoàn thành tiến trình =====');
+                    console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
                     await sleep(3000);
                     check_all();
                 }
@@ -628,6 +629,7 @@ check_all = async () => {
                                             break;
                                         } else {
                                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+                                            last_request_success = moment();
                                             if (result.code == 0 && result.data.code == 0) {
                                                 let get_package = result.data.data;
                                                 result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
@@ -2248,13 +2250,13 @@ check_all = async () => {
         });
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-        console.log('===== Hoàn thành tiến trình =====');
+        console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
         await sleep(3000);
         check_all();
     }
     finally {
         if (!is_wait) {
-            console.log('===== Hoàn thành tiến trình =====');
+            console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
             await sleep(3000);
             check_all();
         }
@@ -2263,7 +2265,7 @@ check_all = async () => {
 
 setInterval(async function () {
     try {
-        console.log("Last running:", last_request_success.format('MM/DD/YYYY HH:mm:ss'));
+        console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + '---');
         if (moment(last_request_success).add(5, 'minutes') < moment()) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
@@ -2272,6 +2274,6 @@ setInterval(async function () {
     catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
     }
-}, 3000);
+}, 10000);
 
 check_all();
