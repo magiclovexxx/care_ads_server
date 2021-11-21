@@ -285,10 +285,13 @@ check_all = async () => {
             }
         }
         const uid = null;
-        let slave_ip = await publicIp.v4();
-        last_request_success = moment();
-        if (use_host)
+        let slave_ip = null;
+        if (use_host) {
             slave_ip = hostname;
+        } else {
+            slave_ip = await publicIp.v4();
+            last_request_success = moment();
+        }
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
         let result = await api_get_shopee_campaigns(slave_ip, port, uid);
         last_request_success = moment();
@@ -378,6 +381,7 @@ check_all = async () => {
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 last_request_success = moment();
+                await last_connection(slave_ip, port);
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_shop_info', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     if (result.code == 999 &&
@@ -1320,6 +1324,7 @@ check_all = async () => {
                 //sleep(100);
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 last_request_success = moment();
+                await last_connection(slave_ip, port);
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_get_shop_info', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     if (result.code == 999 &&
