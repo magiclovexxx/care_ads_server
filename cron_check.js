@@ -381,7 +381,6 @@ check_all = async () => {
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 last_request_success = moment();
-                await last_connection(slave_ip, port);
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_shop_info', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     if (result.code == 999 &&
@@ -1290,11 +1289,11 @@ check_all = async () => {
                         break;
                     }
                 }
-
                 if (is_restore_check) {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Restore Check');
                     restore_check(account.sid, slave_ip, port);
                 }
+                await last_connection(slave_ip, port);
             } catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             } finally {
@@ -1324,7 +1323,6 @@ check_all = async () => {
                 //sleep(100);
                 let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
                 last_request_success = moment();
-                await last_connection(slave_ip, port);
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_get_shop_info', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     if (result.code == 999 &&
@@ -2248,6 +2246,7 @@ check_all = async () => {
                     }
                     campaign.job_done = true;
                 }
+                await last_connection(slave_ip, port);
             } catch (ex) {
                 campaign.job_done = true;
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
