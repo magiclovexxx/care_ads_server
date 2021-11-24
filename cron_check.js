@@ -214,7 +214,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
     last_request_success = moment();
     let end_unix = moment().unix();
     if (result.code != 0) {
-        if (result.code == 1000 || result.status == 403) {
+        if (result.code == 1000) {
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
