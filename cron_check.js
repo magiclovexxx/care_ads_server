@@ -208,7 +208,6 @@ function getMaxPage(max_location) {
 }
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, by, keyword, limit, newest, order) {
-    return 999;
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4557.4 Safari/537.36';
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
@@ -301,7 +300,8 @@ check_all = async () => {
             return;
         }
         //check version từ server
-        let version = result.data.version
+        let version = result.data.version;
+        let clone_cookie = result.data.clone_cookie;
         //check version từ local
         let checkVersion = fs.readFileSync("version.txt", { flag: "as+" });
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Phiên bản hiện tại:', checkVersion.toString());
@@ -1615,7 +1615,7 @@ check_all = async () => {
                                                 let ads_location = 999;
                                                 if (keyword.price == max_price) {
                                                     if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
-                                                        ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                        ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, clone_cookie, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                         last_request_success = moment();
                                                         is_next_step = await php_update_placements(campaign, [{
                                                             id: care_keyword.id,
@@ -1628,7 +1628,7 @@ check_all = async () => {
                                                         }
                                                     }
                                                 } else {
-                                                    ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                    ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, clone_cookie, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                     last_request_success = moment();
                                                 }
                                                 if (ads_location != -1) {
@@ -1759,7 +1759,7 @@ check_all = async () => {
                                                         let ads_location = 999;
                                                         if (keyword.price == max_price) {
                                                             if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
-                                                                ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                                ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, clone_cookie, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                                 last_request_success = moment();
                                                                 is_next_step = await php_update_placements(campaign, [{
                                                                     id: care_keyword.id,
@@ -1772,7 +1772,7 @@ check_all = async () => {
                                                                 }
                                                             }
                                                         } else {
-                                                            ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                            ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, null, clone_cookie, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                             last_request_success = moment();
                                                         }
                                                         if (ads_location != -1) {
@@ -1815,7 +1815,7 @@ check_all = async () => {
                                         let min_location = care_keyword.min_location;
                                         let max_location = care_keyword.max_location;
                                         let max_page = getMaxPage(max_location);
-                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, max_page, null, null, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                        let ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, max_page, null, clone_cookie, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                         last_request_success = moment();
                                         if (ads_location != -1) {
                                             if (ads_location > max_location) {
