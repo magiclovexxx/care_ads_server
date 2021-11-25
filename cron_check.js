@@ -1342,6 +1342,9 @@ check_all = async () => {
                     }
                 }
 
+                clone_cookie = cookie;
+                clone_user_agent = user_agent;
+
                 //Lấy thông tin chiến dịch
                 //sleep(100);
                 result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
