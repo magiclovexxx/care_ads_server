@@ -225,9 +225,10 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
         if (result.code == 1000 || result.status == 403) {
             last_request_success = moment();
             if (result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa -> Switch Server Search');
-                use_search_atosa = true;
-                return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa chờ 60s');
+                //use_search_atosa = true;
+                await sleep(60000);
+                return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 await sleep(3000);
             }
