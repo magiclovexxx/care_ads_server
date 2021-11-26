@@ -26,6 +26,7 @@ const use_host = process.env.USE_HOST;
 const hostname = os.hostname();
 const api_url = "http://api.sacuco.com/api_user";
 var last_request_success = moment();
+let use_search_atosa = false;
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
@@ -208,10 +209,10 @@ function getMaxPage(max_location) {
 }
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     let result = null;
-    //if (use_host)
-    result = await locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
-    //else
-    //result = await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    if (use_search_atosa)
+        result = await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    else
+        result = await locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
     return result;
 }
 
@@ -224,8 +225,9 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
         if (result.code == 1000 || result.status == 403) {
             last_request_success = moment();
             if (result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa đợi 30s');
-                await sleep(30000);
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa -> Switch Server Search');
+                use_search_atosa = true;
+                return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 await sleep(3000);
             }
@@ -235,7 +237,6 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
             return -1;
         }
     }
-    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), newest, max_page, (end_unix - start_unix) + 's');
     if (result.data.items != null) {
         let index = result.data.items.findIndex(x => x.item_basic.itemid == itemid && x.item_basic.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
@@ -243,17 +244,21 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
             let ads_location = (index + 1);
             if (ads_location <= (page == 3 ? 6 : 5)) {
                 ads_location = ads_location + (page * 10);
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
                 return ads_location;
             } else {
                 if (ads_location >= (page == 3 ? 57 : 56)) {
                     ads_location = ads_location - (50 - (page * 10));
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
                     return ads_location;
                 } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                     return 999;
                 }
             }
         } else {
             if (max_page == 0) {
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                 return 999;
             } else {
                 if (page < max_page) {
@@ -261,11 +266,13 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
                     newest = newest + limit;
                     return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
                 } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                     return 999;
                 }
             }
         }
     } else {
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
         return 999;
     }
 
@@ -291,7 +298,6 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
             return -1;
         }
     }
-    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), newest, max_page, (end_unix - start_unix) + 's');
     if (result.data.items != null) {
         let index = result.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
@@ -299,17 +305,21 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
             let ads_location = (index + 1);
             if (ads_location <= (page == 3 ? 6 : 5)) {
                 ads_location = ads_location + (page * 10);
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
                 return ads_location;
             } else {
                 if (ads_location >= (page == 3 ? 57 : 56)) {
                     ads_location = ads_location - (50 - (page * 10));
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
                     return ads_location;
                 } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                     return 999;
                 }
             }
         } else {
             if (max_page == 0) {
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                 return 999;
             } else {
                 if (page < max_page) {
@@ -317,11 +327,13 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
                     newest = newest + limit;
                     return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
                 } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                     return 999;
                 }
             }
         }
     } else {
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
         return 999;
     }
 
@@ -335,6 +347,7 @@ function sleep(ms) {
 
 
 check_all = async () => {
+    use_search_atosa = false;
     let is_wait = false;
     let ps_start_time = moment();
     try {
