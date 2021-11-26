@@ -213,7 +213,11 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
     last_request_success = moment();
     let end_unix = moment().unix();
     if (result.code != 0) {
-        if (result.code == 1000) {
+        if (result.code == 1000 || result.status == 403) {
+            if (result.status == 403) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa đợi 30s');
+                await sleep(30000);
+            }
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
@@ -1261,7 +1265,9 @@ check_all = async () => {
             }
         });
 
-        data_campaigns.forEach(async function (campaign) {
+        //data_campaigns.forEach(async function (campaign) {
+        for (let dc = 0; dc < data_campaigns.length; dc++) {
+            let campaign = data_campaigns[dc];
             try {
                 let spc_cds = campaign.spc_cds;
                 let proxy = {
@@ -1290,7 +1296,8 @@ check_all = async () => {
                         is_need_login = true;
                     else {
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
                 }
 
@@ -1318,7 +1325,8 @@ check_all = async () => {
                             }
                         }
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Đăng nhập thành công');
                     cookie = result.cookie;
@@ -1333,7 +1341,8 @@ check_all = async () => {
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_put_shopee_accounts', result.message);
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
                 }
 
@@ -1344,12 +1353,14 @@ check_all = async () => {
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     campaign.job_done = true;
-                    return;
+                    continue;
+                    //return;
                 }
                 if (result.data != null && result.data != '' && result.data.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', result.data.message);
                     campaign.job_done = true;
-                    return;
+                    continue;
+                    //return;
                 }
                 let campaign_ads_list = {
                     campaign_ads_list: [{
@@ -1370,11 +1381,13 @@ check_all = async () => {
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_put_shopee_campaigns', result.message);
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Tắt care quảng cáo tạm dừng/kết thúc');
                     campaign.job_done = true;
-                    return;
+                    continue;
+                    //return;
                 }
 
                 if (campaign.campaign_type == 'keyword' || campaign.campaign_type == 'shop') {
@@ -1408,7 +1421,8 @@ check_all = async () => {
                                 }
                                 console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Tắt care quảng cáo tự động');
                                 campaign.job_done = true;
-                                return;
+                                continue;
+                                //return;
                             }
                         }
                         if (ads_keyword_manual.length == 0) {
@@ -1422,7 +1436,8 @@ check_all = async () => {
                             }
                             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Tắt care quảng cáo không có từ khóa');
                             campaign.job_done = true;
-                            return;
+                            continue;
+                            //return;
                         }
                         advertisement_keyword = ads_keyword_manual[0];
                         itemid = advertisement_keyword != null ? advertisement_keyword.itemid : advertisement_auto.itemid;
@@ -1446,12 +1461,14 @@ check_all = async () => {
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_detail_report_by_keyword', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
                     if (result.data != null && result.data != '' && result.data.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_detail_report_by_keyword', result.data.message);
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
 
                     let keyword_reports = result.data.data;
@@ -1893,7 +1910,8 @@ check_all = async () => {
                             }
                         }
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                         //});
                     }
                 } else {
@@ -1911,7 +1929,8 @@ check_all = async () => {
                         }
                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Tắt care quảng cáo tự động');
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
 
                     let ads_placements = campaign_ads_list.campaign_ads_list[0].advertisements.filter(x => (x.placement == 1 || x.placement == 2 || x.placement == 5));
@@ -1927,7 +1946,8 @@ check_all = async () => {
                         }
                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Tắt care quảng cáo chưa thiết lập');
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
                     let itemid = ads_placements[0].itemid;
                     let startDate = moment.unix(campaign_ads_list.campaign_ads_list[0].campaign.start_time).unix();
@@ -1945,12 +1965,14 @@ check_all = async () => {
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_item_report_by_placement', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
                     if (result.data != null && result.data != '' && result.data.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_item_report_by_placement', result.data.message);
                         campaign.job_done = true;
-                        return;
+                        continue;
+                        //return;
                     }
 
                     let placement_reports = result.data.data;
@@ -2201,7 +2223,8 @@ check_all = async () => {
                 campaign.job_done = true;
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
-        });
+        }
+        //});
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
