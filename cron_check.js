@@ -214,9 +214,12 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 403) {
+            last_request_success = moment();
             if (result.status == 403) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa đợi 30s');
                 await sleep(30000);
+            } else {
+                await sleep(3000);
             }
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
