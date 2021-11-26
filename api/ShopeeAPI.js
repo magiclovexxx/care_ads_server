@@ -442,6 +442,67 @@ class ShopeeAPI {
         return result;
     }
 
+    api_get_search_items_atosa(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
+        if (cookie != null) {
+            if (cookie.indexOf('[ROOT]') == -1)
+                cookie = RSA.decrypt(cookie, 'utf8');
+            else
+                cookie = cookie.replace('[ROOT]', '');
+        }
+        let Url = 'https://app.atosa.asia/api/service2/shopee/search_items';
+
+        const result = this.http_client.http_request(Url, 'POST', null, {
+            'authority': 'app.atosa.asia',
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+            'sec-ch-ua-mobile': '?0',
+            'authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsIl9pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsInZlcnNpb25fbm8iOiIwLjAuMCIsInB3X2xhc3RfdXBkYXRlIjoiMjAyMS0xMS0yNlQxNDo1Nzo1My45ODYwMDAiLCJzdG9yZV9pZCI6IlJGXzA5NjI5ODY1MzdfcXVhbmduZ3V5ZW43NjE2QGdtYWlsLmNvbSIsInN0b3JlX19pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyYiIsImV4cF90aW1lIjoiMjAyMS0xMS0yOCAwMTowMjozMS4wNDEwMjIiLCJjb21fbWFjIjoiTVVMVElfU0hPUF9DTElFTlQiLCJhcHBfaWQiOiIiLCJyb2xlIjoibWFuYWdlciJ9.HCKSnWtp1-gRufrdAdK_SznOduH5S9l9ajLORctnyVk',
+            'content-type': 'application/json',
+            'accept': 'application/json, text/plain, */*',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36',
+            'x-requested-with': 'XMLHttpRequest',
+            'sec-ch-ua-platform': '"Windows"',
+            'origin': 'https://app.atosa.asia',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://app.atosa.asia/check-position-ads',
+            'accept-language': 'en-US,en;q=0.9,vi;q=0.8'
+        }, {
+            qs: {
+                by: by,
+                keyword: keyword,
+                limit: limit,
+                newest: newest,
+                order: order,
+                page_type: page_type
+            },
+            device: 'website'
+        }).then(function (response) {
+            response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.cookie != null)
+                response.cookie = RSA.encrypt(response.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+        }, function (error) {
+            if (error.response) {
+                error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.cookie != null)
+                    error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                if (proxy == null) {
+                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+                } else {
+                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
+                    if (cookie != null) {
+                        cookie = RSA.encrypt(cookie, 'base64');
+                    }
+                    return api_get_search_items_atosa(null, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version);
+                }
+            }
+        });
+        return result;
+    }
+
     api_get_shop_info_shopid(proxy, UserAgent, cookie, shopid) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)
