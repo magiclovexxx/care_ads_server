@@ -260,7 +260,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
                 if (max_page > 2)
                     return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
                 else
-                    return locationKeyword_ShopeeanAlytics(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+                    return locationKeyword_ShopeeAlytics(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 await sleep(3000);
             }
