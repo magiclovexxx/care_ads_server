@@ -4,6 +4,7 @@ const moment = require('moment');
 const NodeRSA = require('node-rsa');
 const { v4: uuidv4 } = require('uuid');
 const HttpClient = require('./HttpClient.js');
+const qs = require('qs');
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -498,6 +499,43 @@ class ShopeeAPI {
                     }
                     return api_get_search_items_atosa(null, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version);
                 }
+            }
+        });
+        return result;
+    }
+
+    api_get_search_items_shopee_analytics(keyword, shopid, itemid) {
+        let Url = 'https://www.shopeeanalytics.com/vn/seller/product-position';
+        let data = qs.stringify({
+            'keywords': keyword,
+            'product_url': `https://shopee.vn/SA-i.${shopid}.${itemid}`,
+            'sort': 'relevancy',
+            'submit': 'product-position'
+        });
+        const result = this.http_client.http_request(Url, 'POST', null, {
+            'authority': 'www.shopeeanalytics.com',
+            'cache-control': 'max-age=0',
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'upgrade-insecure-requests': '1',
+            'origin': 'https://www.shopeeanalytics.com',
+            'content-type': 'application/x-www-form-urlencoded',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-user': '?1',
+            'sec-fetch-dest': 'document',
+            'referer': 'https://www.shopeeanalytics.com/vn/seller/product-position',
+            'accept-language': 'en-US,en;q=0.9,vi;q=0.8'
+        }, data).then(function (response) {
+            return { code: 0, message: 'OK', status: response.status, data: response.data };
+        }, function (error) {
+            if (error.response) {
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data };
+            } else {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null };
             }
         });
         return result;
