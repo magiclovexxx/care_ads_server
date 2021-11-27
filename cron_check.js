@@ -225,10 +225,9 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
         if (result.code == 1000 || result.status == 403) {
             last_request_success = moment();
             if (result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa chờ 60s');
-                //use_search_atosa = true;
-                await sleep(60000);
-                return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa -> Switch');
+                use_search_atosa = true;
+                return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 await sleep(3000);
             }
@@ -280,22 +279,23 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    await sleep(1000);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     last_request_success = moment();
     let end_unix = moment().unix();
     if (result.code != 0) {
-        if (result.code == 1000 || result.status == 403) {
+        if (result.code == 1000 || result.status == 429) {
             last_request_success = moment();
-            if (result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa đợi 30s');
-                await sleep(30000);
+            if (result.status == 429) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Chặn nhiều request đợi 3s');
+                await sleep(3000);
             } else {
                 await sleep(3000);
             }
             return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_atosa', result);
             return -1;
         }
     }
