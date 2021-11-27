@@ -256,12 +256,14 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
         if (result.code == 1000 || result.status == 403) {
             //last_request_success = moment();
             if (result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa -> Switch');
-                switch_server_search = true;
-                if (max_page > 2)
-                    return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
-                else
-                    return locationKeyword_ShopeeAlytics(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopeee chặn tìm kiếm từ khóa -> 60s');
+                //switch_server_search = true;
+                //if (max_page > 2)
+                //    return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+                //else
+                //return locationKeyword_ShopeeAlytics(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+                await sleep(60000);
+                return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);                
             } else {
                 await sleep(3000);
             }
