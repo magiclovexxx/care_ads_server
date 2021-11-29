@@ -27,6 +27,7 @@ const api_url = "http://api.sacuco.com/api_user";
 var last_request_success = moment();
 var last_shopee_block = moment();
 let switch_server_search = false;
+let public_ip = null;
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
@@ -246,19 +247,25 @@ async function locationKeyword_ShopeeAlytics(shopname, shopid, campaignid, itemi
 }
 
 async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    const time_out = Math.floor(Math.random() * (5555 - 1111 + 1)) + 1111;
-    await sleep(time_out);
+    if (!use_host) {
+        const time_out = Math.floor(Math.random() * (9999 - 1111 + 1)) + 1111;
+        await sleep(time_out);
+    }
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 429 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 60s');
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Chuyển Server Search -> Atosa');
             await sleep(60000);
-            switch_server_search = true;
-            last_shopee_block = moment();
-            return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            if (use_host) {
+                return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            } else {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Chuyển Server Search -> Atosa');
+                switch_server_search = true;
+                last_shopee_block = moment();
+                return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            }
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
             return -1;
@@ -307,8 +314,10 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    const time_out = Math.floor(Math.random() * (5555 - 1111 + 1)) + 1111;
-    await sleep(time_out);
+    if (!use_host) {
+        const time_out = Math.floor(Math.random() * (9999 - 1111 + 1)) + 1111;
+        await sleep(time_out);
+    }
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
@@ -423,12 +432,11 @@ check_all = async () => {
             }
         }
         const uid = null;
-        let slave_ip = null;
+        public_ip = await publicIp.v4();
+        last_request_success = moment();
+        let slave_ip = public_ip;
         if (use_host) {
             slave_ip = hostname;
-        } else {
-            slave_ip = await publicIp.v4();
-            last_request_success = moment();
         }
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', slave_ip, port);
         let result = await api_get_shopee_campaigns(slave_ip, port, uid);
@@ -2377,8 +2385,8 @@ check_all = async () => {
 
 setInterval(async function () {
     try {
-        console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + '---');
-        if(switch_server_search){
+        console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + '---' + public_ip + "---");
+        if (switch_server_search) {
             if (moment(last_shopee_block).add(60, 'minutes') < moment()) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Chuyển Server Search -> Shopee');
                 switch_server_search = false;
@@ -2388,7 +2396,7 @@ setInterval(async function () {
         if (moment(last_request_success).add(30, 'minutes') < moment()) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
-        }        
+        }
     }
     catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
