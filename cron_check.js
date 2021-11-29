@@ -247,10 +247,8 @@ async function locationKeyword_ShopeeAlytics(shopname, shopid, campaignid, itemi
 }
 
 async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    if (!use_host) {
-        const time_out = Math.floor(Math.random() * (9999 - 5555 + 1)) + 5555;
-        await sleep(time_out);
-    }
+    const time_out = Math.floor(Math.random() * (9999 - 5555 + 1)) + 5555;
+    await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
@@ -315,10 +313,8 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    if (!use_host) {
-        const time_out = Math.floor(Math.random() * (9999 - 5555 + 1)) + 5555;
-        await sleep(time_out);
-    }
+    const time_out = Math.floor(Math.random() * (9999 - 5555 + 1)) + 5555;
+    await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
