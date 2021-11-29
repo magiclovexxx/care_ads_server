@@ -248,7 +248,7 @@ async function locationKeyword_ShopeeAlytics(shopname, shopid, campaignid, itemi
 
 async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     if (!use_host) {
-        const time_out = Math.floor(Math.random() * (9999 - 1111 + 1)) + 1111;
+        const time_out = Math.floor(Math.random() * (9999 - 5555 + 1)) + 5555;
         await sleep(time_out);
     }
     let start_unix = moment().unix();
@@ -315,7 +315,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     if (!use_host) {
-        const time_out = Math.floor(Math.random() * (9999 - 1111 + 1)) + 1111;
+        const time_out = Math.floor(Math.random() * (9999 - 5555 + 1)) + 5555;
         await sleep(time_out);
     }
     let start_unix = moment().unix();
