@@ -259,6 +259,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 60s');
             await sleep(60000);
             if (use_host) {
+                public_ip = await publicIp.v4();
                 return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Chuyển Server Search -> Atosa');
