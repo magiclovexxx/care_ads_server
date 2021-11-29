@@ -2385,13 +2385,13 @@ setInterval(async function () {
     try {
         console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + '---' + public_ip + "---");
         if (switch_server_search) {
-            if (moment(last_shopee_block).add(60, 'minutes') < moment()) {
+            if (moment(last_shopee_block).add(70, 'minutes') < moment()) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Chuyển Server Search -> Shopee');
                 switch_server_search = false;
             }
         }
 
-        if (moment(last_request_success).add(30, 'minutes') < moment()) {
+        if (moment(last_request_success).add(70, 'minutes') < moment()) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
         }
