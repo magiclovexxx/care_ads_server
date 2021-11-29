@@ -25,6 +25,7 @@ const use_host = process.env.USE_HOST;
 const hostname = os.hostname();
 const api_url = "http://api.sacuco.com/api_user";
 var last_request_success = moment();
+var last_shopee_block = moment();
 let switch_server_search = false;
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
@@ -245,15 +246,18 @@ async function locationKeyword_ShopeeAlytics(shopname, shopid, campaignid, itemi
 }
 
 async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    await sleep(5000);
+    const time_out = Math.floor(Math.random() * (5555 - 1111 + 1)) + 1111;
+    await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 429 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 60s');
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Chuyển Server Search -> Atosa');
             await sleep(60000);
             switch_server_search = true;
+            last_shopee_block = moment();
             return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
@@ -303,7 +307,8 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    await sleep(5000);
+    const time_out = Math.floor(Math.random() * (5555 - 1111 + 1)) + 1111;
+    await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
@@ -311,8 +316,7 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
         if (result.code == 1000 || result.status == 429 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request đợi 60s');
             await sleep(60000);
-            switch_server_search = false;
-            return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_atosa', result);
             return -1;
@@ -399,7 +403,6 @@ function convert_ads_location(index) {
 }
 
 check_all = async () => {
-    switch_server_search = false;
     let is_wait = false;
     let ps_start_time = moment();
     try {
@@ -2375,10 +2378,17 @@ check_all = async () => {
 setInterval(async function () {
     try {
         console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + '---');
-        if (moment(last_request_success).add(5, 'minutes') < moment()) {
+        if(switch_server_search){
+            if (moment(last_shopee_block).add(60, 'minutes') < moment()) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Chuyển Server Search -> Shopee');
+                switch_server_search = false;
+            }
+        }
+
+        if (moment(last_request_success).add(30, 'minutes') < moment()) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
             exec('pm2 restart cron_check');
-        }
+        }        
     }
     catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');

@@ -41,4 +41,6 @@ const fs = require('fs');
             fs.unlinkSync('/root/.pm2/logs/server-error.log');
         }
     }
+    const time_out = Math.floor(Math.random() * (5555 - 1111 + 1)) + 1111;
+    console.log(time_out);
 })();
