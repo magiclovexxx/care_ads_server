@@ -495,15 +495,7 @@ check_all = async () => {
         data_accounts.forEach(async function (account) {
             try {
                 let spc_cds = account.spc_cds;
-                let proxy = {
-                    host: account.proxy_ip,
-                    port: parseInt(account.proxy_port),
-                    auth: {
-                        username: account.proxy_username,
-                        password: account.proxy_password
-                    }
-                };
-                proxy = null;
+                let proxy = null;
                 let user_agent = account.user_agent;
                 let username = account.username;
                 let password = account.password;
@@ -1411,15 +1403,7 @@ check_all = async () => {
             let campaign = data_campaigns[dc];
             try {
                 let spc_cds = campaign.spc_cds;
-                let proxy = {
-                    host: campaign.proxy_ip,
-                    port: parseInt(campaign.proxy_port),
-                    auth: {
-                        username: campaign.proxy_username,
-                        password: campaign.proxy_password
-                    }
-                };
-                proxy = null;
+                let proxy = null;
                 let user_agent = campaign.user_agent;
                 let username = campaign.username;
                 let password = campaign.password;
