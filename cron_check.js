@@ -233,7 +233,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 60s');
             await sleep(60000);
             result = await proxy_ip();
-            if(result.code == 0) {
+            if (result.code == 0) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', result.data.ip);
                 proxy_server = {
                     host: result.data.ip,
@@ -1356,6 +1356,19 @@ check_all = async () => {
                         continue;
                         //return;
                     }
+                }
+                
+                result = await proxy_ip();
+                if (result.code == 0) {
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', result.data.ip);
+                    proxy_server = {
+                        host: result.data.ip,
+                        port: 3128,
+                        auth: {
+                            username: 'magic',
+                            password: 'Admin@123'
+                        }
+                    };
                 }
 
                 //Lấy thông tin chiến dịch
