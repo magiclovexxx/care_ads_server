@@ -225,6 +225,7 @@ function getMaxPage(max_location) {
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     //const time_out = Math.floor(Math.random() * (15555 - 10555 + 1)) + 10555;
     //await sleep(time_out);
+    console.log(proxy);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
