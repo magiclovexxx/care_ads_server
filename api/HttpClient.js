@@ -11,7 +11,7 @@ class HttpClient {
         this.instance = createAxiosInstance(REQUEST_TIME_OUT);
         this.REQUEST_TIME_OUT = REQUEST_TIME_OUT;
     }
-    http_request(url, method, params = null, headers = null, data = null) {
+    http_request(url, method, params = null, headers = null, data = null, proxy = null) {
         let self = this;
         var urlParameters = '';
         if (params) {
@@ -31,6 +31,9 @@ class HttpClient {
         }*/
         if (data) {
             config.data = data;
+        }
+        if (proxy) {
+            config.proxy = proxy;
         }
 
         let promise = new Promise((resolve, reject) => {

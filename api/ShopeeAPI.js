@@ -416,9 +416,8 @@ class ShopeeAPI {
             'sec-fetch-dest': 'empty',
             'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
-            'cookie': cookie,
-            'proxy': proxy
-        }, null).then(function (response) {
+            'cookie': cookie
+        }, null, proxy).then(function (response) {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
                 response.cookie = RSA.encrypt(response.cookie, 'base64');
