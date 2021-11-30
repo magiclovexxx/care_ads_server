@@ -234,7 +234,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
             await sleep(60000);
             result = await proxy_ip();
             if (result.code == 0) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', result.data.ip);
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', result.data.ip);
                 proxy_server = {
                     host: result.data.ip,
                     port: 3128,
@@ -1357,10 +1357,10 @@ check_all = async () => {
                         //return;
                     }
                 }
-                
+
                 result = await proxy_ip();
                 if (result.code == 0) {
-                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', result.data.ip);
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ') Init Proxy:', result.data.ip);
                     proxy_server = {
                         host: result.data.ip,
                         port: 3128,
