@@ -215,8 +215,8 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 403) {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 60s');
-            await sleep(60000);
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 3s');
+            await sleep(3000);
             result = await shopeeApi.api_get_proxy_free();
             if (result.code == 0) {
                 let html = result.data;
@@ -234,7 +234,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
                     host: proxy_split[0],
                     port: parseInt(proxy_split[1])
                 };
-                console.log(proxy_random);
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', proxy_random);
             }
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
