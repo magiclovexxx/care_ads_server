@@ -206,8 +206,37 @@ function getMaxPage(max_location) {
         return 5;
 
 }
-
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+}
+
+async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    let start_unix = moment().unix();
+    let result = await shopeeApi.api_get_search_items_salework(keyword, itemid);
+    let end_unix = moment().unix();
+    if (result.code != 0) {
+        if (result.code == 1000 || result.status == 403) {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') SaleWork chặn nhiều request đợi 30s');
+            await sleep(30000);
+            return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
+        } else {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
+            return -1;
+        }
+    }
+    last_request_success = moment();
+    if (result.data.status == 'success') {
+        let ads_location = result.data.data.adsLocation;
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí SaleWork:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location);
+        return ads_location;
+    } else {
+        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
+        return -1;
+    }
+
+}
+
+async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     //const time_out = Math.floor(Math.random() * (15555 - 10555 + 1)) + 10555;
     //await sleep(time_out);
     let start_unix = moment().unix();
@@ -1636,7 +1665,7 @@ check_all = async () => {
                                                 let ads_location = 999;
                                                 if (keyword.price == max_price) {
                                                     if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
-                                                        //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                        ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                         last_request_success = moment();
                                                         is_next_step = await php_update_placements(campaign, [{
                                                             id: care_keyword.id,
@@ -1649,7 +1678,7 @@ check_all = async () => {
                                                         }
                                                     }
                                                 } else {
-                                                    //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                    ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                     last_request_success = moment();
                                                 }
                                                 if (ads_location != -1) {
@@ -1780,7 +1809,7 @@ check_all = async () => {
                                                         let ads_location = 999;
                                                         if (keyword.price == max_price) {
                                                             if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
-                                                                //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                                ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                                 last_request_success = moment();
                                                                 is_next_step = await php_update_placements(campaign, [{
                                                                     id: care_keyword.id,
@@ -1793,7 +1822,7 @@ check_all = async () => {
                                                                 }
                                                             }
                                                         } else {
-                                                            //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                            ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                             last_request_success = moment();
                                                         }
                                                         if (ads_location != -1) {

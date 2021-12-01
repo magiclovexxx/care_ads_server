@@ -319,7 +319,6 @@ class ShopeeAPI {
         return result;
     }
 
-
     api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)
@@ -461,24 +460,22 @@ class ShopeeAPI {
         return result;
     }
 
-    api_get_proxy_free() {
-        let Url = 'https://free-proxy-list.net';
-        const result = this.http_client.http_request(Url, 'GET', null, {
-            'authority': 'free-proxy-list.net',
-            'cache-control': 'max-age=0',
-            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'sec-fetch-site': 'same-origin',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-user': '?1',
-            'sec-fetch-dest': 'document',
-            'referer': 'https://www.google.com/',
-            'accept-language': 'en-US,en;q=0.9,vi;q=0.8'
-        }, null).then(function (response) {
+    api_get_search_items_salework(keyword, itemid) {
+        let Url = `https://ads.salework.net/api/shopeeAds/getAdsLocation?keyword=${encodeURI(keyword)}&productId=${itemid}`;        
+        const result = this.http_client.http_request(Url, 'GET', null, { 
+            'Connection': 'keep-alive', 
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"', 
+            'Accept': 'application/json, text/plain, */*', 
+            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzNTE3IiwiaWF0IjoxNjM4Mzc0MjE5LCJleHAiOjE2Mzg4NzgyMTl9.vRaAAHx1RnpgzsR6F6uymIhRiv-nsxSzbo3KRMNk4WJGdeoUu9CjrUjKnbQh0m6zsg2d1nNxRvhd49kdhKHdnw', 
+            'sec-ch-ua-mobile': '?0', 
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36', 
+            'sec-ch-ua-platform': '"Windows"', 
+            'Sec-Fetch-Site': 'same-origin', 
+            'Sec-Fetch-Mode': 'cors', 
+            'Sec-Fetch-Dest': 'empty', 
+            'Referer': 'https://ads.salework.net/searchads/keywords', 
+            'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8'
+          }, null).then(function (response) {
             return { code: 0, message: 'OK', status: response.status, data: response.data };
         }, function (error) {
             if (error.response) {
@@ -489,7 +486,7 @@ class ShopeeAPI {
         });
         return result;
     }
-
+    
     api_get_shop_info_shopid(proxy, UserAgent, cookie, shopid) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)
