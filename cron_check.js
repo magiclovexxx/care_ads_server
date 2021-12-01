@@ -302,6 +302,7 @@ check_all = async () => {
     let is_wait = false;
     let ps_start_time = moment();
     let proxy = null;
+    proxy_server = null;
     try {
         if (fs.existsSync('/root/.pm2/logs/cron-check-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
@@ -1356,19 +1357,6 @@ check_all = async () => {
                         continue;
                         //return;
                     }
-                }
-
-                result = await proxy_ip();
-                if (result.code == 0) {
-                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ') Init Proxy:', result.data.ip);
-                    proxy_server = {
-                        host: result.data.ip,
-                        port: 3128,
-                        auth: {
-                            username: 'magic',
-                            password: 'Admin@123'
-                        }
-                    };
                 }
 
                 //Lấy thông tin chiến dịch
