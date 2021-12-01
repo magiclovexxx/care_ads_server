@@ -429,15 +429,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_search_items(null, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
