@@ -232,7 +232,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
         if (result.code == 1000 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 60s');
             await sleep(60000);
-            result = await proxy_ip();
+            /*result = await proxy_ip();
             if (result.code == 0) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', result.data.ip);
                 proxy_server = {
@@ -243,7 +243,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
                         password: 'Admin@123'
                     }
                 };
-            }
+            }*/
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
@@ -1841,8 +1841,6 @@ check_all = async () => {
                                         }
                                     } else {
                                         //Đấu thầu vị trí
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + '] -> ' + keyword.keyword.normalize('NFC') + ') Bảo trì đấu thầu vị trí');
-                                        continue;
                                         let min_location = care_keyword.min_location;
                                         let max_location = care_keyword.max_location;
                                         let max_page = getMaxPage(max_location);
