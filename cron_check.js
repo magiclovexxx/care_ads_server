@@ -59,21 +59,6 @@ function last_connection(slave_ip, slave_port) {
     });
 }
 
-function proxy_ip() {
-    const Url = api_url + '/proxy_ip';
-    return httpClient.http_request(Url, 'GET').then(function (response) {
-        response.data.status = response.status;
-        return response.data;
-    }, function (error) {
-        if (error.response) {
-            error.response.data.status = error.response.status;
-            return error.response.data;
-        } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
-        }
-    });
-}
-
 function restore_check(id, slave_ip, slave_port) {
     const Url = api_url + '/restore_check?id=' + id + '&slave_ip=' + slave_ip + '&slave_port=' + slave_port;;
     return httpClient.http_request(Url, 'GET').then(function (response) {
@@ -232,18 +217,25 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
         if (result.code == 1000 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 60s');
             await sleep(60000);
-            /*result = await proxy_ip();
+            result = await shopeeApi.api_get_proxy_free();
             if (result.code == 0) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', result.data.ip);
+                let html = result.data;
+                let list_proxy = html.substring(
+                    html.indexOf('<textarea class="form-control" readonly="readonly" rows="12" onclick="select(this)">'),
+                    html.lastIndexOf('</textarea></div><div class="modal-footer">')
+                );
+                list_proxy = list_proxy.split('\n');
+                list_proxy.splice(0, 3);
+                list_proxy.splice(list_proxy.length - 1, 1);
+                let random_num = Math.floor(Math.random() * (list_proxy.length - 1 - 0 + 1)) + 0;
+                let proxy_random = list_proxy[random_num];
+                let proxy_split = proxy_random.split(':');
                 proxy_server = {
-                    host: result.data.ip,
-                    port: 3128,
-                    auth: {
-                        username: 'magic',
-                        password: 'Admin@123'
-                    }
+                    host: proxy_split[0],
+                    port: parseInt(proxy_split[1])
                 };
-            }*/
+                console.log(proxy_random);
+            }
             return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
