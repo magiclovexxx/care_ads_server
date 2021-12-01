@@ -68,15 +68,7 @@ class ShopeeAPI {
                         error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                     return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
                 } else {
-                    if (proxy == null) {
-                        return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                    } else {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                        if (cookie != null) {
-                            cookie = RSA.encrypt(cookie, 'base64');
-                        }
-                        return api_dynamic_request(null, UserAgent, cookie, url, method, data);
-                    }
+                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
                 }
             });
             return result;
@@ -99,15 +91,7 @@ class ShopeeAPI {
                         error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                     return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
                 } else {
-                    if (proxy == null) {
-                        return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                    } else {
-                        console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                        if (cookie != null) {
-                            cookie = RSA.encrypt(cookie, 'base64');
-                        }
-                        return api_dynamic_request(null, UserAgent, cookie, url, method, data);
-                    }
+                    return api_dynamic_request(null, UserAgent, cookie, url, method, data);
                 }
             });
             return result;
@@ -164,15 +148,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_post_login(SPC_CDS, null, UserAgent, cookie, username, password, vcode, captcha, captcha_id);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -202,15 +178,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_all_category_list(SPC_CDS, null, UserAgent, cookie);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -240,15 +208,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_second_category_list(SPC_CDS, null, UserAgent, cookie);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -278,15 +238,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_shop_info(SPC_CDS, null, UserAgent, cookie);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -319,15 +271,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_page_active_collection_list(SPC_CDS, null, UserAgent, cookie, page_number, page_size);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -369,15 +313,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_product_selector(SPC_CDS, null, UserAgent, cookie, offset, limit, is_ads, need_brand, need_item_model, search_type, search_content, sort_by);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -482,15 +418,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_search_items_atosa(null, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -535,22 +463,22 @@ class ShopeeAPI {
 
     api_get_proxy_free() {
         let Url = 'https://free-proxy-list.net';
-        const result = this.http_client.http_request(Url, 'GET', null, { 
-            'authority': 'free-proxy-list.net', 
-            'cache-control': 'max-age=0', 
-            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"', 
-            'sec-ch-ua-mobile': '?0', 
-            'sec-ch-ua-platform': '"Windows"', 
-            'upgrade-insecure-requests': '1', 
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36', 
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 
-            'sec-fetch-site': 'same-origin', 
-            'sec-fetch-mode': 'navigate', 
-            'sec-fetch-user': '?1', 
-            'sec-fetch-dest': 'document', 
-            'referer': 'https://www.google.com/', 
+        const result = this.http_client.http_request(Url, 'GET', null, {
+            'authority': 'free-proxy-list.net',
+            'cache-control': 'max-age=0',
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-user': '?1',
+            'sec-fetch-dest': 'document',
+            'referer': 'https://www.google.com/',
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8'
-          }, null).then(function (response) {
+        }, null).then(function (response) {
             return { code: 0, message: 'OK', status: response.status, data: response.data };
         }, function (error) {
             if (error.response) {
@@ -586,15 +514,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_shop_info_shopid(null, UserAgent, cookie, shopid);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -624,15 +544,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_search_hint(SPC_CDS, null, UserAgent, cookie, keyword, type);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -662,15 +574,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_put_marketing_mass_edit(SPC_CDS, null, UserAgent, cookie, data);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -700,15 +604,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_put_marketing_search_ads(SPC_CDS, null, UserAgent, cookie, data);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -738,15 +634,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_post_marketing_graphql(SPC_CDS, null, UserAgent, cookie, data);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -776,15 +664,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_item_status(SPC_CDS, null, UserAgent, cookie, item_id_list);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -821,15 +701,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_shop_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -862,15 +734,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_captcha_info(SPC_CDS, null, UserAgent, cookie);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -911,15 +775,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_campaign_statistics(SPC_CDS, null, UserAgent, cookie, campaign_type, filter_content, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -961,15 +817,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_search_ads(SPC_CDS, null, UserAgent, cookie, campaign_type, campaign_state, sort_key, sort_direction, search_content, start_time, end_time, offset, limit);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1013,15 +861,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_suggest_keyword(SPC_CDS, null, UserAgent, cookie, keyword, count, placement, itemid);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1051,15 +891,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_post_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1090,15 +922,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_put_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaign_ads_list);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1131,15 +955,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_marketing_campaign(SPC_CDS, null, UserAgent, cookie, campaignid);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1171,15 +987,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_marketing_meta(SPC_CDS, null, UserAgent, cookie);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1217,15 +1025,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_order_id_list(SPC_CDS, null, UserAgent, cookie, from_page_number, source, page_size, page_number, total, is_massship);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1267,15 +1067,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_wallet_transactions(SPC_CDS, null, UserAgent, cookie, wallet_type, page_number, page_size, start_date, end_date, transaction_types);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1308,15 +1100,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_package(SPC_CDS, null, UserAgent, cookie, order_id);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1349,15 +1133,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_one_order(SPC_CDS, null, UserAgent, cookie, order_id);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1390,15 +1166,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_income_transaction_history_detail(SPC_CDS, null, UserAgent, cookie, order_id);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1434,15 +1202,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_search_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, agg_interval);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1484,15 +1244,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_detail_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid, adsid);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1535,15 +1287,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_detail_report_by_keyword(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, need_detail, itemid, adsid);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1581,15 +1325,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_item_report_by_time(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, agg_interval, itemid);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1626,15 +1362,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_item_report_by_placement(SPC_CDS, null, UserAgent, cookie, start_time, end_time, placement_list, itemid);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1666,15 +1394,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1720,15 +1440,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_suggest_keyword_price(SPC_CDS, null, UserAgent, cookie, data);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1760,15 +1472,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_segment_suggest_price(SPC_CDS, null, UserAgent, cookie, data);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1802,15 +1506,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_campaign_list(SPC_CDS, null, UserAgent, cookie, placement_list);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
@@ -1843,15 +1539,7 @@ class ShopeeAPI {
                     error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
-                if (proxy == null) {
-                    return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
-                } else {
-                    console.error('[' + moment().format('MM/DD/YYYY HH:mm:ss') + ']', proxy.host, proxy.port, error.code + ' ' + error.message);
-                    if (cookie != null) {
-                        cookie = RSA.encrypt(cookie, 'base64');
-                    }
-                    return api_get_query_collection_list(SPC_CDS, null, UserAgent, cookie);
-                }
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
         });
         return result;
