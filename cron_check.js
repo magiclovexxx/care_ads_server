@@ -210,7 +210,7 @@ function getMaxPage(max_location) {
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     by = 'pop';
-    return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    return await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
@@ -229,7 +229,7 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
     }
     last_request_success = moment();
     if (result.data.data.items != null) {
-        let index = result.data.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid == campaignid);
+        let index = result.data.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid != null);
         let page = (newest / limit);
         if (index != -1) {
             let ads_location = (index + 1);
