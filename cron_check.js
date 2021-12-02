@@ -9,6 +9,7 @@ const os = require("os");
 const ShopeeAPI = require('./api/ShopeeAPI.js');
 const shopeeApi = new ShopeeAPI(300000);
 const HttpClient = require('./api/HttpClient.js');
+const { stringify } = require('querystring');
 const httpClient = new HttpClient(300000);
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -209,7 +210,7 @@ function getMaxPage(max_location) {
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     by = 'pop';
-    return await locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    return await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
@@ -226,6 +227,7 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
             return -1;
         }
     }
+    console.log(JSON.stringify(result.data));
     last_request_success = moment();
     if (result.data.items != null) {
         let index = result.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid == campaignid);
