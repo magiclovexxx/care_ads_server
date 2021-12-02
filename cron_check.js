@@ -206,8 +206,64 @@ function getMaxPage(max_location) {
         return 5;
 
 }
+
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    return await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+}
+
+async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    let start_unix = moment().unix();
+    let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
+    let end_unix = moment().unix();
+    if (result.code != 0) {
+        if (result.code == 1000 || result.status == 429 || result.status == 403) {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request đợi 30s');
+            await sleep(30000);
+            return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+        } else {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_atosa', result);
+            return -1;
+        }
+    }
+    last_request_success = moment();
+    if (result.data.items != null) {
+        let index = result.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid == campaignid);
+        let page = (newest / limit);
+        if (index != -1) {
+            let ads_location = (index + 1);
+            if (ads_location <= (page == 3 ? 6 : 5)) {
+                ads_location = ads_location + (page * 10);
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Atosa:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
+                return ads_location;
+            } else {
+                if (ads_location >= (page == 3 ? 57 : 56)) {
+                    ads_location = ads_location - (50 - (page * 10));
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Atosa:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
+                    return ads_location;
+                } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Atosa:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+                    return 999;
+                }
+            }
+        } else {
+            if (max_page == 0) {
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Atosa:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+                return 999;
+            } else {
+                if (page < max_page) {
+                    page = page + 1;
+                    newest = newest + limit;
+                    return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
+                } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Atosa:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+                    return 999;
+                }
+            }
+        }
+    } else {
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Atosa:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+        return 999;
+    }
 }
 
 async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
