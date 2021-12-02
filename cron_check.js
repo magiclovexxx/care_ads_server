@@ -227,6 +227,9 @@ async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, ma
     last_request_success = moment();
     if (result.data.status == 'success') {
         let ads_location = result.data.data.adsLocation;
+        if (!result.data.data.adsItemFound) {
+            ads_location = 999;
+        }
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí SaleWork:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location);
         return ads_location;
     } else {
