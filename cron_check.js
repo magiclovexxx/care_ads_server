@@ -228,7 +228,6 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
         }
     }
     last_request_success = moment();
-    console.log(JSON.stringify(result.data.data.items));
     if (result.data.data.items != null) {
         let index = result.data.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
