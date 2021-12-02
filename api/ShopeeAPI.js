@@ -462,7 +462,7 @@ class ShopeeAPI {
     }
 
     api_get_search_items_salework(keyword, itemid) {
-        let Url = `https://ads.salework.net/api/shopeeAds/getAdsLocation?keyword=${encodeURI(keyword)}&productId=${itemid}`;        
+        let Url = `https://nhaquangcao.salework.net/api/shopeeAds/getAdsLocation?keyword=${encodeURI(keyword)}&productId=${itemid}`;        
         const result = this.http_client.http_request(Url, 'GET', null, { 
             'Connection': 'keep-alive', 
             'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"', 
@@ -474,7 +474,7 @@ class ShopeeAPI {
             'Sec-Fetch-Site': 'same-origin', 
             'Sec-Fetch-Mode': 'cors', 
             'Sec-Fetch-Dest': 'empty', 
-            'Referer': 'https://ads.salework.net/searchads/keywords', 
+            'Referer': 'https://nhaquangcao.salework.net/searchads/keywords', 
             'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8'
           }, null).then(function (response) {
             return { code: 0, message: 'OK', status: response.status, data: response.data };
