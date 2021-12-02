@@ -227,10 +227,9 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
             return -1;
         }
     }
-    console.log(JSON.stringify(result.data));
     last_request_success = moment();
-    if (result.data.items != null) {
-        let index = result.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid == campaignid);
+    if (result.data.data.items != null) {
+        let index = result.data.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid == campaignid);
         let page = (newest / limit);
         if (index != -1) {
             let ads_location = (index + 1);
