@@ -210,10 +210,10 @@ function getMaxPage(max_location) {
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     by = 'pop';
-    if (use_host)
-        return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
-    else
-        return await locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    //if (use_host)
+    //    return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    //else
+    return await locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
@@ -313,7 +313,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 30s');
-            await sleep(30000);            
+            await sleep(30000);
             return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
