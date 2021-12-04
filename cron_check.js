@@ -285,7 +285,7 @@ async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, ma
             await sleep(30000);
             return locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_salework', result);
             return -1;
         }
     }
@@ -298,7 +298,7 @@ async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, ma
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí SaleWork:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location);
         return ads_location;
     } else {
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
+        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_salework', result);
         return -1;
     }
 
