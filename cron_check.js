@@ -210,13 +210,15 @@ function getMaxPage(max_location) {
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     by = 'pop';
-    //if (use_host)
-    return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
-    //else
-    //return await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    if (use_host)
+        return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    else
+        return await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    const time_out = Math.floor(Math.random() * (5555 - 3333 + 1)) + 3333;
+    await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
@@ -224,7 +226,7 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
         if (result.code == 1000 || result.status == 429 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request đợi 30s');
             await sleep(30000);
-            return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_atosa', result);
             return -1;
@@ -272,6 +274,8 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
 }
 
 async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    const time_out = Math.floor(Math.random() * (5555 - 3333 + 1)) + 3333;
+    await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_salework(keyword, itemid);
     let end_unix = moment().unix();
@@ -301,35 +305,16 @@ async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, ma
 }
 
 async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    //const time_out = Math.floor(Math.random() * (15555 - 10555 + 1)) + 10555;
-    //await sleep(time_out);
+    const time_out = Math.floor(Math.random() * (5555 - 3333 + 1)) + 3333;
+    await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 30s');
-            await sleep(30000);
-            /*result = await shopeeApi.api_get_proxy_free();
-            if (result.code == 0) {
-                let html = result.data;
-                let list_proxy = html.substring(
-                    html.indexOf('<textarea class="form-control" readonly="readonly" rows="12" onclick="select(this)">'),
-                    html.lastIndexOf('</textarea></div><div class="modal-footer">')
-                );
-                list_proxy = list_proxy.split('\n');
-                list_proxy.splice(0, 3);
-                list_proxy.splice(list_proxy.length - 1, 1);
-                let random_num = Math.floor(Math.random() * (list_proxy.length - 1 - 0 + 1)) + 0;
-                let proxy_random = list_proxy[random_num];
-                let proxy_split = proxy_random.split(':');
-                proxy_server = {
-                    host: proxy_split[0],
-                    port: parseInt(proxy_split[1])
-                };
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Change Proxy:', proxy_random);
-            }*/
-            return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
+            await sleep(30000);            
+            return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
             return -1;
@@ -1729,7 +1714,7 @@ check_all = async () => {
                                                 let ads_location = 999;
                                                 if (keyword.price == max_price) {
                                                     if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
-                                                        ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                        //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                         last_request_success = moment();
                                                         is_next_step = await php_update_placements(campaign, [{
                                                             id: care_keyword.id,
@@ -1742,7 +1727,7 @@ check_all = async () => {
                                                         }
                                                     }
                                                 } else {
-                                                    ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                    //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                     last_request_success = moment();
                                                 }
                                                 if (ads_location != -1) {
@@ -1873,7 +1858,7 @@ check_all = async () => {
                                                         let ads_location = 999;
                                                         if (keyword.price == max_price) {
                                                             if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
-                                                                ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                                //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                                 last_request_success = moment();
                                                                 is_next_step = await php_update_placements(campaign, [{
                                                                     id: care_keyword.id,
@@ -1886,7 +1871,7 @@ check_all = async () => {
                                                                 }
                                                             }
                                                         } else {
-                                                            ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
+                                                            //ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                             last_request_success = moment();
                                                         }
                                                         if (ads_location != -1) {
