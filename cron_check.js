@@ -283,7 +283,7 @@ async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, ma
         if (result.code == 1000 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') SaleWork chặn nhiều request đợi 30s');
             await sleep(30000);
-            return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
+            return locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
             return -1;
@@ -348,7 +348,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
                 if (page < max_page) {
                     page = page + 1;
                     newest = newest + limit;
-                    return locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
+                    return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
                 } else {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Shopee:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                     return 999;
