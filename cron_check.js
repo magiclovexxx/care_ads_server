@@ -459,6 +459,15 @@ check_all = async () => {
                 let username = account.username;
                 let password = account.password;
                 let cookie = account.cookie;
+                let de_cookie = RSA.decrypt(cookie, 'utf8');
+                if (de_cookie.indexOf('|') != -1) {
+                    de_cookie = de_cookie.split('|')[0];
+                    cookie = RSA.encrypt(de_cookie, 'base64');
+                    await api_put_shopee_accounts({
+                        id: account.sid,
+                        cookie: cookie
+                    }, slave_ip, port);
+                }
                 let last_cancel_time = account.last_cancel_time;
                 let last_cancel_page = account.last_cancel_page;
                 if (last_cancel_page == -1)
