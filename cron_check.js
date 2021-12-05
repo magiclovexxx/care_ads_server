@@ -465,7 +465,8 @@ check_all = async () => {
                     cookie = RSA.encrypt(de_cookie, 'base64');
                     await api_put_shopee_accounts({
                         id: account.sid,
-                        cookie: cookie
+                        cookie: cookie,
+                        options: 'fix_cookie'
                     }, slave_ip, port);
                 }
                 let last_cancel_time = account.last_cancel_time;
