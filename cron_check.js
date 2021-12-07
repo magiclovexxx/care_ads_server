@@ -217,7 +217,7 @@ async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, p
 }
 
 async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    const time_out = Math.floor(Math.random() * (5555 - 3333 + 1)) + 5555;
+    const time_out = Math.floor(Math.random() * (3333 - 1111 + 1)) + 1111;
     await sleep(time_out);
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
