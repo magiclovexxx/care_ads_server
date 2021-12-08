@@ -372,6 +372,58 @@ class ShopeeAPI {
         return result;
     }
 
+    api_get_search_items_v2(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
+        if (cookie != null) {
+            if (cookie.indexOf('[ROOT]') == -1)
+                cookie = RSA.decrypt(cookie, 'utf8');
+            else
+                cookie = cookie.replace('[ROOT]', '');
+        }
+        let Url = 'https://shopee.vn/api/v2/search_items/?by=' + by;
+        Url += '&keyword=' + encodeURI(keyword)
+        Url += '&limit=' + limit;
+        Url += '&newest=' + newest;
+        Url += '&order=' + order;
+        Url += '&page_type=' + page_type;
+        Url += '&version=' + version;
+        let text = Url.replace('https://shopee.vn/api/v2/search_items/?', '');
+        let str_request = `55b03${md5(text)}55b03`;
+        let if_none_match = `55b03-${md5(str_request)}`;
+        const result = this.http_client.http_request(Url, 'GET', null, {
+            'authority': 'shopee.vn',
+            'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+            'sec-ch-ua-mobile': '?0',
+            'user-agent': UserAgent,
+            'x-api-source': 'pc',
+            'x-shopee-language': 'vi',
+            'x-requested-with': 'XMLHttpRequest',
+            'if-none-match-': if_none_match,
+            'sec-ch-ua-platform': '"Windows"',
+            'accept': '*/*',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
+            'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
+            'cookie': cookie
+        }, null, proxy).then(function (response) {
+            response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.cookie != null)
+                response.cookie = RSA.encrypt(response.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+        }, function (error) {
+            if (error.response) {
+                error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.cookie != null)
+                    error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            }
+        });
+        return result;
+    }
+
     api_get_search_items_atosa(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)
