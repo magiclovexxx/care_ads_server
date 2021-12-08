@@ -1438,9 +1438,9 @@ check_all = async () => {
                         //return;
                     }
                 }
-
                 //Lấy thông tin chiến dịch
                 //sleep(100);
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lấy thông tin quảng cáo');
                 result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
                 last_request_success = moment();
                 if (result.code != 0) {
