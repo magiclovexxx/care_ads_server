@@ -1742,7 +1742,7 @@ check_all = async () => {
                                                 let old_price = keyword.price;
                                                 let ads_location = 999;
                                                 if (keyword.price == max_price) {
-                                                    if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
+                                                    if (moment(care_keyword.last_check_time).add(60, 'minutes') < moment()) {
                                                         ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                         last_request_success = moment();
                                                         is_next_step = await php_update_placements(campaign, [{
@@ -1886,7 +1886,7 @@ check_all = async () => {
                                                         let old_price = keyword.price;
                                                         let ads_location = 999;
                                                         if (keyword.price == max_price) {
-                                                            if (moment(care_keyword.last_check_time).add(180, 'minutes') < moment()) {
+                                                            if (moment(care_keyword.last_check_time).add(60, 'minutes') < moment()) {
                                                                 ads_location = await locationKeyword(campaign.name, campaign.shop_id, campaign.campaignid, itemid, 0, proxy_server, null, clone_user_agent, 'relevancy', keyword.keyword, 60, 0, 'desc');
                                                                 last_request_success = moment();
                                                                 is_next_step = await php_update_placements(campaign, [{
