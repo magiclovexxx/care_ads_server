@@ -283,6 +283,7 @@ async function locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, ma
         }
     }
     last_request_success = moment();
+    console.log(JSON.stringify(result));
     if (result.data.data.items != null) {
         let index = result.data.data.items.findIndex(x => x.itemid == itemid && x.shopid == shopid && x.campaignid != null);
         let page = (newest / limit);
