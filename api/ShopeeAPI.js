@@ -338,6 +338,7 @@ class ShopeeAPI {
         let text = Url.replace('https://shopee.vn/api/v4/search/search_items?', '');
         let str_request = `55b03${md5(text)}55b03`;
         let if_none_match = `55b03-${md5(str_request)}`;
+        console.log(text, if_none_match);
         const result = this.http_client.http_request(Url, 'GET', null, {
             'authority': 'shopee.vn',
             'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
