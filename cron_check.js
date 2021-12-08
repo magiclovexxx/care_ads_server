@@ -224,8 +224,7 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 429 || result.status == 403) {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request đợi 30s');
-            await sleep(30000);
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request -> Shopee');
             return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_atosa', result);
