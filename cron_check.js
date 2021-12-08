@@ -311,8 +311,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     let end_unix = moment().unix();
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 403) {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request đợi 30s');
-            await sleep(30000);
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> SaleWork');
             return locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
