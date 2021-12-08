@@ -5,6 +5,7 @@ const NodeRSA = require('node-rsa');
 const { v4: uuidv4 } = require('uuid');
 const HttpClient = require('./HttpClient.js');
 const qs = require('qs');
+const md5 = require('md5');
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -334,7 +335,9 @@ class ShopeeAPI {
         Url += '&page_type=' + page_type;
         Url += '&scenario=' + scenario;
         Url += '&version=' + version;
-
+        let text = Url.replace('https://shopee.vn/api/v4/search/search_items?', '');
+        let str_request = `55b03${md5(text)}55b03`;
+        let if_none_match = `55b03-${md5(str_request)}`;
         const result = this.http_client.http_request(Url, 'GET', null, {
             'authority': 'shopee.vn',
             'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
@@ -343,7 +346,7 @@ class ShopeeAPI {
             'x-api-source': 'pc',
             'x-shopee-language': 'vi',
             'x-requested-with': 'XMLHttpRequest',
-            'if-none-match-': '55b03-0bdbd793997dcec906abc543fead0f71',
+            'if-none-match-': if_none_match,
             'sec-ch-ua-platform': '"Windows"',
             'accept': '*/*',
             'sec-fetch-site': 'same-origin',
@@ -379,24 +382,24 @@ class ShopeeAPI {
         }
         let Url = 'https://app.atosa.asia/api/service2/shopee/search_items';
 
-        const result = this.http_client.http_request(Url, 'POST', null, { 
-            'authority': 'app.atosa.asia', 
-            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"', 
-            'sec-ch-ua-mobile': '?0', 
-            'authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsIl9pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsInZlcnNpb25fbm8iOiIwLjAuMCIsInB3X2xhc3RfdXBkYXRlIjoiMjAyMS0xMS0yNlQxNDo1Nzo1My45ODYwMDAiLCJzdG9yZV9pZCI6IlJGXzA5NjI5ODY1MzdfcXVhbmduZ3V5ZW43NjE2QGdtYWlsLmNvbSIsInN0b3JlX19pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyYiIsImV4cF90aW1lIjoiMjAyMS0xMS0yOCAwMTowMjozMS4wNDEwMjIiLCJjb21fbWFjIjoiTVVMVElfU0hPUF9DTElFTlQiLCJhcHBfaWQiOiIiLCJyb2xlIjoibWFuYWdlciJ9.HCKSnWtp1-gRufrdAdK_SznOduH5S9l9ajLORctnyVk', 
-            'content-type': 'application/json', 
-            'accept': 'application/json, text/plain, */*', 
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4736.0 Safari/537.36', 
-            'x-requested-with': 'XMLHttpRequest', 
-            'sec-ch-ua-platform': '"Windows"', 
-            'origin': 'https://app.atosa.asia', 
-            'sec-fetch-site': 'same-origin', 
-            'sec-fetch-mode': 'cors', 
-            'sec-fetch-dest': 'empty', 
-            'referer': 'https://app.atosa.asia/check-position-ads', 
+        const result = this.http_client.http_request(Url, 'POST', null, {
+            'authority': 'app.atosa.asia',
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+            'sec-ch-ua-mobile': '?0',
+            'authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsIl9pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsInZlcnNpb25fbm8iOiIwLjAuMCIsInB3X2xhc3RfdXBkYXRlIjoiMjAyMS0xMS0yNlQxNDo1Nzo1My45ODYwMDAiLCJzdG9yZV9pZCI6IlJGXzA5NjI5ODY1MzdfcXVhbmduZ3V5ZW43NjE2QGdtYWlsLmNvbSIsInN0b3JlX19pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyYiIsImV4cF90aW1lIjoiMjAyMS0xMS0yOCAwMTowMjozMS4wNDEwMjIiLCJjb21fbWFjIjoiTVVMVElfU0hPUF9DTElFTlQiLCJhcHBfaWQiOiIiLCJyb2xlIjoibWFuYWdlciJ9.HCKSnWtp1-gRufrdAdK_SznOduH5S9l9ajLORctnyVk',
+            'content-type': 'application/json',
+            'accept': 'application/json, text/plain, */*',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4736.0 Safari/537.36',
+            'x-requested-with': 'XMLHttpRequest',
+            'sec-ch-ua-platform': '"Windows"',
+            'origin': 'https://app.atosa.asia',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-dest': 'empty',
+            'referer': 'https://app.atosa.asia/check-position-ads',
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8'
-//            'cookie': '_gcl_au=1.1.1888890204.1637821722; __tawkuuid=e::atosa.asia::7+OA7Z2aeJXBWGdtx+JUJ8SIq2FZwCRgF3cOv6a65/1ryqYjqVfeqmwDaAr9wdka::2; _hjSessionUser_2718644=eyJpZCI6ImYyYjY2NWZmLTA1NTMtNTcxMi04NGZhLThmY2QzY2FiMTQ3YyIsImNyZWF0ZWQiOjE2Mzc4MjE3MjE5NzksImV4aXN0aW5nIjp0cnVlfQ==; __tawkuuid=e::app.atosa.asia::vqfZ/HufViVaMHQKNpcV5NW8+4DiAbXuiM/G5fYsIiIT9nVBF/owj218EP3zsVcp::2; _ga_PLN009Y1T3=GS1.1.1637917920.1.0.1637917923.0; _gid=GA1.2.787708238.1638165630; __zi=3000.SSZzejyD6SeacVtuqGqHXMV6jkcV0md6EzIyzer16z0js-BzYGvMs2lSvVp32bRJOD_X_CGANTKsDm.1; _hjSession_2718644=eyJpZCI6ImUzYzFlYmRhLWE4YTMtNGI1My05MzA5LTlmOTQwOTgxYjVjYiIsImNyZWF0ZWQiOjE2Mzg0MjQxOTM4MTR9; _hjAbsoluteSessionInProgress=0; _ga=GA1.2.1892160412.1637821722; _ga_3EEMNWJMVM=GS1.1.1638424193.25.1.1638427485.60; _ce.s=v~1467979bbfc02f147caf6df41b8030b53274aaf9~vpv~0~ir~1~gtrk.la~kwolf6hn; _ss={%22userInfo%22:{%22username%22:%22quangnguyen7616@gmail.com%22%2C%22token%22:%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsIl9pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsInZlcnNpb25fbm8iOiIwLjAuMCIsInB3X2xhc3RfdXBkYXRlIjoiMjAyMS0xMS0yNlQxNDo1Nzo1My45ODYwMDAiLCJzdG9yZV9pZCI6IlJGXzA5NjI5ODY1MzdfcXVhbmduZ3V5ZW43NjE2QGdtYWlsLmNvbSIsInN0b3JlX19pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyYiIsImV4cF90aW1lIjoiMjAyMS0xMS0yOCAwMTowMjozMS4wNDEwMjIiLCJjb21fbWFjIjoiTVVMVElfU0hPUF9DTElFTlQiLCJhcHBfaWQiOiIiLCJyb2xlIjoibWFuYWdlciJ9.HCKSnWtp1-gRufrdAdK_SznOduH5S9l9ajLORctnyVk%22%2C%22phone%22:%220962986537%22%2C%22email%22:%22quangnguyen7616@gmail.com%22%2C%22display_name%22:%22Quang%20Nguyen%22%2C%22store_id%22:%22RF_0962986537_quangnguyen7616@gmail.com%22%2C%22store_name%22:%22Quang%20Nguyen%22%2C%22vip%22:false%2C%22point%22:30%2C%22store_current_money%22:0%2C%22store_price_order%22:5000%2C%22selected_logistic%22:%2250018%22%2C%22show_checkout%22:true%2C%22connect_shop%22:false%2C%22init_like%22:30}%2C%22shop%22:[]%2C%22ip_change_tutorial%22:true%2C%22new_order%22:0%2C%22socket_connected%22:false%2C%22sync_mode%22:false%2C%22registered_alert%22:false%2C%22license%22:[]%2C%22buyer_mode%22:false%2C%22trial_mode%22:true%2C%22package%22:[]%2C%22advanced_ads_list%22:[%22vuducminhdev%22%2C%22ads.atosa%22%2C%22.atosa@gmail.com%22%2C%22@atosa.asia%22%2C%22atosa.asia%22%2C%22tuan.nguyenpartner@gmail.com%22%2C%22atosaagency%22%2C%22atosa.vanhanh%22%2C%22khiemkieu3192@gmail.com%22%2C%22hotayxanh.net@gmail.com%22]}; TawkConnectionTime=0'
-          }, {
+            //            'cookie': '_gcl_au=1.1.1888890204.1637821722; __tawkuuid=e::atosa.asia::7+OA7Z2aeJXBWGdtx+JUJ8SIq2FZwCRgF3cOv6a65/1ryqYjqVfeqmwDaAr9wdka::2; _hjSessionUser_2718644=eyJpZCI6ImYyYjY2NWZmLTA1NTMtNTcxMi04NGZhLThmY2QzY2FiMTQ3YyIsImNyZWF0ZWQiOjE2Mzc4MjE3MjE5NzksImV4aXN0aW5nIjp0cnVlfQ==; __tawkuuid=e::app.atosa.asia::vqfZ/HufViVaMHQKNpcV5NW8+4DiAbXuiM/G5fYsIiIT9nVBF/owj218EP3zsVcp::2; _ga_PLN009Y1T3=GS1.1.1637917920.1.0.1637917923.0; _gid=GA1.2.787708238.1638165630; __zi=3000.SSZzejyD6SeacVtuqGqHXMV6jkcV0md6EzIyzer16z0js-BzYGvMs2lSvVp32bRJOD_X_CGANTKsDm.1; _hjSession_2718644=eyJpZCI6ImUzYzFlYmRhLWE4YTMtNGI1My05MzA5LTlmOTQwOTgxYjVjYiIsImNyZWF0ZWQiOjE2Mzg0MjQxOTM4MTR9; _hjAbsoluteSessionInProgress=0; _ga=GA1.2.1892160412.1637821722; _ga_3EEMNWJMVM=GS1.1.1638424193.25.1.1638427485.60; _ce.s=v~1467979bbfc02f147caf6df41b8030b53274aaf9~vpv~0~ir~1~gtrk.la~kwolf6hn; _ss={%22userInfo%22:{%22username%22:%22quangnguyen7616@gmail.com%22%2C%22token%22:%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsIl9pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyZCIsInZlcnNpb25fbm8iOiIwLjAuMCIsInB3X2xhc3RfdXBkYXRlIjoiMjAyMS0xMS0yNlQxNDo1Nzo1My45ODYwMDAiLCJzdG9yZV9pZCI6IlJGXzA5NjI5ODY1MzdfcXVhbmduZ3V5ZW43NjE2QGdtYWlsLmNvbSIsInN0b3JlX19pZCI6IjYxOWY0YTg0NGI0MmJlMTdiMWM5NmYyYiIsImV4cF90aW1lIjoiMjAyMS0xMS0yOCAwMTowMjozMS4wNDEwMjIiLCJjb21fbWFjIjoiTVVMVElfU0hPUF9DTElFTlQiLCJhcHBfaWQiOiIiLCJyb2xlIjoibWFuYWdlciJ9.HCKSnWtp1-gRufrdAdK_SznOduH5S9l9ajLORctnyVk%22%2C%22phone%22:%220962986537%22%2C%22email%22:%22quangnguyen7616@gmail.com%22%2C%22display_name%22:%22Quang%20Nguyen%22%2C%22store_id%22:%22RF_0962986537_quangnguyen7616@gmail.com%22%2C%22store_name%22:%22Quang%20Nguyen%22%2C%22vip%22:false%2C%22point%22:30%2C%22store_current_money%22:0%2C%22store_price_order%22:5000%2C%22selected_logistic%22:%2250018%22%2C%22show_checkout%22:true%2C%22connect_shop%22:false%2C%22init_like%22:30}%2C%22shop%22:[]%2C%22ip_change_tutorial%22:true%2C%22new_order%22:0%2C%22socket_connected%22:false%2C%22sync_mode%22:false%2C%22registered_alert%22:false%2C%22license%22:[]%2C%22buyer_mode%22:false%2C%22trial_mode%22:true%2C%22package%22:[]%2C%22advanced_ads_list%22:[%22vuducminhdev%22%2C%22ads.atosa%22%2C%22.atosa@gmail.com%22%2C%22@atosa.asia%22%2C%22atosa.asia%22%2C%22tuan.nguyenpartner@gmail.com%22%2C%22atosaagency%22%2C%22atosa.vanhanh%22%2C%22khiemkieu3192@gmail.com%22%2C%22hotayxanh.net@gmail.com%22]}; TawkConnectionTime=0'
+        }, {
             qs: {
                 by: by,
                 keyword: keyword,
@@ -462,21 +465,21 @@ class ShopeeAPI {
     }
 
     api_get_search_items_salework(keyword, itemid) {
-        let Url = `https://nhaquangcao.salework.net/api/shopeeAds/getAdsLocation?keyword=${encodeURI(keyword)}&productId=${itemid}`;        
-        const result = this.http_client.http_request(Url, 'GET', null, { 
-            'Connection': 'keep-alive', 
-            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"', 
-            'Accept': 'application/json, text/plain, */*', 
-            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzNTE3IiwiaWF0IjoxNjM4Mzc0MjE5LCJleHAiOjE2Mzg4NzgyMTl9.vRaAAHx1RnpgzsR6F6uymIhRiv-nsxSzbo3KRMNk4WJGdeoUu9CjrUjKnbQh0m6zsg2d1nNxRvhd49kdhKHdnw', 
-            'sec-ch-ua-mobile': '?0', 
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36', 
-            'sec-ch-ua-platform': '"Windows"', 
-            'Sec-Fetch-Site': 'same-origin', 
-            'Sec-Fetch-Mode': 'cors', 
-            'Sec-Fetch-Dest': 'empty', 
-            'Referer': 'https://nhaquangcao.salework.net/searchads/keywords', 
+        let Url = `https://nhaquangcao.salework.net/api/shopeeAds/getAdsLocation?keyword=${encodeURI(keyword)}&productId=${itemid}`;
+        const result = this.http_client.http_request(Url, 'GET', null, {
+            'Connection': 'keep-alive',
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+            'Accept': 'application/json, text/plain, */*',
+            'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzNTE3IiwiaWF0IjoxNjM4Mzc0MjE5LCJleHAiOjE2Mzg4NzgyMTl9.vRaAAHx1RnpgzsR6F6uymIhRiv-nsxSzbo3KRMNk4WJGdeoUu9CjrUjKnbQh0m6zsg2d1nNxRvhd49kdhKHdnw',
+            'sec-ch-ua-mobile': '?0',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36',
+            'sec-ch-ua-platform': '"Windows"',
+            'Sec-Fetch-Site': 'same-origin',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Dest': 'empty',
+            'Referer': 'https://nhaquangcao.salework.net/searchads/keywords',
             'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8'
-          }, null).then(function (response) {
+        }, null).then(function (response) {
             return { code: 0, message: 'OK', status: response.status, data: response.data };
         }, function (error) {
             if (error.response) {
@@ -487,7 +490,7 @@ class ShopeeAPI {
         });
         return result;
     }
-    
+
     api_get_shop_info_shopid(proxy, UserAgent, cookie, shopid) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)
