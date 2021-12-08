@@ -209,10 +209,7 @@ function getMaxPage(max_location) {
 }
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    //by = 'pop';
-    //if (use_host)
-    //    return await locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
-    //else
+    by = 'pop';
     return await locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
 }
 
@@ -272,37 +269,6 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
     }
 }
 
-async function locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    //const time_out = Math.floor(Math.random() * (9999 - 3333 + 1)) + 3333;
-    //await sleep(time_out);
-    let start_unix = moment().unix();
-    let result = await shopeeApi.api_get_search_items_salework(keyword, itemid);
-    let end_unix = moment().unix();
-    if (result.code != 0) {
-        if (result.code == 1000 || result.status == 403) {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') SaleWork chặn nhiều request đợi 30s');
-            await sleep(30000);
-            return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
-        } else {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_salework', result);
-            return -1;
-        }
-    }
-    last_request_success = moment();
-    if (result.data.status == 'success') {
-        let ads_location = result.data.data.adsLocation;
-        if (!result.data.data.adsItemFound) {
-            ads_location = 999;
-        }
-        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí SaleWork:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location);
-        return ads_location;
-    } else {
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_salework', result);
-        return -1;
-    }
-
-}
-
 async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     //const time_out = Math.floor(Math.random() * (9999 - 3333 + 1)) + 3333;
     //await sleep(time_out);
@@ -312,7 +278,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     if (result.code != 0) {
         if (result.code == 1000 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> SaleWork');
-            return locationKeyword_SaleWork(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
+            return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
             return -1;
