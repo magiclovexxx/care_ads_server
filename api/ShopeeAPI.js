@@ -5,7 +5,6 @@ const NodeRSA = require('node-rsa');
 const { v4: uuidv4 } = require('uuid');
 const HttpClient = require('./HttpClient.js');
 const qs = require('qs');
-const md5 = require('md5');
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
