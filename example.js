@@ -1,13 +1,82 @@
 const { v4: uuidv4 } = require('uuid');
 const prompt = require('prompt');
-var shopeeApi = require('./api/ShopeeAPI.js');
-var HttpClient = require('./api/HttpClient.js');
+const ShopeeAPI = require('./api/ShopeeAPI.js');
+const shopeeApi = new ShopeeAPI(300000);
+const HttpClient = require('./api/HttpClient.js');
+const httpClient = new HttpClient(300000);
 var moment = require('moment');
 const NodeRSA = require('node-rsa');
 const fs = require('fs');
 const md5 = require('md5');
-(async () => {
 
+async function locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    by = 'pop';
+    let start_unix = moment().unix();
+    let result = await shopeeApi.api_get_search_items_v2(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
+    let end_unix = moment().unix();
+    if (result.code != 0) {
+        if (result.code == 1000) {
+            if (result.status == 429 || result.status == 403) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeV2 chặn nhiều request -> Shopee');
+                return locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            } else {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeV2 Request Timeout');
+                await sleep(3000);
+                return locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            }
+        } else {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items_v2', result);
+            return -1;
+        }
+    }
+
+    if (result.data.items != null) {
+        let index = result.data.items.findIndex(x => x.itemid == itemid && x.campaignid != null);
+        let page = (newest / limit);
+        if (index != -1) {
+            let ads_location = (index + 1);
+            if (ads_location <= (page == 3 ? 6 : 5)) {
+                ads_location = ads_location + (page * 10);
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí ShopeeV2:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
+                return ads_location;
+            } else {
+                if (ads_location >= (page == 3 ? 57 : 56)) {
+                    ads_location = ads_location - (50 - (page * 10));
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí ShopeeV2:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
+                    return ads_location;
+                } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí ShopeeV2:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+                    return 999;
+                }
+            }
+        } else {
+            if (max_page == 0) {
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí ShopeeV2:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+                return 999;
+            } else {
+                if (page < max_page) {
+                    page = page + 1;
+                    newest = newest + limit;
+                    return locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
+                } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí ShopeeV2:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+                    return 999;
+                }
+            }
+        }
+    } else {
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí ShopeeV2:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
+        return 999;
+    }
+}
+
+(async () => {
+    let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36';
+    let itemid = 6121833543;
+    let keyword = 'ví nữ';
+    let location = await locationKeyword_ShopeeV2(null, null, null, itemid, 6, null, null, user_agent, 'pop', keyword, 60, 0, 'desc');
+    console.log(location);
+    return;
     let data = 'by=sales&keyword=v%C3%AD%20n%E1%BB%AF&limit=60&newest=0&order=desc&page_type=search&scenario=PAGE_GLOBAL_SEARCH&version=2';
     let str_request = `55b03${md5(data)}55b03`;
     let if_none_match = `55b03-${md5(str_request)}`;
