@@ -1888,7 +1888,7 @@ check_all = async () => {
                                                     }
                                                 } else {
                                                     //Không có click
-                                                    if (moment(care_keyword.last_up_price).add(10, 'minutes') <= moment()) {
+                                                    if (moment(care_keyword.last_up_price).add(30, 'minutes') <= moment()) {
                                                         let old_price = keyword.price;
                                                         let ads_location = 999;
                                                         if (keyword.price == max_price) {
@@ -2287,7 +2287,7 @@ check_all = async () => {
                                         });
                                     } else {
                                         //Không có click
-                                        if (moment(care_placement.last_up_price).add(10, 'minutes') <= moment()) {
+                                        if (moment(care_placement.last_up_price).add(30, 'minutes') <= moment()) {
                                             placement.extinfo.target.premium_rate = placement.extinfo.target.premium_rate + 10;
                                             if (placement.extinfo.target.premium_rate > care_placement.max_price)
                                                 placement.extinfo.target.premium_rate = care_placement.max_price;
