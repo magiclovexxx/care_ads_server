@@ -27,6 +27,7 @@ const hostname = os.hostname();
 const api_url = "http://api.sacuco.com/api_user";
 var last_request_success = moment();
 var proxy_server = null;
+var slave_type = 'CRON';
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
@@ -441,6 +442,7 @@ check_all = async () => {
         }
         //check version từ server
         let version = result.data.version;
+        slave_type = result.data.type;
         let clone_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36';
         //check version từ local
         let checkVersion = fs.readFileSync("version.txt", { flag: "as+" });
@@ -478,7 +480,7 @@ check_all = async () => {
                     result = await last_connection(slave_ip, port);
                     last_request_success = moment();
                     console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-                    await sleep(3000);
+                    await sleep((slave_type == 'LIVE' ? 60000 : 3000));
                     check_all();
                 }
             }, 3000);
@@ -2341,13 +2343,13 @@ check_all = async () => {
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-        await sleep(3000);
+        await sleep((slave_type == 'LIVE' ? 60000 : 3000));
         check_all();
     }
     finally {
         if (!is_wait) {
             console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-            await sleep(3000);
+            await sleep((slave_type == 'LIVE' ? 60000 : 3000));
             check_all();
         }
     }
