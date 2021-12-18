@@ -29,6 +29,7 @@ var last_request_success = moment();
 var proxy_server = null;
 var slave_type = 'CRON';
 
+
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     if (uid)
@@ -36,12 +37,18 @@ function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     return httpClient.http_request(Url, 'GET').then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return api_get_shopee_campaigns(slave_ip, slave_port, uid);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
@@ -51,12 +58,18 @@ function last_connection(slave_ip, slave_port) {
     return httpClient.http_request(Url, 'GET').then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return last_connection(slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
@@ -66,12 +79,18 @@ function restore_check(id, slave_ip, slave_port) {
     return httpClient.http_request(Url, 'GET').then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return restore_check(id, slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
@@ -81,12 +100,18 @@ function api_put_shopee_accounts(data, slave_ip, slave_port) {
     return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return api_put_shopee_accounts(data, slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
@@ -96,12 +121,18 @@ function api_put_shopee_campaigns(data, slave_ip, slave_port) {
     return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return api_put_shopee_campaigns(data, slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
@@ -111,12 +142,18 @@ function api_put_shopee_placements(data, slave_ip, slave_port) {
     return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return api_put_shopee_placements(data, slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
@@ -126,12 +163,18 @@ function api_put_shopee_orders(data, slave_ip, slave_port) {
     return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return api_put_shopee_orders(data, slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
@@ -141,12 +184,18 @@ function api_put_shopee_payments(data, slave_ip, slave_port) {
     return httpClient.http_request(Url, 'PUT', null, null, data).then(function (response) {
         response.data.status = response.status;
         return response.data;
-    }, function (error) {
+    }, async function (error) {
         if (error.response) {
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
-            return { code: 1000, message: error.code + ' ' + error.message };
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return api_put_shopee_payments(data, slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
         }
     });
 }
