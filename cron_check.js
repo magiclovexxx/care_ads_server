@@ -1779,18 +1779,9 @@ check_all = async () => {
                                                     check_win = true;
                                             }
                                         } else {
-                                            if (cost == 0) {
+                                            if (cir_value <=  broad_cir)
                                                 check_win = true;
-                                            }
-                                            else {
-                                                if (direct_gmv != 0) {
-                                                    let check_profit = cost / (direct_gmv * campaign.profit_num);
-                                                    if (check_profit < 1)
-                                                        check_win = true;
-                                                }
-                                            }
                                         }
-
 
                                         if (check_win) {
                                             //Quảng cáo lãi/hòa
