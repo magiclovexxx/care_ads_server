@@ -358,10 +358,7 @@ class ShopeeAPI {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
                 response.cookie = RSA.encrypt(response.cookie, 'base64');
-            let response_items = {
-                items: response.data.items
-            }
-            return { code: 0, message: 'OK', status: response.status, data: response_items, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+            return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
                 error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
@@ -413,7 +410,10 @@ class ShopeeAPI {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
                 response.cookie = RSA.encrypt(response.cookie, 'base64');
-            return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+            let response_items = {
+                items: response.data.items
+            }
+            return { code: 0, message: 'OK', status: response.status, data: response_items, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
                 error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
