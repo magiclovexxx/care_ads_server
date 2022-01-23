@@ -75,11 +75,29 @@ class ShopeeAPI {
         }
 
         if (method == 'POST' || method == 'PUT') {
-            const result = this.http_client.http_request(url, method, null, {
+            let headers = {
                 cookie: cookie,
                 'User-Agent': UserAgent,
                 referer: url
-            }, data).then(function (response) {
+            }
+            if (url.indexOf('localapi.trazk.com') != -1) {
+                headers = {
+                    'Connection': 'keep-alive',
+                    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
+                    'Accept': 'application/json, text/javascript, */*; q=0.01',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'sec-ch-ua-mobile': '?0',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4750.0 Safari/537.36',
+                    'sec-ch-ua-platform': '"Windows"',
+                    'Origin': 'https://keywordplanner.vn',
+                    'Sec-Fetch-Site': 'cross-site',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Referer': 'https://keywordplanner.vn/',
+                    'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8'
+                }
+            }
+            const result = this.http_client.http_request(url, method, null, headers, data).then(function (response) {
                 response.cookie = cookieParse(cookie, response.headers['set-cookie']);
                 if (response.cookie != null)
                     response.cookie = RSA.encrypt(response.cookie, 'base64');
