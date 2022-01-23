@@ -76,7 +76,7 @@ async function locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, ma
     let user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4710.4 Safari/537.36';
 
     
-    let result = await shopeeApi.api_dynamic_request(null, user_agent, null, 'https://localapi.trazk.com/keywords/v2.php?task=getKeywordsSuggestion&limit=5000&lang=vn&country=vn&userToken=VEFKa3Bqd0RQb0tGc1ZDZ3JXakhIZUdlR2c1QUg4RDhuMlpRdGNnY3ByZllHb0xFcGVsT0lCNXUwakJ5cjdHdjo6rHJ64rs6rAHFKVFndx31Wg&sortBy=relevance', 'POST', 'keywords[]=ví+nữ');
+    let result = await shopeeApi.api_dynamic_request(null, user_agent, null, 'https://localapi.trazk.com/keywords/v2.php?task=getKeywordsSuggestion&limit=5000&lang=vn&country=vn&userToken=Vjh2VU81NDFUN0VsQ3lYQ1F5L1craWlOL0VFL3R6TFdnN0wwT0hDTjlvSUZsV1BwM0cxQ3Z5MDcxY3FvTGdJcTo6bRVZaF_cF3J-4a3_q9pubw&sortBy=relevance', 'POST', 'keywords[]=ví+nữ');
     console.log(result);
 
     return;
