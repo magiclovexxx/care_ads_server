@@ -34,19 +34,24 @@ function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
     if (uid)
         Url += '&uid=' + uid;
+    //Call request get với url để lấy data
     return httpClient.http_request(Url, 'GET').then(function (response) {
+        //Webservice API trả về data
         response.data.status = response.status;
         return response.data;
     }, async function (error) {
         if (error.response) {
+            //Trả về lỗi kết nối
             error.response.data.status = error.response.status;
             return error.response.data;
         } else {
             if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                //Trường hợp lỗi request time out đợi 3s gọi lại function sẽ hay xảy ra nếu mạng chập chờn (Cả mạng server và client)
                 await sleep(3000);
                 return api_get_shopee_campaigns(slave_ip, slave_port, uid);
             }
             else {
+                //Các lỗi phát sinh khác trả về lỗi
                 return { code: 1000, message: error.code + ' ' + error.message };
             }
         }
