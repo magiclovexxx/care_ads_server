@@ -1066,6 +1066,43 @@ class ShopeeAPI {
         return result;
     }
 
+    api_get_package_list(SPC_CDS, proxy, UserAgent, cookie, source, sort_by, page_size, page_number, total) {
+        if (cookie != null) {
+            if (cookie.indexOf('[ROOT]') == -1)
+                cookie = RSA.decrypt(cookie, 'utf8');
+            else
+                cookie = cookie.replace('[ROOT]', '');
+        }
+        let Url = 'https://banhang.shopee.vn/api/v3/order/get_package_list';
+        Url += '?SPC_CDS=' + SPC_CDS;
+        Url += '&SPC_CDS_VER=2';
+        Url += '&source=' + source;        
+        Url += '&sort_by=' + sort_by;
+        Url += '&page_size=' + page_size;
+        Url += '&page_number=' + page_number;
+        Url += '&total=' + total;
+        const result = this.http_client.http_request(Url, 'GET', null, {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://banhang.shopee.vn/'
+        }, null).then(function (response) {
+            response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.cookie != null)
+                response.cookie = RSA.encrypt(response.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+        }, function (error) {
+            if (error.response) {
+                error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.cookie != null)
+                    error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            }
+        });
+        return result;
+    }
+
     api_get_order_id_list(SPC_CDS, proxy, UserAgent, cookie, from_page_number, source, page_size, page_number, total, is_massship) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)
