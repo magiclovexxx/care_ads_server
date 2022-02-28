@@ -1568,13 +1568,13 @@ check_all = async () => {
                                         let checkout_carrier_name = get_one_order.checkout_carrier_name;
                                         let status = get_one_order.status;
                                         let status_ext = get_one_order.status_ext;
+                                        let logistics_status = get_one_order.logistics_status;
                                         let package_number = package_list[i].package_number;
                                         let third_party_tn = package_list[i].third_party_tn;
                                         let consignment_no = package_list[i].consignment_no;                                        
                                         let pickup_time = package_list[i].pickup_time;
                                         let parcel_no = package_list[i].parcel_no;
                                         let parcel_price = package_list[i].parcel_price;
-                                        
                                         let order_items = [];
                                         for (let n = 0; n < get_one_order.order_items.length; n++) {
                                             order_items.push({
@@ -1610,7 +1610,8 @@ check_all = async () => {
                                             parcel_price: parcel_price,
                                             order_items: (order_items != null ? JSON.stringify(order_items) : null),
                                             status: status,                                            
-                                            status_ext: status_ext
+                                            status_ext: status_ext,
+                                            logistics_status: logistics_status
                                         }], slave_ip, port);
                                         last_request_success = moment();
                                         if (result.code != 0) {
