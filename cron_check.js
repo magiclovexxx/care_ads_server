@@ -1483,7 +1483,7 @@ check_all = async () => {
                 let disable_check_pack_time = false;
 
                 while (true) {
-                    result = await shopeeApi.api_get_package_list(spc_cds, proxy, user_agent, cookie, 'processed', 'create_date_desc', 40, pack_page, 0);
+                    result = await shopeeApi.api_get_package_list(spc_cds, proxy, user_agent, cookie, null, 'confirmed_date_desc', 40, pack_page, 0);
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.package_list.length > 0) {
@@ -1492,7 +1492,7 @@ check_all = async () => {
                             let total_page = Math.ceil(result.data.data.total / result.data.data.page_size);
                             for (let i = 0; i < package_list.length; i++) {
                                 let order_id = package_list[i].order_id;
-                                let pack_time = package_list[i].order_create_time;
+                                let pack_time = package_list[i].shipping_confirm_time;
                                 if (first_pack_time == 0) {
                                     first_pack_time = pack_time;
                                 }

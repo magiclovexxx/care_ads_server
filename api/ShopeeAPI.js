@@ -1076,7 +1076,9 @@ class ShopeeAPI {
         let Url = 'https://banhang.shopee.vn/api/v3/order/get_package_list';
         Url += '?SPC_CDS=' + SPC_CDS;
         Url += '&SPC_CDS_VER=2';
-        Url += '&source=' + source;        
+        if (source != null) {
+            Url += '&source=' + source;
+        }
         Url += '&sort_by=' + sort_by;
         Url += '&page_size=' + page_size;
         Url += '&page_number=' + page_number;
