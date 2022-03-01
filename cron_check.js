@@ -669,8 +669,9 @@ check_all = async () => {
                         let status = get_one_order.status;
                         let status_ext = get_one_order.status_ext;
                         let logistics_status = get_one_order.logistics_status;
+                        let pickup_time = get_one_order.pickup_time;
                         let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
-                        
+
                         if (status != account.packages[i].status
                             || status_ext != account.packages[i].status_ext
                             || logistics_status != account.packages[i].logistics_status
@@ -682,7 +683,8 @@ check_all = async () => {
                                 status: status,
                                 status_ext: status_ext,
                                 logistics_status: logistics_status,
-                                fulfillment_carrier_name: fulfillment_carrier_name
+                                fulfillment_carrier_name: fulfillment_carrier_name,
+                                pickup_time: moment.unix(pickup_time).format('YYYY-MM-DD HH:mm:ss')
                             }], slave_ip, port);
                             last_request_success = moment();
                             if (result.code != 0) {
