@@ -1528,6 +1528,8 @@ check_all = async () => {
                             let total_page = Math.ceil(result.data.data.total / result.data.data.page_size);
                             for (let i = 0; i < package_list.length; i++) {
                                 let order_id = package_list[i].order_id;
+                                let ship_by_date  = package_list[i].ship_by_date;                                
+                                let shipping_confirm_time = package_list[i].shipping_confirm_time;                                
                                 let pack_time = package_list[i].shipping_confirm_time;
                                 if (first_pack_time == 0) {
                                     first_pack_time = pack_time;
@@ -1633,6 +1635,8 @@ check_all = async () => {
                                             order_sn: order_sn,
                                             create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
                                             pickup_time: moment.unix(pickup_time).format('YYYY-MM-DD HH:mm:ss'),
+                                            ship_by_date: moment.unix(ship_by_date).format('YYYY-MM-DD HH:mm:ss'),
+                                            shipping_confirm_time: moment.unix(shipping_confirm_time).format('YYYY-MM-DD HH:mm:ss'),
                                             buyer_user_id: buyer_user_id,
                                             buyer_user_name: buyer_user_name,
                                             buyer_shop_id: buyer_shop_id,
