@@ -658,6 +658,43 @@ check_all = async () => {
                     }
                 }
 
+                //Kiểm tra đón gói đang treo
+                for (let i = 0; i < account.packages.length; i++) {
+                    let order_id = account.packages[i].order_id;
+                    let order_sn = account.packages[i].order_sn;
+                    result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
+                    last_request_success = moment();
+                    if (result.code == 0 && result.data.code == 0) {
+                        let get_one_order = result.data.data;
+                        let status = get_one_order.status;
+                        let status_ext = get_one_order.status_ext;
+                        let logistics_status = get_one_order.logistics_status;
+                        if (status != account.packages[i].status
+                            || status_ext != account.packages[i].status_ext
+                            || logistics_status != account.packages[i].logistics_status) {
+                            result = await api_put_shopee_packages([{
+                                uid: account.uid,
+                                shop_id: account.sid,
+                                order_id: order_id,
+                                status: status,
+                                status_ext: status_ext,
+                                logistics_status: logistics_status
+                            }], slave_ip, port);
+                            last_request_success = moment();
+                            if (result.code != 0) {
+                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_packages', result);
+                                continue;
+                            }
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status OK', order_sn);
+                        } else {
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status SKIP', order_sn);
+                        }
+                    } else {
+                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_one_order', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                    }
+
+                }
+
                 //Kiểm tra đơn hàng treo
                 for (let i = 0; i < account.orders.length; i++) {
                     let order_id = account.orders[i].order_id;
@@ -737,9 +774,9 @@ check_all = async () => {
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                 continue;
                             }
-                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') check update OK', order_sn);
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') O check order status OK', order_sn);
                         } else {
-                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') check update SKIP', order_sn);
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') O check order status SKIP', order_sn);
                         }
                     } else {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -1556,7 +1593,7 @@ check_all = async () => {
                                 } else {
                                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
                                     last_request_success = moment();
-                                    if (result.code == 0 && result.data.code == 0) {                                        
+                                    if (result.code == 0 && result.data.code == 0) {
                                         let get_one_order = result.data.data;
                                         let order_sn = get_one_order.order_sn;
                                         let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
@@ -1571,7 +1608,7 @@ check_all = async () => {
                                         let logistics_status = get_one_order.logistics_status;
                                         let package_number = package_list[i].package_number;
                                         let third_party_tn = package_list[i].third_party_tn;
-                                        let consignment_no = package_list[i].consignment_no;                                        
+                                        let consignment_no = package_list[i].consignment_no;
                                         let pickup_time = package_list[i].pickup_time;
                                         let parcel_no = package_list[i].parcel_no;
                                         let parcel_price = package_list[i].parcel_price;
@@ -1606,10 +1643,10 @@ check_all = async () => {
                                             package_number: package_number,
                                             third_party_tn: third_party_tn,
                                             consignment_no: consignment_no,
-                                            parcel_no: parcel_no,                                            
+                                            parcel_no: parcel_no,
                                             parcel_price: parcel_price,
                                             order_items: (order_items != null ? JSON.stringify(order_items) : null),
-                                            status: status,                                            
+                                            status: status,
                                             status_ext: status_ext,
                                             logistics_status: logistics_status
                                         }], slave_ip, port);
