@@ -669,16 +669,20 @@ check_all = async () => {
                         let status = get_one_order.status;
                         let status_ext = get_one_order.status_ext;
                         let logistics_status = get_one_order.logistics_status;
+                        let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
+                        
                         if (status != account.packages[i].status
                             || status_ext != account.packages[i].status_ext
-                            || logistics_status != account.packages[i].logistics_status) {
+                            || logistics_status != account.packages[i].logistics_status
+                            || fulfillment_carrier_name != account.packages[i].fulfillment_carrier_name) {
                             result = await api_put_shopee_packages([{
                                 uid: account.uid,
                                 shop_id: account.sid,
                                 order_id: order_id,
                                 status: status,
                                 status_ext: status_ext,
-                                logistics_status: logistics_status
+                                logistics_status: logistics_status,
+                                fulfillment_carrier_name: fulfillment_carrier_name
                             }], slave_ip, port);
                             last_request_success = moment();
                             if (result.code != 0) {
