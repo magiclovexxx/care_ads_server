@@ -669,22 +669,16 @@ check_all = async () => {
                         let status = get_one_order.status;
                         let status_ext = get_one_order.status_ext;
                         let logistics_status = get_one_order.logistics_status;
-                        let pickup_time = get_one_order.pickup_time;
-                        let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
-
                         if (status != account.packages[i].status
                             || status_ext != account.packages[i].status_ext
-                            || logistics_status != account.packages[i].logistics_status
-                            || fulfillment_carrier_name != account.packages[i].fulfillment_carrier_name) {
+                            || logistics_status != account.packages[i].logistics_status) {
                             result = await api_put_shopee_packages([{
                                 uid: account.uid,
                                 shop_id: account.sid,
                                 order_id: order_id,
                                 status: status,
                                 status_ext: status_ext,
-                                logistics_status: logistics_status,
-                                fulfillment_carrier_name: fulfillment_carrier_name,
-                                pickup_time: moment.unix(pickup_time).format('YYYY-MM-DD HH:mm:ss')
+                                logistics_status: logistics_status
                             }], slave_ip, port);
                             last_request_success = moment();
                             if (result.code != 0) {
@@ -698,7 +692,6 @@ check_all = async () => {
                     } else {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_one_order', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     }
-
                 }
 
                 //Kiểm tra đơn hàng treo
@@ -1526,7 +1519,7 @@ check_all = async () => {
                 let disable_check_pack_time = false;
 
                 while (true) {
-                    result = await shopeeApi.api_get_package_list(spc_cds, proxy, user_agent, cookie, null, 'confirmed_date_desc', 40, pack_page, 0);
+                    result = await shopeeApi.api_get_package_list(spc_cds, proxy, user_agent, cookie, 'processed', 'confirmed_date_desc', 40, pack_page, 0);
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.package_list.length > 0) {
