@@ -1710,10 +1710,6 @@ check_all = async () => {
                     }
                     pack_page++;
                     count_pack_page++;
-                    if (last_pack_page != 0 && count_pack_page >= 3) {
-                        is_restore_check = true;
-                        break;
-                    }
                 }
 
                 if (is_restore_check) {
