@@ -549,7 +549,7 @@ router.get("/api_get_search_items", async (req, res) => {
         let limit = req.body.limit;
         let newest = req.body.newest;
         let order = req.body.order;
-        let result = await shopeeApi.api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
+        let result = await shopeeApi.api_get_search_items_v2(proxy, UserAgent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
         res.send(result);
     }
     catch (ex) {
