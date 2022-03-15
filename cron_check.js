@@ -295,7 +295,7 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
     let result = await shopeeApi.api_get_search_items_atosa(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
     if (result.code != 0) {
-        if (result.code == 1000) {
+        if (result.code == 999) {
             if (result.status == 429 || result.status == 403) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request -> ShopeeV2');
                 return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
