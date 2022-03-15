@@ -297,7 +297,7 @@ async function locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_p
     if (result.code != 0) {
         //if (result.code == 1000) {
             if (result.status == 429 || result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request -> ShopeeV2');
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa chặn nhiều request -> Shopee');
                 return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Atosa Request Timeout');
@@ -358,7 +358,7 @@ async function locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, ma
     if (result.code != 0) {
         //if (result.code == 1000) {
             if (result.status == 429 || result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeV2 chặn nhiều request -> Shopee');
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeV2 chặn nhiều request -> Atosa');
                 return locationKeyword_Atosa(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeV2 Request Timeout');
@@ -419,7 +419,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     if (result.code != 0) {
         //if (result.code == 1000) {
             if (result.status == 429 || result.status == 403) {
-                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> Atosa');
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> ShopeeV2');
                 return locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
             } else {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee Request Timeout');
