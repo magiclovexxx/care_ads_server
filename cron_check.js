@@ -594,7 +594,7 @@ check_all = async () => {
             result = await api_get_proxy_ip(slave_ip, 'N');
             if (result.code != 0) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
-                return -1;
+                return;
             }
             proxy_server = {
                 host: result.data.proxy_ip,
@@ -1810,6 +1810,28 @@ check_all = async () => {
                         return;
                     }
                 }
+
+                //Kiểm tra tài khoản
+                result = await shopeeApi.api_get_marketing_meta(spc_cds, proxy, user_agent, cookie);
+                if (result.code != 0) {
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_meta', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                    campaign.job_done = true;
+                    return;
+                }
+                if (result.data != null && result.data != '' && result.data.code != 0) {
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_meta', result.data.message);
+                    campaign.job_done = true;
+                    return;
+                }
+                let balance = result.data.data.account_info.balance;
+                if (balance <= 0) {
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Tài khoản hết tiền');
+                    campaign.job_done = true;
+                    return;
+                } else {
+                    console.info(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Số dư tài khoản:', balance.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                }
+
                 //Lấy thông tin chiến dịch
                 //sleep(100);
                 result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
