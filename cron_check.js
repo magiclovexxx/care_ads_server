@@ -28,6 +28,7 @@ const api_url = "http://api.sacuco.com/api_user";
 var last_request_success = moment();
 var proxy_server = null;
 var slave_type = 'CRON';
+var slave_ip = null;
 
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
@@ -49,6 +50,32 @@ function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
                 //Trường hợp lỗi request time out đợi 3s gọi lại function sẽ hay xảy ra nếu mạng chập chờn (Cả mạng server và client)
                 await sleep(3000);
                 return api_get_shopee_campaigns(slave_ip, slave_port, uid);
+            }
+            else {
+                //Các lỗi phát sinh khác trả về lỗi
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
+        }
+    });
+}
+
+function api_get_proxy_ip(slave_ip) {
+    let Url = api_url + '/proxy_ip?slave_ip=' + slave_ip;
+    //Call request get với url để lấy data
+    return httpClient.http_request(Url, 'GET').then(function (response) {
+        //Webservice API trả về data
+        response.data.status = response.status;
+        return response.data;
+    }, async function (error) {
+        if (error.response) {
+            //Trả về lỗi kết nối
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                //Trường hợp lỗi request time out đợi 3s gọi lại function sẽ hay xảy ra nếu mạng chập chờn (Cả mạng server và client)
+                await sleep(3000);
+                return api_get_proxy_ip(slave_ip);
             }
             else {
                 //Các lỗi phát sinh khác trả về lỗi
@@ -419,17 +446,24 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     if (result.code != 0) {
         //if (result.code == 1000) {
         if (result.status == 429 || result.status == 403) {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> ShopeeV2');
-            return locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
+            result = await api_get_proxy_ip(slave_ip);
+            if (result.code != 0) {
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
+                return -1;
+            }
+            proxy_server = {
+                host: result.data.proxy_ip,
+                port: parseInt(result.data.proxy_port),
+                auth: { username: result.data.proxy_username, password: result.data.proxy_password.replace('\r', '') }
+            };            
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> Đổi Proxy', proxy_server);
+            await sleep(3000);
+            return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee Request Timeout');
             await sleep(3000);
             return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         }
-        //} else {
-        //    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Lỗi api_get_search_items', result);
-        //    return -1;
-        //}
     }
     last_request_success = moment();
     if (result.data.items != null) {
@@ -502,7 +536,7 @@ check_all = async () => {
             }
         }
         const uid = null;
-        let slave_ip = await publicIp.v4();
+        slave_ip = await publicIp.v4();
         last_request_success = moment();
         if (use_host) {
             slave_ip = hostname;
