@@ -1586,6 +1586,7 @@ check_all = async () => {
                                 let ship_by_date = package_list[i].ship_by_date;
                                 let shipping_confirm_time = package_list[i].shipping_confirm_time;
                                 let pack_time = package_list[i].shipping_confirm_time;
+                                let channel_id = package_list[i].channel_id;
                                 if (first_pack_time == 0) {
                                     first_pack_time = pack_time;
                                 }
@@ -1661,6 +1662,7 @@ check_all = async () => {
                                                 package_number: package_number,
                                                 third_party_tn: third_party_tn,
                                                 consignment_no: consignment_no,
+                                                channel_id: channel_id,
                                                 parcel_no: parcel_no,
                                                 parcel_price: parcel_price,
                                                 order_items: (order_items != null ? JSON.stringify(order_items) : null),
