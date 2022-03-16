@@ -29,7 +29,7 @@ var last_request_success = moment();
 var proxy_server = null;
 var slave_type = 'CRON';
 var slave_ip = null;
-
+var change_proxy_pending = false;
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
@@ -446,8 +446,13 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     if (result.code != 0) {
         //if (result.code == 1000) {
         if (result.status == 429 || result.status == 403) {
+            while (change_proxy_pending) {
+                await sleep(3000);
+            }
+            change_proxy_pending = true;
             result = await api_get_proxy_ip(slave_ip, proxy.host);
             if (result.code != 0) {
+                change_proxy_pending = false;
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
                 return -1;
             }
@@ -456,6 +461,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
                 port: parseInt(result.data.proxy_port),
                 auth: { username: result.data.proxy_username, password: result.data.proxy_password.replace('\r', '') }
             };
+            change_proxy_pending = false;
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> Đổi Proxy', proxy.host, ' -> ', result.data.proxy_ip);
             await sleep(3000);
             return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
