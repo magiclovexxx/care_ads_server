@@ -591,7 +591,7 @@ check_all = async () => {
             port: parseInt(result.data.proxy_port),
             auth: { username: result.data.proxy_username, password: result.data.proxy_password.replace('\r', '') }
         };
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lấy proxy', result.data.proxy_ip);
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lấy proxy', result.data.proxy_ip);
 
         if ((data_accounts.length + data_campaigns.length) > 0) {
             is_wait = true;
