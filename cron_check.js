@@ -59,8 +59,8 @@ function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     });
 }
 
-function api_get_proxy_ip(slave_ip) {
-    let Url = api_url + '/proxy_ip?slave_ip=' + slave_ip;
+function api_get_proxy_ip(slave_ip, proxy_ip) {
+    let Url = api_url + '/proxy_ip?slave_ip=' + slave_ip + '&proxy_ip=' + proxy_ip;
     //Call request get với url để lấy data
     return httpClient.http_request(Url, 'GET').then(function (response) {
         //Webservice API trả về data
@@ -75,7 +75,7 @@ function api_get_proxy_ip(slave_ip) {
             if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
                 //Trường hợp lỗi request time out đợi 3s gọi lại function sẽ hay xảy ra nếu mạng chập chờn (Cả mạng server và client)
                 await sleep(3000);
-                return api_get_proxy_ip(slave_ip);
+                return api_get_proxy_ip(slave_ip, proxy_ip);
             }
             else {
                 //Các lỗi phát sinh khác trả về lỗi
@@ -446,7 +446,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     if (result.code != 0) {
         //if (result.code == 1000) {
         if (result.status == 429 || result.status == 403) {
-            result = await api_get_proxy_ip(slave_ip);
+            result = await api_get_proxy_ip(slave_ip, proxy.host);
             if (result.code != 0) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
                 return -1;
@@ -456,7 +456,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
                 port: parseInt(result.data.proxy_port),
                 auth: { username: result.data.proxy_username, password: result.data.proxy_password.replace('\r', '') }
             };
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> Đổi Proxy', result.data.proxy_ip);
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request -> Đổi Proxy', proxy.host, ' -> ', result.data.proxy_ip);
             await sleep(3000);
             return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
@@ -581,7 +581,7 @@ check_all = async () => {
 
         if (data_campaigns.length > 0) {
             //Lấy proxy
-            result = await api_get_proxy_ip(slave_ip);
+            result = await api_get_proxy_ip(slave_ip, 'N');
             if (result.code != 0) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
                 return -1;
