@@ -1510,7 +1510,7 @@ check_all = async () => {
                 //Lấy đơn đóng gói
                 let pack_page = 1;
                 let first_pack_time = 0;
-
+                /*
                 while (true) {
                     result = await shopeeApi.api_get_package_list(spc_cds, proxy, user_agent, cookie, 'processed', 'confirmed_date_desc', 40, pack_page, 0);
                     last_request_success = moment();
@@ -1646,7 +1646,7 @@ check_all = async () => {
                         break;
                     }
                 }
-
+*/
                 if (is_restore_check) {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Restore Check');
                     restore_check(account.sid, slave_ip, port);
