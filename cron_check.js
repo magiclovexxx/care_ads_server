@@ -447,7 +447,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
         //if (result.code == 1000) {
         if (result.status == 429 || result.status == 403) {
             let is_waiting = false;
-            let old_ip = 'HOST';
+            let old_ip = 'N';
             if(proxy != null) {
                 old_ip = proxy.host;
             }
@@ -457,7 +457,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
             }
             if (!is_waiting) {
                 change_proxy_pending = true;
-                result = await api_get_proxy_ip(slave_ip, proxy.host);
+                result = await api_get_proxy_ip(slave_ip, old_ip);
                 if (result.code != 0) {
                     change_proxy_pending = false;
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
