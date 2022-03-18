@@ -448,7 +448,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
         if (result.status == 429 || result.status == 403) {
             let is_waiting = false;
             let old_ip = 'N';
-            if(proxy != null) {
+            if (proxy != null) {
                 old_ip = proxy.host;
             }
             while (change_proxy_pending) {
@@ -659,8 +659,10 @@ check_all = async () => {
                 if (last_pay_page == -1)
                     last_pay_page = 1;
 
-                let last_pack_time = account.last_pack_time;
+                let max_pack_time = account.max_pack_time;
                 let min_pack_time = account.min_pack_time;
+                let recheck_pack_count = account.recheck_pack_count;
+
 
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
@@ -1574,8 +1576,6 @@ check_all = async () => {
                 //Lấy đơn đóng gói
                 let pack_page = 1;
                 let first_pack_time = 0;
-                //min_pack_time
-                //last_pack_time
 
                 while (true) {
                     result = await shopeeApi.api_get_package_list(spc_cds, proxy, user_agent, cookie, 'processed', 'confirmed_date_desc', 40, pack_page, 0);
@@ -1594,18 +1594,33 @@ check_all = async () => {
                                 if (first_pack_time == 0) {
                                     first_pack_time = pack_time;
                                 }
-                                if (pack_time <= last_pack_time && min_pack_time == -1) {
-                                    if (last_pack_time != first_pack_time) {
-                                        last_pack_time = first_pack_time;
-                                        result = await api_put_shopee_accounts({
-                                            id: account.sid,
-                                            last_pack_time: last_pack_time
-                                        }, slave_ip, port);
-                                        last_request_success = moment();
-                                        if (result.code != 0) {
-                                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                if (pack_time <= max_pack_time && min_pack_time == -1) {
+                                    if (max_pack_time != first_pack_time) {
+                                        if (recheck_pack_count > 3) {
+                                            max_pack_time = first_pack_time;
+                                            result = await api_put_shopee_accounts({
+                                                id: account.sid,
+                                                max_pack_time: max_pack_time,
+                                                recheck_pack_count: 0
+                                            }, slave_ip, port);
+                                            last_request_success = moment();
+                                            if (result.code != 0) {
+                                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                            } else {
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật max_pack_time', max_pack_time);
+                                            }
                                         } else {
-                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pack_time', last_pack_time);
+                                            recheck_pack_count++;
+                                            result = await api_put_shopee_accounts({
+                                                id: account.sid,
+                                                recheck_pack_count: recheck_pack_count
+                                            }, slave_ip, port);
+                                            last_request_success = moment();
+                                            if (result.code != 0) {
+                                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                            } else {
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật recheck_pack_count', recheck_pack_count);
+                                            }
                                         }
                                     }
                                     is_break_while = true;
@@ -1711,19 +1726,19 @@ check_all = async () => {
                                 pack_page++;
                             }
                         } else {
-                            if (last_pack_time != first_pack_time) {
-                                last_pack_time = first_pack_time;
+                            if (max_pack_time != first_pack_time) {
+                                max_pack_time = first_pack_time;
                                 min_pack_time = -1;
                                 result = await api_put_shopee_accounts({
                                     id: account.sid,
-                                    last_pack_time: last_pack_time,
+                                    max_pack_time: max_pack_time,
                                     min_pack_time: min_pack_time
                                 }, slave_ip, port);
                                 last_request_success = moment();
                                 if (result.code != 0) {
                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
                                 } else {
-                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_pack_time', last_pack_time, 'min_pack_time', min_pack_time);
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật max_pack_time', max_pack_time, 'min_pack_time', min_pack_time);
                                 }
                             }
                             break;
