@@ -1612,7 +1612,8 @@ check_all = async () => {
                                         } else {
                                             recheck_pack_count++;
                                             result = await api_put_shopee_accounts({
-                                                id: account.sid,
+                                                id: account.sid,                                                
+                                                next_pack_time: first_pack_time,
                                                 recheck_pack_count: recheck_pack_count
                                             }, slave_ip, port);
                                             last_request_success = moment();
