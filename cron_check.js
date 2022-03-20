@@ -1596,13 +1596,11 @@ check_all = async () => {
                                 }
                                 if (pack_time <= max_pack_time && min_pack_time == -1) {
                                     if (max_pack_time != first_pack_time) {
-                                        if (recheck_pack_count >= 100) {
+                                        if (moment.unix(max_pack_time).add(3, 'days') > moment.unix(first_pack_time)) {
                                             max_pack_time = first_pack_time;
                                             result = await api_put_shopee_accounts({
                                                 id: account.sid,
-                                                max_pack_time: max_pack_time,
-                                                recheck_pack_count: 0
-                                            }, slave_ip, port);
+                                                max_pack_time: max_pack_time                                            }, slave_ip, port);
                                             last_request_success = moment();
                                             if (result.code != 0) {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
@@ -1612,7 +1610,7 @@ check_all = async () => {
                                         } else {
                                             recheck_pack_count++;
                                             result = await api_put_shopee_accounts({
-                                                id: account.sid,                                                
+                                                id: account.sid,
                                                 next_pack_time: first_pack_time,
                                                 recheck_pack_count: recheck_pack_count
                                             }, slave_ip, port);
