@@ -661,8 +661,6 @@ check_all = async () => {
 
                 let max_pack_time = account.max_pack_time;
                 let min_pack_time = account.min_pack_time;
-                let recheck_pack_count = account.recheck_pack_count;
-
 
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
