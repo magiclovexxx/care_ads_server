@@ -725,7 +725,6 @@ check_all = async () => {
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         let get_one_order = result.data.data;
-
                         let status = get_one_order.status;
                         let status_ext = get_one_order.status_ext;
                         let logistics_status = get_one_order.logistics_status;
@@ -753,6 +752,10 @@ check_all = async () => {
                                     cancel_time = moment.unix(get_one_order.cancel_time).format('YYYY-MM-DD HH:mm:ss');
                                 }
                                 let cancel_reason_ext = get_one_order.cancel_reason_ext;
+                                let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
+                                let fulfillment_channel_id = get_one_order.fulfillment_channel_id;
+                                let checkout_carrier_name = get_one_order.checkout_carrier_name;
+                            
                                 let last_logistics_status = 0;
                                 let last_logistics_ctime = 0;
                                 let last_logistics_description = null;
@@ -812,6 +815,9 @@ check_all = async () => {
                                     package_number: package_number,
                                     third_party_tn: third_party_tn,
                                     consignment_no: consignment_no,
+                                    fulfillment_carrier_name: fulfillment_carrier_name,
+                                    checkout_carrier_name: checkout_carrier_name,
+                                    channel_id: fulfillment_channel_id,
                                     package_logistics_status: package_logistics_status,
                                     refund_time: refund_time
                                 }], slave_ip, port);
