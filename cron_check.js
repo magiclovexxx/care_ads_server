@@ -660,7 +660,13 @@ check_all = async () => {
                     last_pay_page = 1;
 
                 let max_pack_time = account.max_pack_time;
+                if (max_pack_time == -1) {
+                    max_pack_time == 0;
+                }
                 let min_pack_time = account.min_pack_time;
+                if (min_pack_time == -1) {
+                    min_pack_time == 0;
+                }
                 let min_pack_blocked = account.min_pack_blocked;
 
                 let is_need_login = false;
