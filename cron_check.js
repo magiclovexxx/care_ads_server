@@ -1596,7 +1596,7 @@ check_all = async () => {
                                 }
                                 if (pack_time <= max_pack_time && min_pack_time == -1) {
                                     if (max_pack_time != first_pack_time) {
-                                        if (moment.unix(max_pack_time).add(3, 'days') > moment.unix(first_pack_time)) {
+                                        if (moment.unix(max_pack_time).add(3, 'days') < moment.unix(first_pack_time)) {
                                             max_pack_time = first_pack_time;
                                             result = await api_put_shopee_accounts({
                                                 id: account.sid,
