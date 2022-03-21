@@ -725,16 +725,17 @@ check_all = async () => {
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         let get_one_order = result.data.data;
-                        result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
-                        last_request_success = moment();
-                        if (result.code == 0 && result.data.code == 0) {
-                            let get_package = result.data.data;
-                            let status = get_one_order.status;
-                            let status_ext = get_one_order.status_ext;
-                            let logistics_status = get_one_order.logistics_status;
-                            if (status != account.packages[i].status
-                                || status_ext != account.packages[i].status_ext
-                                || logistics_status != account.packages[i].logistics_status) {
+
+                        let status = get_one_order.status;
+                        let status_ext = get_one_order.status_ext;
+                        let logistics_status = get_one_order.logistics_status;
+                        if (status != account.packages[i].status
+                            || status_ext != account.packages[i].status_ext
+                            || logistics_status != account.packages[i].logistics_status) {
+                            result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+                            last_request_success = moment();
+                            if (result.code == 0 && result.data.code == 0) {
+                                let get_package = result.data.data;
                                 let pickup_time = null;
                                 if (get_one_order.pickup_time != 0) {
                                     pickup_time = moment.unix(get_one_order.pickup_time).format('YYYY-MM-DD HH:mm:ss');
@@ -821,10 +822,10 @@ check_all = async () => {
                                 }
                                 console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status OK', order_sn);
                             } else {
-                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status SKIP', order_sn);
+                                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                             }
                         } else {
-                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status SKIP', order_sn);
                         }
                     } else {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_one_order', result.status, (result.data != null && result.data != '' ? result.data : result.message));
