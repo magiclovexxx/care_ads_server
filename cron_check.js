@@ -1685,24 +1685,11 @@ check_all = async () => {
                                     first_pack_time = pack_time;
                                 }
                                 if (min_pack_time == 0) {
-                                    min_pack_time = pack_time;
-                                    result = await api_put_shopee_accounts({
-                                        id: account.sid,
-                                        min_pack_time: min_pack_time
-                                    }, slave_ip, port);
-                                    last_request_success = moment();
-                                    if (result.code != 0) {
-                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
-                                        is_break_while = true;
-                                        break;
-                                    } else {
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Khởi tạo min_pack_time', min_pack_time);
-                                    }
-                                }
-                                if (max_pack_time == 0) {
+                                    min_pack_time = pack_time;                                    
                                     max_pack_time = pack_time;
                                     result = await api_put_shopee_accounts({
                                         id: account.sid,
+                                        min_pack_time: min_pack_time,                                        
                                         max_pack_time: max_pack_time
                                     }, slave_ip, port);
                                     last_request_success = moment();
@@ -1711,7 +1698,7 @@ check_all = async () => {
                                         is_break_while = true;
                                         break;
                                     } else {
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Khởi tạo max_pack_time', max_pack_time);
+                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Khởi tạo min_pack_time, min_pack_time', min_pack_time);
                                     }
                                 }
 
