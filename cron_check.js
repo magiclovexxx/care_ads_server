@@ -816,7 +816,7 @@ check_all = async () => {
                                     cancel_time: cancel_time,
                                     cancel_reason_ext: cancel_reason_ext,
                                     last_logistics_status: last_logistics_status,
-                                    last_logistics_ctime: last_logistics_ctime,
+                                    last_logistics_ctime: (last_logistics_ctime != 0 ? moment.unix(last_logistics_ctime).format('YYYY-MM-DD HH:mm:ss') : null),
                                     last_logistics_description: last_logistics_description,
                                     tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null),
                                     package_number: package_number,
