@@ -741,9 +741,11 @@ check_all = async () => {
                         let status = get_one_order.status;
                         let status_ext = get_one_order.status_ext;
                         let logistics_status = get_one_order.logistics_status;
+                        let channel_id = get_one_order.fulfillment_channel_id;
                         if (status != account.packages[i].status
                             || status_ext != account.packages[i].status_ext
-                            || logistics_status != account.packages[i].logistics_status) {
+                            || logistics_status != account.packages[i].logistics_status
+                            || channel_id != account.packages[i].channel_id) {
                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                             last_request_success = moment();
                             if (result.code == 0 && result.data.code == 0) {
