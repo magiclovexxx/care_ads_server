@@ -1,3 +1,4 @@
+const md5 = require('md5');
 const publicIp = require('public-ip');
 require('dotenv').config();
 const fs = require('fs');
@@ -738,14 +739,11 @@ check_all = async () => {
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         let get_one_order = result.data.data;
-                        let status = get_one_order.status;
-                        let status_ext = get_one_order.status_ext;
-                        let logistics_status = get_one_order.logistics_status;
-                        let channel_id = get_one_order.fulfillment_channel_id;
-                        if (status != account.packages[i].status
-                            || status_ext != account.packages[i].status_ext
-                            || logistics_status != account.packages[i].logistics_status
-                            || channel_id != account.packages[i].channel_id) {
+                        let checksum = md5(JSON.stringify(get_one_order));
+                        if (checksum != account.packages[i].checksum) {
+                            let status = get_one_order.status;
+                            let status_ext = get_one_order.status_ext;
+                            let logistics_status = get_one_order.logistics_status;   
                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                             last_request_success = moment();
                             if (result.code == 0 && result.data.code == 0) {
@@ -755,7 +753,8 @@ check_all = async () => {
                                     shop_id: account.sid,
                                     order_id: order_id,
                                     status: status,
-                                    status_ext: status_ext
+                                    status_ext: status_ext,
+                                    logistics_status: logistics_status
                                 };
 
                                 if (get_one_order.pickup_time != 0) {
@@ -936,6 +935,7 @@ check_all = async () => {
                                         shop_id: account.sid,
                                         order_id: order_id,
                                         order_sn: order_sn,
+                                        checksum: md5(JSON.stringify(get_one_order)),
                                         create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
                                         pickup_time: moment.unix(pickup_time).format('YYYY-MM-DD HH:mm:ss'),
                                         ship_by_date: moment.unix(ship_by_date).format('YYYY-MM-DD HH:mm:ss'),
