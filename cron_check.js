@@ -660,7 +660,7 @@ check_all = async () => {
                     last_pay_page = 1;
 
                 let max_pack_time = account.max_pack_time;
-                let min_pack_time = account.min_pack_time;                
+                let min_pack_time = account.min_pack_time;
                 let min_pack_blocked = account.min_pack_blocked;
 
                 if (max_pack_time == -1 || min_pack_time == -1) {
@@ -723,7 +723,11 @@ check_all = async () => {
                         return;
                     }
                 }
-                
+
+                if (account.sid != 14) {
+                    return;
+                }
+
                 //Kiểm tra đón gói đang treo
                 for (let i = 0; i < account.packages.length; i++) {
                     let order_id = account.packages[i].order_id;
@@ -934,7 +938,7 @@ check_all = async () => {
                 }
                 //Check restore
                 let is_restore_check = false;
-                
+
                 //Lấy đơn hàng hủy
                 let cancel_page = 1;
                 let count_cancel_page = 0;
@@ -1661,7 +1665,7 @@ check_all = async () => {
                         break;
                     }
                 }
-                
+
                 //Lấy đơn đóng gói
                 let pack_page = 1;
                 let first_pack_time = 0;
@@ -1769,7 +1773,7 @@ check_all = async () => {
                                         channel_id: channel_id,
                                         parcel_no: parcel_no,
                                         parcel_price: parcel_price,
-                                        order_items: (order_items != null ? JSON.stringify(order_items) : null),                                        
+                                        order_items: (order_items != null ? JSON.stringify(order_items) : null),
                                         status: status,
                                         status_ext: status_ext,
                                         logistics_status: logistics_status
