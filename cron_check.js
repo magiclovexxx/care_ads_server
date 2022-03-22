@@ -724,9 +724,10 @@ check_all = async () => {
                     }
                 }
 
-                if (account.sid != 14) {
+                return;
+                /*if (account.sid != 14) {
                     return;
-                }
+                }*/
 
                 //Kiểm tra đón gói đang treo
                 for (let i = 0; i < account.packages.length; i++) {
