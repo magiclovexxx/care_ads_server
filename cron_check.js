@@ -660,14 +660,14 @@ check_all = async () => {
                     last_pay_page = 1;
 
                 let max_pack_time = account.max_pack_time;
-                if (max_pack_time == -1) {
-                    max_pack_time == 0;
-                }
-                let min_pack_time = account.min_pack_time;
-                if (min_pack_time == -1) {
-                    min_pack_time == 0;
-                }
+                let min_pack_time = account.min_pack_time;                
                 let min_pack_blocked = account.min_pack_blocked;
+
+                if (max_pack_time == -1 || min_pack_time == -1) {
+                    max_pack_time = 0;
+                    min_pack_time = 0;
+                    min_pack_blocked = 0;
+                }
 
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
@@ -723,7 +723,7 @@ check_all = async () => {
                         return;
                     }
                 }
-
+                
                 //Kiểm tra đón gói đang treo
                 for (let i = 0; i < account.packages.length; i++) {
                     let order_id = account.packages[i].order_id;
@@ -932,10 +932,9 @@ check_all = async () => {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     }
                 }
-
                 //Check restore
                 let is_restore_check = false;
-
+                
                 //Lấy đơn hàng hủy
                 let cancel_page = 1;
                 let count_cancel_page = 0;
@@ -1662,7 +1661,7 @@ check_all = async () => {
                         break;
                     }
                 }
-
+                
                 //Lấy đơn đóng gói
                 let pack_page = 1;
                 let first_pack_time = 0;
@@ -1684,12 +1683,12 @@ check_all = async () => {
                                 if (first_pack_time == 0) {
                                     first_pack_time = pack_time;
                                 }
-                                if (min_pack_time == 0) {
-                                    min_pack_time = pack_time;                                    
+                                if (min_pack_time == 0 || max_pack_time == 0) {
+                                    min_pack_time = pack_time;
                                     max_pack_time = pack_time;
                                     result = await api_put_shopee_accounts({
                                         id: account.sid,
-                                        min_pack_time: min_pack_time,                                        
+                                        min_pack_time: min_pack_time,
                                         max_pack_time: max_pack_time
                                     }, slave_ip, port);
                                     last_request_success = moment();
@@ -1698,7 +1697,7 @@ check_all = async () => {
                                         is_break_while = true;
                                         break;
                                     } else {
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Khởi tạo min_pack_time, min_pack_time', min_pack_time);
+                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Khởi tạo min_pack_time, max_pack_time', min_pack_time);
                                     }
                                 }
 
@@ -1716,128 +1715,78 @@ check_all = async () => {
                                 last_request_success = moment();
                                 if (result.code == 0 && result.data.code == 0) {
                                     let get_one_order = result.data.data;
-                                    result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
+                                    //Lấy thông tin
+                                    let order_sn = get_one_order.order_sn;
+                                    let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
+                                    let buyer_user_name = get_one_order.buyer_user.user_name;
+                                    let buyer_shop_id = (get_one_order.buyer_user.shop_id != null ? get_one_order.buyer_user.shop_id : 0);
+                                    let buyer_portrait = get_one_order.buyer_user.portrait;
+                                    let create_time = get_one_order.create_time;
+                                    let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
+                                    let checkout_carrier_name = get_one_order.checkout_carrier_name;
+                                    let status = get_one_order.status;
+                                    let status_ext = get_one_order.status_ext;
+                                    let logistics_status = get_one_order.logistics_status;
+                                    let package_number = package_list[i].package_number;
+                                    let third_party_tn = package_list[i].third_party_tn;
+                                    let consignment_no = package_list[i].consignment_no;
+                                    let pickup_time = package_list[i].pickup_time;
+                                    let parcel_no = package_list[i].parcel_no;
+                                    let parcel_price = package_list[i].parcel_price;
+                                    let order_items = [];
+                                    for (let n = 0; n < get_one_order.order_items.length; n++) {
+                                        order_items.push({
+                                            item_id: get_one_order.order_items[n].item_id,
+                                            sku: get_one_order.order_items[n].item_model.sku,
+                                            name: get_one_order.order_items[n].product.name,
+                                            image: get_one_order.order_items[n].product.images.length > 0 ? get_one_order.order_items[n].product.images[0] : null,
+                                            item_price: get_one_order.order_items[n].item_price,
+                                            order_price: get_one_order.order_items[n].order_price,
+                                            amount: get_one_order.order_items[n].amount,
+                                            rebate_price: get_one_order.order_items[n].item_model.rebate_price,
+                                            status: get_one_order.order_items[n].status
+                                        });
+                                    }
+
+                                    result = await api_put_shopee_packages([{
+                                        uid: account.uid,
+                                        shop_id: account.sid,
+                                        order_id: order_id,
+                                        order_sn: order_sn,
+                                        create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
+                                        pickup_time: moment.unix(pickup_time).format('YYYY-MM-DD HH:mm:ss'),
+                                        ship_by_date: moment.unix(ship_by_date).format('YYYY-MM-DD HH:mm:ss'),
+                                        shipping_confirm_time: moment.unix(shipping_confirm_time).format('YYYY-MM-DD HH:mm:ss'),
+                                        buyer_user_id: buyer_user_id,
+                                        buyer_user_name: buyer_user_name,
+                                        buyer_shop_id: buyer_shop_id,
+                                        buyer_portrait: buyer_portrait,
+                                        fulfillment_carrier_name: fulfillment_carrier_name,
+                                        checkout_carrier_name: checkout_carrier_name,
+                                        package_number: package_number,
+                                        third_party_tn: third_party_tn,
+                                        consignment_no: consignment_no,
+                                        channel_id: channel_id,
+                                        parcel_no: parcel_no,
+                                        parcel_price: parcel_price,
+                                        order_items: (order_items != null ? JSON.stringify(order_items) : null),                                        
+                                        status: status,
+                                        status_ext: status_ext,
+                                        logistics_status: logistics_status
+                                    }], slave_ip, port);
                                     last_request_success = moment();
-                                    if (result.code == 0 && result.data.code == 0) {
-                                        let income_transaction_history_detail = result.data.data;
-                                        //Lấy thông tin
-                                        let order_sn = get_one_order.order_sn;
-                                        let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
-                                        let buyer_user_name = get_one_order.buyer_user.user_name;
-                                        let buyer_shop_id = (get_one_order.buyer_user.shop_id != null ? get_one_order.buyer_user.shop_id : 0);
-                                        let buyer_portrait = get_one_order.buyer_user.portrait;
-                                        let create_time = get_one_order.create_time;
-                                        let fulfillment_carrier_name = get_one_order.fulfillment_carrier_name;
-                                        let checkout_carrier_name = get_one_order.checkout_carrier_name;
-                                        let status = get_one_order.status;
-                                        let status_ext = get_one_order.status_ext;
-                                        let logistics_status = get_one_order.logistics_status;
-                                        let package_number = package_list[i].package_number;
-                                        let third_party_tn = package_list[i].third_party_tn;
-                                        let consignment_no = package_list[i].consignment_no;
-                                        let pickup_time = package_list[i].pickup_time;
-                                        let parcel_no = package_list[i].parcel_no;
-                                        let parcel_price = package_list[i].parcel_price;
-                                        let order_items = [];
-                                        for (let n = 0; n < get_one_order.order_items.length; n++) {
-                                            order_items.push({
-                                                item_id: get_one_order.order_items[n].item_id,
-                                                sku: get_one_order.order_items[n].item_model.sku,
-                                                name: get_one_order.order_items[n].product.name,
-                                                image: get_one_order.order_items[n].product.images.length > 0 ? get_one_order.order_items[n].product.images[0] : null,
-                                                item_price: get_one_order.order_items[n].item_price,
-                                                order_price: get_one_order.order_items[n].order_price,
-                                                amount: get_one_order.order_items[n].amount,
-                                                rebate_price: get_one_order.order_items[n].item_model.rebate_price,
-                                                status: get_one_order.order_items[n].status
-                                            });
-                                        }
+                                    if (result.code != 0) {
+                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_packages', result);
+                                        is_break_while = true;
+                                        break;
+                                    }
 
-                                        //Tính tiền
-                                        let service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
-                                        let transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
-                                        let commission_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.commission_fee);
-                                        let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
-                                        let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
-                                        let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
-                                        let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
-                                        let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
-                                        let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
-                                        let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - commission_fee - refund_amount;
-
-                                        result = await api_put_shopee_packages([{
-                                            uid: account.uid,
-                                            shop_id: account.sid,
-                                            order_id: order_id,
-                                            order_sn: order_sn,
-                                            create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
-                                            pickup_time: moment.unix(pickup_time).format('YYYY-MM-DD HH:mm:ss'),
-                                            ship_by_date: moment.unix(ship_by_date).format('YYYY-MM-DD HH:mm:ss'),
-                                            shipping_confirm_time: moment.unix(shipping_confirm_time).format('YYYY-MM-DD HH:mm:ss'),
-                                            buyer_user_id: buyer_user_id,
-                                            buyer_user_name: buyer_user_name,
-                                            buyer_shop_id: buyer_shop_id,
-                                            buyer_portrait: buyer_portrait,
-                                            fulfillment_carrier_name: fulfillment_carrier_name,
-                                            checkout_carrier_name: checkout_carrier_name,
-                                            package_number: package_number,
-                                            third_party_tn: third_party_tn,
-                                            consignment_no: consignment_no,
-                                            channel_id: channel_id,
-                                            parcel_no: parcel_no,
-                                            parcel_price: parcel_price,
-                                            order_items: (order_items != null ? JSON.stringify(order_items) : null),
-                                            service_fee: service_fee,
-                                            transaction_fee: transaction_fee,
-                                            commission_fee: commission_fee,
-                                            seller_voucher: seller_voucher,
-                                            package_number: package_number,
-                                            third_party_tn: third_party_tn,
-                                            consignment_no: consignment_no,
-                                            product_price: product_price,
-                                            cancel_amount: cancel_amount,
-                                            refund_amount: refund_amount,
-                                            merchant_subtotal: merchant_subtotal,
-                                            product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
-                                            final_total: final_total,
-                                            status: status,
-                                            status_ext: status_ext,
-                                            logistics_status: logistics_status
-                                        }], slave_ip, port);
-                                        last_request_success = moment();
-                                        if (result.code != 0) {
-                                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_packages', result);
-                                            is_break_while = true;
-                                            break;
-                                        }
-
-                                        if (pack_time < max_pack_time) {
-                                            if (max_pack_time != first_pack_time) {
-                                                max_pack_time = first_pack_time;
-                                                result = await api_put_shopee_accounts({
-                                                    id: account.sid,
-                                                    max_pack_time: max_pack_time
-                                                }, slave_ip, port);
-                                                last_request_success = moment();
-                                                if (result.code != 0) {
-                                                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
-                                                    is_break_while = true;
-                                                    break;
-                                                } else {
-                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật max_pack_time', max_pack_time);
-                                                }
-                                            }
-                                            if (min_pack_blocked == 1) {
-                                                is_break_while = true;
-                                                break;
-                                            }
-                                        }
-
-                                        if (min_pack_blocked == 0 && pack_time < min_pack_time) {
-                                            min_pack_time = pack_time;
+                                    if (pack_time < max_pack_time) {
+                                        if (max_pack_time != first_pack_time) {
+                                            max_pack_time = first_pack_time;
                                             result = await api_put_shopee_accounts({
                                                 id: account.sid,
-                                                min_pack_time: min_pack_time
+                                                max_pack_time: max_pack_time
                                             }, slave_ip, port);
                                             last_request_success = moment();
                                             if (result.code != 0) {
@@ -1845,16 +1794,32 @@ check_all = async () => {
                                                 is_break_while = true;
                                                 break;
                                             } else {
-                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật min_pack_time', min_pack_time);
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật max_pack_time', max_pack_time);
                                             }
                                         }
-                                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + pack_page + ']) order package', order_sn, moment.unix(pack_time).format('YYYY-MM-DD HH:mm:ss'));
-                                    } else {
-                                        //LỖI
-                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                                        is_break_while = true;
-                                        break;
+                                        if (min_pack_blocked == 1) {
+                                            is_break_while = true;
+                                            break;
+                                        }
                                     }
+
+                                    if (pack_time < min_pack_time && min_pack_blocked == 0) {
+                                        min_pack_time = pack_time;
+                                        result = await api_put_shopee_accounts({
+                                            id: account.sid,
+                                            min_pack_time: min_pack_time
+                                        }, slave_ip, port);
+                                        last_request_success = moment();
+                                        if (result.code != 0) {
+                                            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
+                                            is_break_while = true;
+                                            break;
+                                        } else {
+                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật min_pack_time', min_pack_time);
+                                        }
+                                    }
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + pack_page + ']) order package', order_sn, moment.unix(pack_time).format('YYYY-MM-DD HH:mm:ss'));
+
                                 } else {
                                     //LỖI
                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_one_order', result.status, (result.data != null && result.data != '' ? result.data : result.message));
