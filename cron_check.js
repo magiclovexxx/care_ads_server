@@ -752,6 +752,7 @@ check_all = async () => {
                                     uid: account.uid,
                                     shop_id: account.sid,
                                     order_id: order_id,
+                                    checksum: checksum,
                                     status: status,
                                     status_ext: status_ext,
                                     logistics_status: logistics_status
