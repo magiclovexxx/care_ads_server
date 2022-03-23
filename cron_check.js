@@ -848,7 +848,7 @@ check_all = async () => {
                                     request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee;
                                 }
                             }
-                            
+
                             result = await api_put_shopee_packages([request_data], slave_ip, port);
                             last_request_success = moment();
                             if (result.code != 0) {
@@ -955,7 +955,6 @@ check_all = async () => {
                                         shop_id: account.sid,
                                         order_id: order_id,
                                         order_sn: order_sn,
-                                        checksum: md5(JSON.stringify(get_one_order)),
                                         create_time: moment.unix(create_time).format('YYYY-MM-DD HH:mm:ss'),
                                         pickup_time: moment.unix(pickup_time).format('YYYY-MM-DD HH:mm:ss'),
                                         ship_by_date: moment.unix(ship_by_date).format('YYYY-MM-DD HH:mm:ss'),
