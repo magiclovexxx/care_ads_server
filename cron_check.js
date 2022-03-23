@@ -550,7 +550,7 @@ check_all = async () => {
                 return;
             }
         }
-        const uid = null;
+        const uid = 1006;
         slave_ip = await publicIp.v4();
         last_request_success = moment();
         if (use_host) {
@@ -800,7 +800,7 @@ check_all = async () => {
                                     let tracking_info_filter = tracking_info.filter(x => x.logistics_status == 8);
                                     if (tracking_info_filter.length > 0) {
                                         request_data.last_logistics_status = tracking_info_filter[0].logistics_status;
-                                        request_data.last_logistics_ctime = tracking_info_filter[0].ctime;
+                                        request_data.last_logistics_ctime = moment.unix(tracking_info_filter[0].ctime).format('YYYY-MM-DD HH:mm:ss');
                                         request_data.last_logistics_description = tracking_info_filter[0].description;
                                     } else {
                                         if (request_data.last_logistics_status == 201) {
