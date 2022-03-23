@@ -734,16 +734,16 @@ check_all = async () => {
                 //Kiểm tra đón gói đang treo
                 for (let i = 0; i < account.packages.length; i++) {
                     let order_id = account.packages[i].order_id;
-                    let order_sn = account.packages[i].order_sn;
                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         let get_one_order = result.data.data;
+                        let order_sn = get_one_order.order_sn;
                         let checksum = md5(JSON.stringify(get_one_order));
                         if (checksum != account.packages[i].checksum) {
                             let status = get_one_order.status;
                             let status_ext = get_one_order.status_ext;
-                            let logistics_status = get_one_order.logistics_status;   
+                            let logistics_status = get_one_order.logistics_status;
                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                             last_request_success = moment();
                             if (result.code == 0 && result.data.code == 0) {
@@ -810,27 +810,27 @@ check_all = async () => {
                                 }
 
                                 //if (status == 4 || status == 5) {
-                                    result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
-                                    last_request_success = moment();
-                                    if (result.code == 0 && result.data.code == 0) {
-                                        let income_transaction_history_detail = result.data.data;
-                                        request_data.service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
-                                        request_data.transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
-                                        request_data.commission_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.commission_fee);
-                                        request_data.seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
-                                        request_data.merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
-                                        request_data.product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
-                                        request_data.cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
-                                        request_data.product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
-                                        request_data.refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
-                                        request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee - request_data.service_fee - request_data.transaction_fee - request_data.commission_fee - request_data.refund_amount;
-                                        if (request_data.cancel_reason_ext == 5) {
-                                            request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee;
-                                        }
-                                    } else {
-                                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', order_id, result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                                        continue;
+                                result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
+                                last_request_success = moment();
+                                if (result.code == 0 && result.data.code == 0) {
+                                    let income_transaction_history_detail = result.data.data;
+                                    request_data.service_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.service_fee);
+                                    request_data.transaction_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.transaction_fee);
+                                    request_data.commission_fee = Math.abs(income_transaction_history_detail.payment_info.fees_and_charges.commission_fee);
+                                    request_data.seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
+                                    request_data.merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
+                                    request_data.product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
+                                    request_data.cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
+                                    request_data.product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
+                                    request_data.refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
+                                    request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee - request_data.service_fee - request_data.transaction_fee - request_data.commission_fee - request_data.refund_amount;
+                                    if (request_data.cancel_reason_ext == 5) {
+                                        request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee;
                                     }
+                                } else {
+                                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', order_id, result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                                    continue;
+                                }
                                 //}
                                 result = await api_put_shopee_packages([request_data], slave_ip, port);
                                 last_request_success = moment();
@@ -1858,7 +1858,7 @@ check_all = async () => {
                         break;
                     }
                 }
-                
+
                 if (is_restore_check) {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Restore Check');
                     restore_check(account.sid, slave_ip, port);
