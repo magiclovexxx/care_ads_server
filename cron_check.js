@@ -550,7 +550,7 @@ check_all = async () => {
                 return;
             }
         }
-        const uid = 1006;
+        const uid = null;
         slave_ip = await publicIp.v4();
         last_request_success = moment();
         if (use_host) {
