@@ -809,7 +809,7 @@ check_all = async () => {
                                     }
                                 }
 
-                                if (status == 4 || status == 5) {
+                                //if (status == 4 || status == 5) {
                                     result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
                                     last_request_success = moment();
                                     if (result.code == 0 && result.data.code == 0) {
@@ -827,7 +827,7 @@ check_all = async () => {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', order_id, result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                         continue;
                                     }
-                                }
+                                //}
                                 result = await api_put_shopee_packages([request_data], slave_ip, port);
                                 last_request_success = moment();
                                 if (result.code != 0) {
