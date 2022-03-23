@@ -823,6 +823,10 @@ check_all = async () => {
                                         request_data.cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
                                         request_data.product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
                                         request_data.refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
+                                        request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee;
+                                        if (request_data.cancel_reason_ext == 5) {
+                                            request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee;
+                                        }
                                     } else {
                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', order_id, result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                         continue;
