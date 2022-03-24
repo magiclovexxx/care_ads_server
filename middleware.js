@@ -72,7 +72,7 @@ run = async () => {
         }
         let vpn_ip = result.data.proxy_ip;
         let vpn_port = parseInt(result.data.proxy_port);
-        let proto = parseInt(result.data.proto);
+        let proto = result.data.proto;
         
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ VPN', vpn_ip, vpn_port);
         const openvpn = await exec(`openvpn --client --dev tun --proto ${proto} --remote ${vpn_ip} ${vpn_port} --resolv-retry infinite --remote-random --nobind --tun-mtu 1500 --tun-mtu-extra 32 --mssfix 1450 --persist-key --persist-tun --ping 15 --ping-restart 0 --ping-timer-rem --reneg-sec 0 --remote-cert-tls server --auth-user-pass /etc/openvpn/login.info --verb 3 --pull --fast-io --cipher AES-256-CBC --auth SHA512 --ca /etc/openvpn/cert.ca --key-direction 1 --tls-auth /etc/openvpn/tls.key`);
