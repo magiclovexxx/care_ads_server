@@ -63,6 +63,7 @@ function api_get_vpn_error(vpn_ip, vpn_port) {
 run = async () => {
     try {
         let connected = false;
+        exec('pm2 stop server;');
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', hostname);
         let result = await api_get_vpn_ip(hostname);
         if (result.code != 0) {
@@ -79,6 +80,7 @@ run = async () => {
         openvpn.stdout.on('data', (data) => {
             if (data.indexOf('Initialization Sequence Completed') != -1) {
                 connected = true;
+                exec('pm2 start server;');
             }
             console.log(data);
         });
