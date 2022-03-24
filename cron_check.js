@@ -478,6 +478,7 @@ async function locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, m
     let start_unix = moment().unix();
     let result = await vpn_post_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order);
     let end_unix = moment().unix();
+    console.log(JSON.stringify(result));
     if (result.code != 0) {
         //if (result.code == 1000) {
         if (result.status == 429 || result.status == 403) {
