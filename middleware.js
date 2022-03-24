@@ -83,9 +83,9 @@ run = async () => {
         openvpn.stderr.on('data', (data) => {
             console.error(data);
         });
-        setTimeout(function () {
+        setTimeout(async function () {
             if (!connected) {
-                result  = await api_get_vpn_error(vpn_ip, vpn_port);
+                result = await api_get_vpn_error(vpn_ip, vpn_port);
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'VPN ERROR');
                 exec(`pm2 restart middleware;`);
             }
