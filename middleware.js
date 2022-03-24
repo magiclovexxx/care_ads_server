@@ -33,9 +33,36 @@ function api_get_vpn_ip(slave_ip) {
     });
 }
 
+function api_get_vpn_error(vpn_ip, vpn_port) {
+    let Url = api_url + '/vpn_error?vpn_ip=' + vpn_ip + '&vpn_port=' + vpn_port;
+    //Call request get với url để lấy data
+    return httpClient.http_request(Url, 'GET').then(function (response) {
+        //Webservice API trả về data
+        response.data.status = response.status;
+        return response.data;
+    }, async function (error) {
+        if (error.response) {
+            //Trả về lỗi kết nối
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                //Trường hợp lỗi request time out đợi 3s gọi lại function sẽ hay xảy ra nếu mạng chập chờn (Cả mạng server và client)
+                await sleep(3000);
+                return api_get_vpn_error(vpn_ip, vpn_port);
+            }
+            else {
+                //Các lỗi phát sinh khác trả về lỗi
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
+        }
+    });
+}
+
+
 run = async () => {
-    let connected = false;
     try {
+        let connected = false;
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Thông tin máy chủ JS', hostname);
         let result = await api_get_vpn_ip(hostname);
         if (result.code != 0) {
@@ -56,13 +83,20 @@ run = async () => {
         openvpn.stderr.on('data', (data) => {
             console.error(data);
         });
+        setTimeout(function () {
+            if (!connected) {
+                await api_get_vpn_error(vpn_ip, vpn_port);
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'VPN ERROR');
+                exec(`pm2 restart middleware;`);
+            }
+        }, 30000);
     } catch (ex) {
         console.error(ex);
     } finally {
         setTimeout(function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Restart Middleware');
             exec(`pm2 restart middleware;`);
-        }, (connected ? 600000 : 30000));
+        }, 600000);
     }
 };
 run();
