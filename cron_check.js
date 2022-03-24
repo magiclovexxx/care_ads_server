@@ -609,9 +609,6 @@ run = async () => {
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
             try {
                 exec('git stash; git pull origin master; npm install; pm2 restart all;');
-                if(slave_type == 'VPN'){
-                    exec('yum install epel-release -y; yum install openvpn -y; pm2 start middleware.js; pm2 startup; pm2 save;');
-                }
             }
             catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
