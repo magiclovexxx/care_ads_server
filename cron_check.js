@@ -257,7 +257,7 @@ function api_put_shopee_payments(data, slave_ip, slave_port) {
 
 
 function vpn_post_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order) {
-    const Url = 'http://192.168.4.1/vpn_post_search_items';
+    const Url = 'http://192.168.4.1:4000/vpn_post_search_items';
     return httpClient.http_request(Url, 'POST', null, null, {
         proxy: proxy,
         UserAgent: UserAgent,
@@ -478,7 +478,6 @@ async function locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, m
     let start_unix = moment().unix();
     let result = await vpn_post_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order);
     let end_unix = moment().unix();
-    console.log(JSON.stringify(result));
     if (result.code != 0) {
         //if (result.code == 1000) {
         if (result.status == 429 || result.status == 403) {
