@@ -98,7 +98,7 @@ run = async () => {
         setTimeout(function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Restart Middleware');
             exec(`pm2 restart middleware;`);
-        }, 60000);
+        }, 600000);
     }
 };
 run();
