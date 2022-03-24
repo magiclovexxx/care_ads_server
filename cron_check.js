@@ -258,7 +258,7 @@ function api_put_shopee_payments(data, slave_ip, slave_port) {
 
 function vpn_post_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order) {
     const Url = 'http://192.168.4.1/vpn_post_search_items';
-    return httpClient.http_request(Url, 'POS', null, null, {
+    return httpClient.http_request(Url, 'POST', null, null, {
         proxy: proxy,
         UserAgent: UserAgent,
         cookie: cookie,
