@@ -3,6 +3,7 @@ const ShopeeAPI = require('../api/ShopeeAPI.js');
 const router = express.Router();
 const moment = require('moment');
 const shopeeApi = new ShopeeAPI(30000);
+const exec = require('child_process').exec;
 
 router.use(express.json({ limit: "5000mb", extended: true }));
 
@@ -571,5 +572,37 @@ router.get("/api_get_shop_info_shopid", async (req, res) => {
     }
 });
 
+router.get("/vpn_get_search_items", async (req, res) => {
+    try {
+        let proxy = req.body.proxy;
+        let UserAgent = req.body.UserAgent;
+        let cookie = req.body.cookie;
+        let by = req.body.by;
+        let keyword = req.body.keyword;
+        let limit = req.body.limit;
+        let newest = req.body.newest;
+        let order = req.body.order;
+        let result = await shopeeApi.api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
+        if (result.code != 0) {
+            if (result.status == 429 || result.status == 403) {
+                exec('pm2 restart middleware;');
+            }
+        }
+        res.send(result);        
+    }
+    catch (ex) {
+        res.send({ code: 1001, message: ex.toSting() });
+    }
+});
+
+router.get("/vpn_middleware_restart", async (req, res) => {
+    try {
+        exec('pm2 restart middleware;');
+        res.send({ code: 0, message: 'OK' });        
+    }
+    catch (ex) {
+        res.send({ code: 1001, message: ex.toSting() });
+    }
+});
 
 module.exports = router;

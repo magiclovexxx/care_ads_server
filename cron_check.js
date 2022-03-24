@@ -528,7 +528,7 @@ function sleep(ms) {
     });
 }
 
-check_all = async () => {
+run = async () => {
     let is_wait = false;
     let ps_start_time = moment();
     let proxy = null;
@@ -547,6 +547,14 @@ check_all = async () => {
             if (((size / 1024) / 1024) > 10) {
                 fs.unlinkSync('/root/.pm2/logs/server-error.log');
                 exec('pm2 restart server;');
+                return;
+            }
+        }
+        if (fs.existsSync('/root/.pm2/logs/middleware-error.log')) {
+            const { size } = fs.statSync('/root/.pm2/logs/middleware-error.log');
+            if (((size / 1024) / 1024) > 10) {
+                fs.unlinkSync('/root/.pm2/logs/middleware-error.log');
+                exec('pm2 restart middleware;');
                 return;
             }
         }
@@ -577,6 +585,9 @@ check_all = async () => {
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
             try {
                 exec('git stash; git pull origin master; npm install; pm2 restart all;');
+                if(slave_type == 'VPN'){
+                    exec('yum install epel-release -y; yum install openvpn -y;');
+                }
             }
             catch (ex) {
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
@@ -618,8 +629,8 @@ check_all = async () => {
                     result = await last_connection(slave_ip, port);
                     last_request_success = moment();
                     console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-                    await sleep((slave_type == 'LIVE' ? 60000 : 3000));
-                    check_all();
+                    await sleep((slave_type != 'CRON' ? 60000 : 3000));
+                    run();
                 }
             }, 3000);
         } else {
@@ -2837,14 +2848,14 @@ check_all = async () => {
     } catch (ex) {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-        await sleep((slave_type == 'LIVE' ? 60000 : 3000));
-        check_all();
+        await sleep((slave_type != 'CRON' ? 60000 : 3000));
+        run();
     }
     finally {
         if (!is_wait) {
             console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-            await sleep((slave_type == 'LIVE' ? 60000 : 3000));
-            check_all();
+            await sleep((slave_type != 'CRON' ? 60000 : 3000));
+            run();
         }
     }
 }
@@ -2862,4 +2873,4 @@ setInterval(async function () {
     }
 }, 10000);
 
-check_all();
+run();
