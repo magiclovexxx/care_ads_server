@@ -572,7 +572,7 @@ router.get("/api_get_shop_info_shopid", async (req, res) => {
     }
 });
 
-router.get("/vpn_get_search_items", async (req, res) => {
+router.post("/vpn_post_search_items", async (req, res) => {
     try {
         let proxy = req.body.proxy;
         let UserAgent = req.body.UserAgent;
