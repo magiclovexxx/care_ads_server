@@ -542,6 +542,14 @@ run = async () => {
                 return;
             }
         }
+        if (fs.existsSync('/root/.pm2/logs/cron-check-out.log')) {
+            const { size } = fs.statSync('/root/.pm2/logs/cron-check-out.log');
+            if (((size / 1024) / 1024) > 10) {
+                fs.unlinkSync('/root/.pm2/logs/cron-check-out.log');
+                exec('pm2 restart cron_check;');
+                return;
+            }
+        }
         if (fs.existsSync('/root/.pm2/logs/server-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/server-error.log');
             if (((size / 1024) / 1024) > 10) {
@@ -550,10 +558,26 @@ run = async () => {
                 return;
             }
         }
+        if (fs.existsSync('/root/.pm2/logs/server-out.log')) {
+            const { size } = fs.statSync('/root/.pm2/logs/server-out.log');
+            if (((size / 1024) / 1024) > 10) {
+                fs.unlinkSync('/root/.pm2/logs/server-out.log');
+                exec('pm2 restart server;');
+                return;
+            }
+        }
         if (fs.existsSync('/root/.pm2/logs/middleware-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/middleware-error.log');
             if (((size / 1024) / 1024) > 10) {
                 fs.unlinkSync('/root/.pm2/logs/middleware-error.log');
+                exec('pm2 restart middleware;');
+                return;
+            }
+        }
+        if (fs.existsSync('/root/.pm2/logs/middleware-out.log')) {
+            const { size } = fs.statSync('/root/.pm2/logs/middleware-out.log');
+            if (((size / 1024) / 1024) > 10) {
+                fs.unlinkSync('/root/.pm2/logs/middleware-out.log');
                 exec('pm2 restart middleware;');
                 return;
             }
@@ -586,7 +610,7 @@ run = async () => {
             try {
                 exec('git stash; git pull origin master; npm install; pm2 restart all;');
                 if(slave_type == 'VPN'){
-                    exec('yum install epel-release -y; yum install openvpn -y;');
+                    exec('yum install epel-release -y; yum install openvpn -y; pm2 start middleware.js; pm2 startup; pm2 save;');
                 }
             }
             catch (ex) {
@@ -2865,7 +2889,7 @@ setInterval(async function () {
         console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + "---");
         if (moment(last_request_success).add(5, 'minutes') < moment()) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
-            exec('pm2 restart cron_check');
+            exec('pm2 restart cron_check;');
         }
     }
     catch (ex) {

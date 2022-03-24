@@ -588,7 +588,7 @@ router.get("/vpn_get_search_items", async (req, res) => {
                 exec('pm2 restart middleware;');
             }
         }
-        res.send(result);        
+        res.send(result);
     }
     catch (ex) {
         res.send({ code: 1001, message: ex.toSting() });
