@@ -473,7 +473,7 @@ async function locationKeyword_ShopeeV2(shopname, shopid, campaignid, itemid, ma
 }
 
 
-async function locationKeyword_VPN(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+async function locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
     by = 'relevancy';
     let start_unix = moment().unix();
     let result = await vpn_post_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order);
