@@ -61,6 +61,7 @@ function api_get_vpn_error(vpn_ip, vpn_port) {
 
 
 run = async () => {
+    let error = false;
     try {
         let connected = false;
         exec('pm2 stop server;');
@@ -69,6 +70,7 @@ run = async () => {
         if (result.code != 0) {
             console.log(result);
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_vpn_ip', result.message);
+            error = true;
             return;
         }
         let vpn_ip = result.data.proxy_ip;
@@ -100,7 +102,7 @@ run = async () => {
         setTimeout(function () {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Restart Middleware');
             exec(`pm2 restart middleware;`);
-        }, 600000);
+        }, (error ? 10000 : 600000));
     }
 };
 run();
