@@ -483,11 +483,11 @@ async function locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, m
         if (result.status == 429 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeVPN BLOCK');
             await sleep(10000);
-            return locationKeyword_VPN(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
+            return locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
         } else {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeVPN Request Timeout');
             await sleep(10000);
-            return locationKeyword_VPN(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+            return locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
         }
     }
     last_request_success = moment();
@@ -518,7 +518,7 @@ async function locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, m
                 if (page < max_page) {
                     page = page + 1;
                     newest = newest + limit;
-                    return locationKeyword_VPN(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
+                    return locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, max_page, proxy, result.cookie, user_agent, by, keyword, limit, newest, order);
                 } else {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí ShopeeVPN:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', 999, max_page);
                     return 999;
