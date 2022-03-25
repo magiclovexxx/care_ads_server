@@ -583,11 +583,6 @@ router.post("/vpn_post_search_items", async (req, res) => {
         let newest = req.body.newest;
         let order = req.body.order;
         let result = await shopeeApi.api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
-        if (result.code != 0) {
-            if (result.status == 429 || result.status == 403) {
-                exec('pm2 restart middleware;');
-            }
-        }
         res.send(result);
     }
     catch (ex) {
