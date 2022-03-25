@@ -344,8 +344,8 @@ function getMaxPage(max_location) {
 }
 
 async function locationKeyword(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
-    if (use_host)
-        return await locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+    if (hostname == 'sacuco_cron_600')
+        return await locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
     else
         return await locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
 }
@@ -479,7 +479,6 @@ async function locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, m
     let result = await vpn_post_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order);
     let end_unix = moment().unix();
     if (result.code != 0) {
-        console.log(JSON.stringify(result));
         //if (result.code == 1000) {
         if (result.status == 429 || result.status == 403) {
             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') ShopeeVPN BLOCK');
