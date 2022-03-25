@@ -357,21 +357,24 @@ class ShopeeAPI {
         let if_none_match = `55b03-${md5(str_request)}`;
         const result = this.http_client.http_request(Url, 'GET', null, {
             'authority': 'shopee.vn',
-            'sec-ch-ua': '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"',
+            'accept': 'application/json',
+            'accept-language': 'vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7,fr-FR;q=0.6,fr;q=0.5',
+            'af-ac-enc-dat': 'AAUyLjEuMAAAAX+/yCHbAAAAAAJIAAAAAAAAAAD0QDTiApo7K9b1Yi6qzNTIR4qt9jpVe5OWhvxoO8uRZzDRkVHTMLvQhLGsv5yRcyEhF4Oa+0PGY81qnJbOwR1diYS9AwubYjooGNt/nB3zpyxMVkBMYvkTeckraLKIAyDSI7092SfGhXJadGJP91nidNYqrrDqMjmOsNifLGPDMZFjs4yw8pGWNnYQjtmnppYSS3CJCxVfHuOyc4FxDHHr48UdRhhbhIVgU+IFUyU01vsYaXtvIkt86xLca56jgoolAwchz2hp3UGCZPaQOWsgoEQSSK14GUVdTw2jtH9bbYWKsIHCPk4Kosz6l73FF2UR5+QqWsYDJ69sIDUI+MqjlEjEw9Ydq1zcMnGstvGdov5/Fc0jLua+QrrfDcvGmBPg43/xbQ/ylUBuGExCpgyGzeeiEX4wKeGzAITeglfAelSsueLmKhf+ihUrESbIpbeaGl0E6iSASK8uY258wCvok4w5Rk+rTYiCwgjMbeIk8oWKsIHCPk4Kosz6l73FF2XOP6/Gz8NFEsMCPUNctXUQkWOzjLDykZY2dhCO2aemlvehiJf6OllW/EgYrZ8LIcCuWkY1nVC8JblfwClwB6BwM2U0Hc2rDMX7Uwc35BB3yxfvIaXng5DA5dFl5DxycVlg/1y5RQDddqZU8vwde9pId9PA9T6efzuJielOUikGrY1TCLd9/HeDZTrOzJg8ax1WZZMuE8aC0vvIv+7WJ2YZzNI2gLnFQfK/6exM2RR9jxC3q7r7Amu/FcS/fiwQIrJCxnzBPMIg1LMs4N5bOGhE',
+            'content-type': 'application/json',
+            'cookie': cookie,
+            'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"',
             'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'sz-token': '4Ml7BhoXBmkiw16l7VtDqQ==|gYwi0c1cylneid5Cm2qLPONrS7LS4jYfHfar0K4vT3JghJUB/lgFhV7zRv5GMgQ0hJDerxxDfNrWGWnixmxckA==|HOUZy/6C2tJj91mE|04|3',
             'user-agent': UserAgent,
             'x-api-source': 'pc',
-            'x-shopee-language': 'vi',
+            'x-csrftoken': '9CkDZef7VcXtlc2N8kzdYuC7OHlxJX9d',
             'x-requested-with': 'XMLHttpRequest',
-            'if-none-match-': if_none_match,
-            'sec-ch-ua-platform': '"Windows"',
-            'accept': '*/*',
-            'sec-fetch-site': 'same-origin',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-dest': 'empty',
-            'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
-            'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
-            'cookie': cookie
+            'x-shopee-language': 'vi'
         }, null, proxy).then(function (response) {
             response.cookie = cookieParse(cookie, response.headers['set-cookie']);
             if (response.cookie != null)
@@ -470,7 +473,7 @@ class ShopeeAPI {
             'sec-fetch-site': 'same-origin',
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4929.5 Safari/537.36',
             'x-requested-with': 'XMLHttpRequest'
-        }, {            
+        }, {
             device: 'website',
             qs: {
                 by: by,
