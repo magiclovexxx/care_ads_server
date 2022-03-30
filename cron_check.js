@@ -948,7 +948,7 @@ run = async () => {
                             let is_skip_get_income_transaction_history_detail = false;
                             if (!(result.code == 0 && result.data.code == 0)) {
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', order_id, result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                                if (status == 4 || status == 5 || logistics_status == 1 || logistics_status == 3) {
+                                if (status == 4 || status == 5) {
                                     continue;
                                 } else {
                                     is_skip_get_income_transaction_history_detail = true;
