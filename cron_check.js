@@ -682,7 +682,7 @@ run = async () => {
         let result = await api_get_shopee_campaigns(slave_ip, port, uid);
         last_request_success = moment();
         if (result.code != 0) {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_shopee_campaigns', result.message);
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_shopee_campaigns', result);
             return;
         }
         //check version từ server
