@@ -964,10 +964,11 @@ run = async () => {
                                 request_data.seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
                                 request_data.merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
                                 request_data.product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
+                                request_data.seller_absorbed_coin_cash_back = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.seller_absorbed_coin_cash_back);
                                 request_data.cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
                                 request_data.product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
                                 request_data.refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
-                                request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee - request_data.service_fee - request_data.transaction_fee - request_data.commission_fee - request_data.refund_amount;
+                                request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee - request_data.service_fee - request_data.transaction_fee - request_data.commission_fee - request_data.refund_amount - request_data.seller_absorbed_coin_cash_back;
                                 if (request_data.cancel_reason_ext == 5) {
                                     request_data.final_total = request_data.product_price - request_data.seller_voucher + request_data.product_discount_rebate_from_shopee;
                                 }
@@ -1422,6 +1423,7 @@ run = async () => {
                                                     let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
                                                     let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
                                                     let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
+                                                    let seller_absorbed_coin_cash_back = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.seller_absorbed_coin_cash_back);
                                                     let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
                                                     let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
                                                     let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
@@ -1478,6 +1480,7 @@ run = async () => {
                                                         refund_amount: refund_amount,
                                                         merchant_subtotal: merchant_subtotal,
                                                         product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
+                                                        seller_absorbed_coin_cash_back: seller_absorbed_coin_cash_back,
                                                         final_total: final_total,
                                                         order_items: (order_items != null ? JSON.stringify(order_items) : null),
                                                         tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null),
@@ -1711,6 +1714,7 @@ run = async () => {
                                                 let seller_voucher = Math.abs(income_transaction_history_detail.buyer_payment_info.seller_voucher);
                                                 let merchant_subtotal = Math.abs(income_transaction_history_detail.buyer_payment_info.merchant_subtotal);
                                                 let product_discount_rebate_from_shopee = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.product_discount_rebate_from_shopee);
+                                                let seller_absorbed_coin_cash_back = Math.abs(income_transaction_history_detail.payment_info.rebate_and_voucher.seller_absorbed_coin_cash_back);
                                                 let cancel_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.cancel_amount);
                                                 let product_price = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.product_price);
                                                 let refund_amount = Math.abs(income_transaction_history_detail.payment_info.merchant_subtotal.refund_amount);
@@ -1730,7 +1734,7 @@ run = async () => {
                                                     });
                                                 }
 
-                                                let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - commission_fee - refund_amount;
+                                                let final_total = product_price - seller_voucher + product_discount_rebate_from_shopee - service_fee - transaction_fee - commission_fee - refund_amount - seller_absorbed_coin_cash_back;
 
                                                 result = await api_put_shopee_orders([{
                                                     uid: account.uid,
@@ -1763,6 +1767,7 @@ run = async () => {
                                                     refund_amount: refund_amount,
                                                     merchant_subtotal: merchant_subtotal,
                                                     product_discount_rebate_from_shopee: product_discount_rebate_from_shopee,
+                                                    seller_absorbed_coin_cash_back: seller_absorbed_coin_cash_back,
                                                     final_total: final_total,
                                                     order_items: (order_items != null ? JSON.stringify(order_items) : null),
                                                     tracking_info: (tracking_info != null ? JSON.stringify(tracking_info) : null),
