@@ -882,6 +882,10 @@ run = async () => {
                             request_data.channel_id = get_one_order.fulfillment_channel_id;
                             request_data.checkout_carrier_name = get_one_order.checkout_carrier_name;
 
+                            if (get_one_order.ship_by_date != 0) {
+                                request_data.ship_by_date = moment.unix(get_one_order.ship_by_date).format('YYYY-MM-DD HH:mm:ss');
+                            }
+
                             if (get_one_order.pickup_time != 0) {
                                 request_data.pickup_time = moment.unix(get_one_order.pickup_time).format('YYYY-MM-DD HH:mm:ss');
                             }
