@@ -2268,7 +2268,7 @@ run = async () => {
                                             break;
                                         } else {
                                             const rule = RRule.fromString(event.rrule);
-                                            const dates = rule.between(new Date(moment('2022-05-04 22:29:59').add(-1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(-1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'), new Date(moment('2022-05-04 22:29:59').add(1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(parseInt(event.duration.split(':')[0]), 'hours').add(parseInt(event.duration.split(':')[1]), 'minutes').add(1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'));
+                                            const dates = rule.between(new Date(moment().add(-1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(-1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'), new Date(moment().add(1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(parseInt(event.duration.split(':')[0]), 'hours').add(parseInt(event.duration.split(':')[1]), 'minutes').add(1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'));
                                             let is_current_event = false;
                                             for (let d = 0; d < dates.length; d++) {
                                                 let date = dates[d];
@@ -2751,7 +2751,7 @@ run = async () => {
                                     break;
                                 } else {
                                     const rule = RRule.fromString(event.rrule);
-                                    const dates = rule.between(new Date(moment('2022-05-04 22:29:59').add(-1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(-1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'), new Date(moment('2022-05-04 22:29:59').add(1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(parseInt(event.duration.split(':')[0]), 'hours').add(parseInt(event.duration.split(':')[1]), 'minutes').add(1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'));
+                                    const dates = rule.between(new Date(moment().add(-1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(-1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'), new Date(moment().add(1, 'days').format(`YYYY-MM-DDT${moment(rule.options.dtstart).add(-7, 'hours').add(parseInt(event.duration.split(':')[0]), 'hours').add(parseInt(event.duration.split(':')[1]), 'minutes').add(1, 'seconds').format('HH:mm:ss')}.000`) + 'Z'));
                                     let is_current_event = false;
                                     for (let d = 0; d < dates.length; d++) {
                                         let date = dates[d];
