@@ -715,6 +715,45 @@ class ShopeeAPI {
         return result;
     }
 
+    //LIVE
+    api_post_session_join(cookie, uuid, session_id) {
+        if (cookie != null) {
+            if (cookie.indexOf('[ROOT]') == -1)
+                cookie = RSA.decrypt(cookie, 'utf8');
+            else
+                cookie = cookie.replace('[ROOT]', '');
+        }
+        const Url = `https://live.shopee.vn/api/v1/session/${session_id}/join`;
+        const result = this.http_client.http_request(Url, 'POST', null, {
+            'Host': 'live.shopee.vn',
+            'cookie': cookie,
+            'User-Agent': 'ShopeeVN/2.86.21 (com.beeasy.shopee.vn; build:2.86.21; iOS 15.3.1) Alamofire/5.0.5 language=vi app_type=1',
+            'content-type': 'application/json',
+            'client-info': `device_id=${uuid};device_model=iPhone%2012%20Pro%20Max;os=1;os_version=15.3.1;client_version=28621;network=1;platform=2`,
+            'accept': '*/*',
+            'accept-language': 'vi-VN,vi;q=0.9',
+            'user-agent': 'ShopeeVN/2.86.21 (com.beeasy.shopee.vn; build:2.86.21; iOS 15.3.1) Alamofire/5.0.5 language=vi app_type=1'
+        }, {
+            'ver': 1,
+            'uuid': uuid
+        }).then(function (response) {
+            response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.cookie != null)
+                response.cookie = RSA.encrypt(response.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+        }, function (error) {
+            if (error.response) {
+                error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.cookie != null)
+                    error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            }
+        });
+        return result;
+    }
+
     api_get_item_status(SPC_CDS, proxy, UserAgent, cookie, item_id_list) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)
