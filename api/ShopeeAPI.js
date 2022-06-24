@@ -125,7 +125,7 @@ class ShopeeAPI {
 
         }
         const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
-        const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+        const Url = 'https://banhang.shopee.vn/api/account/sc/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         let data = '';
         let vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
         let email_regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
