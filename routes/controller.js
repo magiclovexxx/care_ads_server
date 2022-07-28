@@ -48,7 +48,7 @@ router.post("/api_post_login", async (req, res) => {
     }
 });
 
-router.get("/api_get_login", async (req, res) => {
+router.post("/api_get_login", async (req, res) => {
     try {
         let SPC_CDS = req.body.SPC_CDS;
         let proxy = req.body.proxy;
