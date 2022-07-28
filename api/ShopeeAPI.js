@@ -172,6 +172,37 @@ class ShopeeAPI {
         return result;
     }
 
+
+    api_get_login(SPC_CDS, proxy, UserAgent, cookie) {
+        if (cookie != null) {
+            if (cookie.indexOf('[ROOT]') == -1)
+                cookie = RSA.decrypt(cookie, 'utf8');
+            else
+                cookie = cookie.replace('[ROOT]', '');
+        }
+        const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+        const result = this.http_client.http_request(Url, 'GET', null, {
+            cookie: cookie,
+            'User-Agent': UserAgent,
+            referer: 'https://banhang.shopee.vn/'
+        }, null).then(function (response) {
+            response.cookie = cookieParse(cookie, response.headers['set-cookie']);
+            if (response.cookie != null)
+                response.cookie = RSA.encrypt(response.cookie, 'base64');
+            return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
+        }, function (error) {
+            if (error.response) {
+                error.response.cookie = cookieParse(cookie, error.response.headers['set-cookie']);
+                if (error.response.cookie != null)
+                    error.response.cookie = RSA.encrypt(error.response.cookie, 'base64');
+                return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
+            } else {
+                return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+            }
+        });
+        return result;
+    }
+
     api_get_all_category_list(SPC_CDS, proxy, UserAgent, cookie) {
         if (cookie != null) {
             if (cookie.indexOf('[ROOT]') == -1)

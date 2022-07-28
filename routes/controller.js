@@ -48,6 +48,20 @@ router.post("/api_post_login", async (req, res) => {
     }
 });
 
+router.get("/api_get_login", async (req, res) => {
+    try {
+        let SPC_CDS = req.body.SPC_CDS;
+        let proxy = req.body.proxy;
+        let UserAgent = req.body.UserAgent;
+        let cookie = req.body.cookie;
+        let result = await shopeeApi.api_get_login(SPC_CDS, proxy, UserAgent, cookie);
+        res.send(result);
+    }
+    catch (ex) {
+        res.send({ code: 1001, message: ex.toSting() });
+    }
+});
+
 router.get("/api_get_captcha_info", async (req, res) => {
     try {
         let SPC_CDS = req.body.SPC_CDS;
