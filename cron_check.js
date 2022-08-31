@@ -798,7 +798,7 @@ run = async () => {
                 last_request_success = moment();
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                    if (result.code == 999 && result.status == 403)
+                    if (result.code == 999 && (result.status == 403 || result.status == 400))
                         is_need_login = true;
                     else
                         return;
@@ -2141,7 +2141,7 @@ run = async () => {
                 last_request_success = moment();
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_get_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                    if (result.code == 999 && result.status == 403)
+                    if (result.code == 999 && (result.status == 403 || result.status == 400))
                         is_need_login = true;
                     else {
                         campaign.job_done = true;
