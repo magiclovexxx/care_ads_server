@@ -1220,7 +1220,6 @@ class ShopeeAPI {
                     cookie = RSA.decrypt(cookie, 'utf8');
                 else
                     cookie = cookie.replace('[ROOT]', '');
-
                 cookie = initCookie(cookie);
             } else {
                 cookie = JSON.parse(cookie);
