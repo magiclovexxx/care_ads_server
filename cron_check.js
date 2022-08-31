@@ -621,7 +621,7 @@ function sleep(ms) {
 }
 
 run = async () => {
-    
+
     let is_wait = false;
     let ps_start_time = moment();
     let proxy = null;
@@ -790,7 +790,10 @@ run = async () => {
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
-
+                if (cookie != result.cookie) {
+                    cookie = result.cookie;
+                    await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                }
                 last_request_success = moment();
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -800,7 +803,6 @@ run = async () => {
                         return;
                 } else {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Kiểm tra token: OK');
-                    cookie = result.cookie;
                     result = await api_put_shopee_accounts({
                         id: account.sid,
                         cookie: cookie,
@@ -817,6 +819,10 @@ run = async () => {
                 if (is_need_login) {
                     spc_cds = uuidv4();
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.status != 200) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_post_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -839,7 +845,6 @@ run = async () => {
                         return;
                     }
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Đăng nhập thành công');
-                    cookie = result.cookie;
                     result = await api_put_shopee_accounts({
                         id: account.sid,
                         spc_cds: spc_cds,
@@ -864,6 +869,10 @@ run = async () => {
                 for (let i = 0; i < account.packages.length; i++) {
                     let order_id = account.packages[i].order_id;
                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         let get_one_order = result.data.data;
@@ -910,6 +919,11 @@ run = async () => {
 
                             //GET PACKAGE
                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+
+                            if (cookie != result.cookie) {
+                                cookie = result.cookie;
+                                await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                            }
                             last_request_success = moment();
                             let is_skip_get_package = false;
                             if (!(result.code == 0 && result.data.code == 0)) {
@@ -956,6 +970,10 @@ run = async () => {
 
                             //GET TRANSACTION
                             result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
+                            if (cookie != result.cookie) {
+                                cookie = result.cookie;
+                                await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                            }
                             last_request_success = moment();
                             let is_skip_get_income_transaction_history_detail = false;
                             if (!(result.code == 0 && result.data.code == 0)) {
@@ -1007,6 +1025,11 @@ run = async () => {
 
                 while (true) {
                     result = await shopeeApi.api_get_package_list(spc_cds, proxy, user_agent, cookie, null, 'confirmed_date_desc', 40, pack_page, 0);
+
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') api_get_package_list', pack_page);
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
@@ -1050,6 +1073,11 @@ run = async () => {
                                 }
                                 //Lấy thông tin đơn
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
+
+                                if (cookie != result.cookie) {
+                                    cookie = result.cookie;
+                                    await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                                }
                                 last_request_success = moment();
                                 if (result.code == 0 && result.data.code == 0) {
                                     let get_one_order = result.data.data;
@@ -1200,6 +1228,11 @@ run = async () => {
                     let order_sn = account.orders[i].order_sn;
 
                     result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         let get_package = result.data.data;
@@ -1289,6 +1322,11 @@ run = async () => {
                 let disable_check_cancel_time = false;
                 while (true) {
                     result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_complete', 40, cancel_page, 0, false);
+
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.orders.length > 0) {
@@ -1298,6 +1336,11 @@ run = async () => {
                             for (let i = 0; i < orders.length; i++) {
                                 let order_id = orders[i].order_id;
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
+
+                                if (cookie != result.cookie) {
+                                    cookie = result.cookie;
+                                    await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                                }
                                 last_request_success = moment();
                                 if (result.code == 0 && result.data.code == 0) {
                                     let get_one_order = result.data.data;
@@ -1381,10 +1424,20 @@ run = async () => {
                                             break;
                                         } else {
                                             result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+
+                                            if (cookie != result.cookie) {
+                                                cookie = result.cookie;
+                                                await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                                            }
                                             last_request_success = moment();
                                             if (result.code == 0 && result.data.code == 0) {
                                                 let get_package = result.data.data;
                                                 result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
+
+                                                if (cookie != result.cookie) {
+                                                    cookie = result.cookie;
+                                                    await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                                                }
                                                 last_request_success = moment();
                                                 if (result.code == 0 && result.data.code == 0) {
                                                     let income_transaction_history_detail = result.data.data;
@@ -1581,6 +1634,11 @@ run = async () => {
 
                 while (true) {
                     result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'completed', 40, complete_page, 0, false);
+
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.orders.length > 0) {
@@ -1590,6 +1648,10 @@ run = async () => {
                             for (let i = 0; i < orders.length; i++) {
                                 let order_id = orders[i].order_id;
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
+                                if (cookie != result.cookie) {
+                                    cookie = result.cookie;
+                                    await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                                }
                                 last_request_success = moment();
                                 if (result.code == 0 && result.data.code == 0) {
                                     let get_one_order = result.data.data;
@@ -1670,10 +1732,18 @@ run = async () => {
                                         break;
                                     } else {
                                         result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
+                                        if (cookie != result.cookie) {
+                                            cookie = result.cookie;
+                                            await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                                        }
                                         last_request_success = moment();
                                         if (result.code == 0 && result.data.code == 0) {
                                             let get_package = result.data.data;
                                             result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
+                                            if (cookie != result.cookie) {
+                                                cookie = result.cookie;
+                                                await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                                            }
                                             last_request_success = moment();
                                             if (result.code == 0 && result.data.code == 0) {
                                                 let income_transaction_history_detail = result.data.data;
@@ -1865,6 +1935,10 @@ run = async () => {
 
                 while (true) {
                     result = await shopeeApi.api_get_wallet_transactions(spc_cds, proxy, user_agent, cookie, 0, pay_page, 50, null, null, '102,101,405,404,401,402,302,504,505,301');
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.list.length > 0) {
@@ -2042,7 +2116,10 @@ run = async () => {
                 //sleep(100);
 
                 let result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
-
+                if (cookie != result.cookie) {
+                    cookie = result.cookie;
+                    await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                }
                 last_request_success = moment();
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_get_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -2054,7 +2131,6 @@ run = async () => {
                     }
                 } else {
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Kiểm tra token: OK');
-                    cookie = result.cookie;
                     result = await api_put_shopee_accounts({
                         id: campaign.sid,
                         cookie: cookie,
@@ -2073,6 +2149,10 @@ run = async () => {
                     spc_cds = uuidv4();
                     //sleep(100);
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.status != 200) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_post_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -2096,7 +2176,6 @@ run = async () => {
                         return;
                     }
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Đăng nhập thành công');
-                    cookie = result.cookie;
                     result = await api_put_shopee_accounts({
                         id: campaign.sid,
                         spc_cds: spc_cds,
@@ -2114,6 +2193,10 @@ run = async () => {
 
                 //Kiểm tra tài khoản
                 result = await shopeeApi.api_get_marketing_meta(spc_cds, proxy, user_agent, cookie);
+                if (cookie != result.cookie) {
+                    cookie = result.cookie;
+                    await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                }
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_meta', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                     campaign.job_done = true;
@@ -2136,6 +2219,10 @@ run = async () => {
                 //Lấy thông tin chiến dịch
                 //sleep(100);
                 result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
+                if (cookie != result.cookie) {
+                    cookie = result.cookie;
+                    await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                }
                 last_request_success = moment();
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_marketing_campaign', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -2239,6 +2326,11 @@ run = async () => {
                     //sleep(100);
                     result = await shopeeApi.api_get_detail_report_by_keyword(spc_cds, proxy, user_agent, cookie,
                         startDate, endDate, placement_list, 1, 0, itemid, adsid);
+
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_detail_report_by_keyword', result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -2738,6 +2830,10 @@ run = async () => {
                     result = await shopeeApi.api_get_item_report_by_placement(spc_cds, proxy, user_agent, cookie,
                         startDate,
                         endDate, [1, 2, 5, 8], itemid);
+                    if (cookie != result.cookie) {
+                        cookie = result.cookie;
+                        await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
+                    }
                     last_request_success = moment();
                     if (result.code != 0) {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ' -> ' + campaign.campaignid + ' [' + campaign.campaign_type + ']) Lỗi api_get_item_report_by_placement', result.status, (result.data != null && result.data != '' ? result.data : result.message));
