@@ -92,11 +92,11 @@ class ShopeeAPI {
                 'User-Agent': UserAgent,
                 referer: url
             }, null).then(function (response) {
-                response.cookie = JSON.parse(setCookie(cookie, response.headers));
+                response.cookie = JSON.stringify(setCookie(cookie, response.headers));
                 return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
             }, function (error) {
                 if (error.response) {
-                    error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                    error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                     return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
                 } else {
                     return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -129,11 +129,11 @@ class ShopeeAPI {
                 }
             }
             const result = this.http_client.http_request(url, method, null, headers, data).then(function (response) {
-                response.cookie = JSON.parse(setCookie(cookie, response.headers));
+                response.cookie = JSON.stringify(setCookie(cookie, response.headers));
                 return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
             }, function (error) {
                 if (error.response) {
-                    error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                    error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                     return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
                 } else {
                     return api_dynamic_request(null, UserAgent, cookie, url, method, data);
@@ -185,11 +185,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, data).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -216,11 +216,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -246,11 +246,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -276,11 +276,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -306,11 +306,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -339,11 +339,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -381,11 +381,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -437,11 +437,11 @@ class ShopeeAPI {
             'x-requested-with': 'XMLHttpRequest',
             'x-shopee-language': 'vi'
         }, null, proxy).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -489,14 +489,14 @@ class ShopeeAPI {
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
             'cookie': cookie
         }, null, proxy).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             let response_items = {
                 items: response.data.items
             }
             return { code: 0, message: 'OK', status: response.status, data: response_items, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -545,11 +545,11 @@ class ShopeeAPI {
                 page_type: page_type
             }
         }).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -641,11 +641,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -671,11 +671,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://mall.shopee.vn'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -701,11 +701,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, data).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -731,11 +731,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, data).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -761,11 +761,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, data).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -800,11 +800,11 @@ class ShopeeAPI {
             'ver': 1,
             'uuid': uuid
         }).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -830,11 +830,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, item_id_list).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -867,11 +867,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -900,11 +900,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -941,11 +941,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -983,11 +983,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1027,11 +1027,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1057,11 +1057,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, campaign_ads_list).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1088,11 +1088,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, campaign_ads_list).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1121,11 +1121,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1153,11 +1153,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1192,11 +1192,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1230,11 +1230,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1272,11 +1272,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1305,11 +1305,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1338,11 +1338,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1371,11 +1371,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1407,11 +1407,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1449,11 +1449,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1492,11 +1492,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1530,11 +1530,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1567,11 +1567,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1599,11 +1599,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, data).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1645,11 +1645,11 @@ class ShopeeAPI {
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
             'cookie': cookie
         }, data).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1677,11 +1677,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, data).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1711,11 +1711,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
@@ -1744,11 +1744,11 @@ class ShopeeAPI {
             'User-Agent': UserAgent,
             referer: 'https://banhang.shopee.vn/'
         }, null).then(function (response) {
-            response.cookie = JSON.parse(setCookie(cookie, response.headers));
+            response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
         }, function (error) {
             if (error.response) {
-                error.response.cookie = JSON.parse(setCookie(cookie, error.response.headers));
+                error.response.cookie = JSON.stringify(setCookie(cookie, error.response.headers));
                 return { code: 999, message: error.response.statusText, status: error.response.status, data: error.response.data, cookie: error.response.cookie, proxy: { code: (error.response.status == 407 ? 1 : 0), message: (error.response.status == 407 ? error.response.statusText : 'OK') } };
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };

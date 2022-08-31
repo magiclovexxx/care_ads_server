@@ -703,6 +703,7 @@ run = async () => {
                 exec('git stash; git pull origin master; npm install; pm2 restart all;');
             }
             catch (ex) {
+                console.log(ex);
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
             return;
@@ -788,11 +789,11 @@ run = async () => {
                 let is_need_login = false;
                 //Kiểm tra thông tin shop
                 let result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
+
                 last_request_success = moment();
                 if (result.code != 0) {
-                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_shop_info', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                    if (result.code == 999 &&
-                        result.status == 403)
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                    if (result.code == 999 && result.status == 403)
                         is_need_login = true;
                     else
                         return;
@@ -2018,6 +2019,7 @@ run = async () => {
                 await last_connection(slave_ip, port);
 
             } catch (ex) {
+                console.log(ex);
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             } finally {
                 account.job_done = true;
@@ -2037,14 +2039,30 @@ run = async () => {
 
                 //Kiểm tra thông tin shop
                 //sleep(100);
-                let result = await shopeeApi.api_get_shop_info(spc_cds, proxy, user_agent, cookie);
+
+                let result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
+                
                 last_request_success = moment();
                 if (result.code != 0) {
-                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_get_shop_info', result.status, (result.data != null && result.data != '' ? result.data : result.message));
-                    if (result.code == 999 &&
-                        result.status == 403)
+                    console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_get_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));
+                    if (result.code == 999 && result.status == 403)
                         is_need_login = true;
                     else {
+                        campaign.job_done = true;
+                        return;
+                    }
+                } else {
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Kiểm tra token: OK');
+                    cookie = result.cookie;
+                    result = await api_put_shopee_accounts({
+                        id: campaign.sid,
+                        cookie: cookie,
+                        options: JSON.stringify(result),
+                        last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
+                    }, slave_ip, port);
+                    last_request_success = moment();
+                    if (result.code != 0) {
+                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_put_shopee_accounts', result.message);
                         campaign.job_done = true;
                         return;
                     }
@@ -2661,6 +2679,7 @@ run = async () => {
                                     }
                                 }
                             } catch (ex) {
+                                console.log(ex);
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
                             }
                             finally {
@@ -2995,11 +3014,13 @@ run = async () => {
                 await last_connection(slave_ip, port);
             } catch (ex) {
                 campaign.job_done = true;
+                console.log(ex);
                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
             }
             //}
         });
     } catch (ex) {
+        console.log(ex);
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
         await sleep((slave_type != 'CRON' ? 60000 : 3000));
@@ -3023,6 +3044,7 @@ setInterval(async function () {
         }
     }
     catch (ex) {
+        console.log(ex);
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
     }
 }, 10000);
