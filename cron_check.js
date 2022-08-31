@@ -792,6 +792,7 @@ run = async () => {
                 let result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
                 if (cookie != result.cookie) {
                     cookie = result.cookie;
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                     await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                 }
                 last_request_success = moment();
@@ -821,6 +822,7 @@ run = async () => {
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -871,6 +873,7 @@ run = async () => {
                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -922,6 +925,7 @@ run = async () => {
 
                             if (cookie != result.cookie) {
                                 cookie = result.cookie;
+                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                 await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                             }
                             last_request_success = moment();
@@ -972,6 +976,7 @@ run = async () => {
                             result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
                             if (cookie != result.cookie) {
                                 cookie = result.cookie;
+                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                 await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                             }
                             last_request_success = moment();
@@ -1028,6 +1033,7 @@ run = async () => {
 
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') api_get_package_list', pack_page);
@@ -1076,6 +1082,7 @@ run = async () => {
 
                                 if (cookie != result.cookie) {
                                     cookie = result.cookie;
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                     await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                                 }
                                 last_request_success = moment();
@@ -1231,6 +1238,7 @@ run = async () => {
 
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -1325,6 +1333,7 @@ run = async () => {
 
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -1339,6 +1348,7 @@ run = async () => {
 
                                 if (cookie != result.cookie) {
                                     cookie = result.cookie;
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                     await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                                 }
                                 last_request_success = moment();
@@ -1427,6 +1437,7 @@ run = async () => {
 
                                             if (cookie != result.cookie) {
                                                 cookie = result.cookie;
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                                 await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                                             }
                                             last_request_success = moment();
@@ -1436,6 +1447,7 @@ run = async () => {
 
                                                 if (cookie != result.cookie) {
                                                     cookie = result.cookie;
+                                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                                     await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                                                 }
                                                 last_request_success = moment();
@@ -1637,6 +1649,7 @@ run = async () => {
 
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -1650,6 +1663,7 @@ run = async () => {
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
                                 if (cookie != result.cookie) {
                                     cookie = result.cookie;
+                                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                     await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                                 }
                                 last_request_success = moment();
@@ -1734,6 +1748,7 @@ run = async () => {
                                         result = await shopeeApi.api_get_package(spc_cds, proxy, user_agent, cookie, order_id);
                                         if (cookie != result.cookie) {
                                             cookie = result.cookie;
+                                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                             await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                                         }
                                         last_request_success = moment();
@@ -1742,6 +1757,7 @@ run = async () => {
                                             result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
                                             if (cookie != result.cookie) {
                                                 cookie = result.cookie;
+                                                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                                                 await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                                             }
                                             last_request_success = moment();
@@ -1937,6 +1953,7 @@ run = async () => {
                     result = await shopeeApi.api_get_wallet_transactions(spc_cds, proxy, user_agent, cookie, 0, pay_page, 50, null, null, '102,101,405,404,401,402,302,504,505,301');
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: account.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -2118,6 +2135,7 @@ run = async () => {
                 let result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
                 if (cookie != result.cookie) {
                     cookie = result.cookie;
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                     await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                 }
                 last_request_success = moment();
@@ -2151,6 +2169,7 @@ run = async () => {
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -2195,6 +2214,7 @@ run = async () => {
                 result = await shopeeApi.api_get_marketing_meta(spc_cds, proxy, user_agent, cookie);
                 if (cookie != result.cookie) {
                     cookie = result.cookie;
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                     await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                 }
                 if (result.code != 0) {
@@ -2221,6 +2241,7 @@ run = async () => {
                 result = await shopeeApi.api_get_marketing_campaign(spc_cds, proxy, user_agent, cookie, campaign.campaignid);
                 if (cookie != result.cookie) {
                     cookie = result.cookie;
+                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                     await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                 }
                 last_request_success = moment();
@@ -2329,6 +2350,7 @@ run = async () => {
 
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
@@ -2832,6 +2854,7 @@ run = async () => {
                         endDate, [1, 2, 5, 8], itemid);
                     if (cookie != result.cookie) {
                         cookie = result.cookie;
+                        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'update cookies');
                         await api_put_shopee_accounts({ id: campaign.sid, cookie: cookie, last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss') }, slave_ip, port);
                     }
                     last_request_success = moment();
