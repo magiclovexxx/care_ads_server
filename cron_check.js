@@ -802,19 +802,6 @@ run = async () => {
                         is_need_login = true;
                     else
                         return;
-                } else {
-                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Kiểm tra token: OK');
-                    result = await api_put_shopee_accounts({
-                        id: account.sid,
-                        cookie: cookie,
-                        options: JSON.stringify(result),
-                        last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
-                    }, slave_ip, port);
-                    last_request_success = moment();
-                    if (result.code != 0) {
-                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_put_shopee_accounts', result.message);
-                        return;
-                    }
                 }
 
                 if (is_need_login) {
@@ -850,9 +837,7 @@ run = async () => {
                     result = await api_put_shopee_accounts({
                         id: account.sid,
                         spc_cds: spc_cds,
-                        cookie: cookie,
                         options: JSON.stringify(result),
-                        last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
                     }, slave_ip, port);
                     last_request_success = moment();
                     if (result.code != 0) {
@@ -2147,20 +2132,6 @@ run = async () => {
                         campaign.job_done = true;
                         return;
                     }
-                } else {
-                    console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Kiểm tra token: OK');
-                    result = await api_put_shopee_accounts({
-                        id: campaign.sid,
-                        cookie: cookie,
-                        options: JSON.stringify(result),
-                        last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
-                    }, slave_ip, port);
-                    last_request_success = moment();
-                    if (result.code != 0) {
-                        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_put_shopee_accounts', result.message);
-                        campaign.job_done = true;
-                        return;
-                    }
                 }
 
                 if (is_need_login) {
@@ -2198,9 +2169,7 @@ run = async () => {
                     result = await api_put_shopee_accounts({
                         id: campaign.sid,
                         spc_cds: spc_cds,
-                        cookie: cookie,
                         options: JSON.stringify(result),
-                        last_renew_time: moment().format('YYYY-MM-DD HH:mm:ss')
                     }, slave_ip, port);
                     last_request_success = moment();
                     if (result.code != 0) {
