@@ -621,6 +621,7 @@ function sleep(ms) {
 }
 
 run = async () => {
+    
     let is_wait = false;
     let ps_start_time = moment();
     let proxy = null;
@@ -2041,7 +2042,7 @@ run = async () => {
                 //sleep(100);
 
                 let result = await shopeeApi.api_get_login(spc_cds, proxy, user_agent, cookie);
-                
+
                 last_request_success = moment();
                 if (result.code != 0) {
                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + campaign.name + ') Lỗi api_get_login', result.status, (result.data != null && result.data != '' ? result.data : result.message));

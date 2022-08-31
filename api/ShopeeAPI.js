@@ -41,7 +41,7 @@ function cookieParse(cookie, cookie_array) {
 
 function applyCookie(cookies) {
     if (cookies) {
-        return Object.keys(cookies).map(key => `${key}=${cookies[key]}`).join('; ');
+        return Object.keys(cookies).map(key => `${key.replace('=', '')}=${cookies[key]}`).join('; ');
     } else {
         return null;
     }
@@ -51,7 +51,7 @@ function initCookie(cookiesString) {
     const cookies = cookiesString.split(";").map(function (cookieString) {
         return cookieString.trim().split(/=(.+)/);
     }).reduce(function (acc, curr) {
-        acc[curr[0]] = (curr[1] ? curr[1] : '');
+        acc[curr[0].replace('=', '')] = curr[1] ? curr[1] : '';
         return acc;
     }, {});
     return cookies;
@@ -63,7 +63,7 @@ function setCookie(cookies, headers) {
     }
     headers['set-cookie']?.forEach(co => {
         const [key, value] = co.split(';')[0].trim().split(/=(.+)/);
-        cookies[key] = value;
+        cookies[key.replace('=', '')] = value;
     });
     return cookies;
 }
@@ -1254,12 +1254,12 @@ class ShopeeAPI {
                     cookie = RSA.decrypt(cookie, 'utf8');
                 else
                     cookie = cookie.replace('[ROOT]', '');
-
                 cookie = initCookie(cookie);
             } else {
                 cookie = JSON.parse(cookie);
             }
         }
+        
         let Url = 'https://banhang.shopee.vn/api/v3/order/get_package_list';
         Url += '?SPC_CDS=' + SPC_CDS;
         Url += '&SPC_CDS_VER=2';
