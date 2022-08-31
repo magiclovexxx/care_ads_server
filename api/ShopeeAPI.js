@@ -84,6 +84,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
 
         if (method == 'GET') {
@@ -153,6 +155,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const password_hash = crypto.createHash('sha256').update(md5(password)).digest('hex');
         const Url = 'https://banhang.shopee.vn/api/account/sc/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
@@ -209,6 +213,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/v2/login/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'GET', null, {
@@ -239,6 +245,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/v3/category/get_all_category_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
         const result = this.http_client.http_request(Url, 'GET', null, {
@@ -269,6 +277,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/v3/category/get_second_category_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2&version=3.1.0';
         const result = this.http_client.http_request(Url, 'GET', null, {
@@ -299,6 +309,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/selleraccount/shop_info/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'GET', null, {
@@ -329,6 +341,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/page_active_collection_list/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         Url += '&page_number=' + page_number;
@@ -362,6 +376,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/product_selector/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         Url += '&offset=' + offset;
@@ -404,6 +420,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://shopee.vn/api/v4/search/search_items?by=' + by;
         Url += '&keyword=' + encodeURI(keyword)
@@ -460,6 +478,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://shopee.vn/api/v2/search_items/?by=' + by;
         Url += '&keyword=' + encodeURI(keyword)
@@ -515,6 +535,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://app.atosa.asia/api/service5/shopee/search_items';
 
@@ -634,6 +656,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://shopee.vn/api/v4/product/get_shop_info?shopid=' + shopid;
         const result = this.http_client.http_request(Url, 'GET', null, {
@@ -664,6 +688,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = `https://mall.shopee.vn/api/v1/search_hint?SPC_CDS=${SPC_CDS}&SPC_CDS_VER=2&keyword=${encodeURI(keyword)}&type=${type}`;
         const result = this.http_client.http_request(Url, 'GET', null, {
@@ -694,6 +720,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/mass_edit/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'PUT', null, {
@@ -724,6 +752,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'PUT', null, {
@@ -754,6 +784,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/n/marketing/graphql/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'POST', null, {
@@ -785,6 +817,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = `https://live.shopee.vn/api/v1/session/${session_id}/join`;
         const result = this.http_client.http_request(Url, 'POST', null, {
@@ -823,6 +857,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_item_status/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'POST', null, {
@@ -853,6 +889,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/shop_report_by_time/';
         Url += '?start_time=' + start_time;
@@ -890,6 +928,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/selleraccount/v2/get_captcha_info/';
         Url += '?region=VN';
@@ -923,6 +963,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign_statistics/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -964,6 +1006,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/list/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1006,6 +1050,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/suggest/keyword/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1050,6 +1096,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'POST', null, {
@@ -1081,6 +1129,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'PUT', null, {
@@ -1111,6 +1161,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1144,6 +1196,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/meta/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1176,6 +1230,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/v3/order/get_package_list';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1215,6 +1271,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/v3/order/get_order_id_list/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1253,6 +1311,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/v3/finance/get_wallet_transactions/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1295,6 +1355,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/v3/order/get_package';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1328,6 +1390,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/v3/order/get_one_order';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1361,6 +1425,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/v3/finance/income_transaction_history_detail/';
         Url += '?order_id=' + order_id;
@@ -1394,6 +1460,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/search_report_by_time/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1430,6 +1498,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_time/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1472,6 +1542,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/detail_report_by_keyword/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1515,6 +1587,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/item_report_by_time/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1553,6 +1627,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/report/item_report_by_placement/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1590,6 +1666,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_suggest_price/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1622,6 +1700,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_suggest_keyword_price/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1668,6 +1748,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/get_segment_suggest_price/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1700,6 +1782,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/campaign/list/';
         Url += '?SPC_CDS=' + SPC_CDS;
@@ -1734,6 +1818,8 @@ class ShopeeAPI {
                     cookie = cookie.replace('[ROOT]', '');
             }
             cookie = initCookie(cookie);
+        } else {
+            cookie = JSON.parse(cookie);
         }
         let Url = 'https://banhang.shopee.vn/api/shopcategory/v3/category/query_collection_list/';
         Url += '?SPC_CDS=' + SPC_CDS;
