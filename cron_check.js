@@ -809,7 +809,13 @@ run = async () => {
                 }
 
                 if (is_need_login) {
-                    spc_cds = uuidv4();
+                    if (!password) {
+                        result = await api_put_shopee_accounts({
+                            id: account.sid,
+                            status: 0
+                        }, slave_ip, port);
+                        return;
+                    }
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     last_request_success = moment();
                     if (result.status != 200) {
@@ -2054,6 +2060,13 @@ run = async () => {
                 }
 
                 if (is_need_login) {
+                    if (!password) {
+                        result = await api_put_shopee_accounts({
+                            id: campaign.sid,
+                            status: 0
+                        }, slave_ip, port);
+                        return;
+                    }
                     spc_cds = uuidv4();
                     result = await shopeeApi.api_post_login(spc_cds, proxy, user_agent, cookie, username, password, null, null, null);
                     last_request_success = moment();
