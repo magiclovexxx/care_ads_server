@@ -63,7 +63,7 @@ function setCookie(cookies, headers) {
     }
     headers['set-cookie']?.forEach(co => {
         const [key, value] = co.split(';')[0].trim().split(/=(.+)/);
-        cookies[key.replace('=', '')] = value;
+        cookies[key.replace('=', '')] = value ? value : '';
     });
     return cookies;
 }
@@ -1259,7 +1259,7 @@ class ShopeeAPI {
                 cookie = JSON.parse(cookie);
             }
         }
-        
+
         let Url = 'https://banhang.shopee.vn/api/v3/order/get_package_list';
         Url += '?SPC_CDS=' + SPC_CDS;
         Url += '&SPC_CDS_VER=2';
