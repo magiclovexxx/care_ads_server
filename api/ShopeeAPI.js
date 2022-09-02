@@ -449,7 +449,7 @@ class ShopeeAPI {
             'accept-language': 'vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7,fr-FR;q=0.6,fr;q=0.5',
             'af-ac-enc-dat': 'AAUyLjEuMAAAAX+/yCHbAAAAAAJIAAAAAAAAAAD0QDTiApo7K9b1Yi6qzNTIR4qt9jpVe5OWhvxoO8uRZzDRkVHTMLvQhLGsv5yRcyEhF4Oa+0PGY81qnJbOwR1diYS9AwubYjooGNt/nB3zpyxMVkBMYvkTeckraLKIAyDSI7092SfGhXJadGJP91nidNYqrrDqMjmOsNifLGPDMZFjs4yw8pGWNnYQjtmnppYSS3CJCxVfHuOyc4FxDHHr48UdRhhbhIVgU+IFUyU01vsYaXtvIkt86xLca56jgoolAwchz2hp3UGCZPaQOWsgoEQSSK14GUVdTw2jtH9bbYWKsIHCPk4Kosz6l73FF2UR5+QqWsYDJ69sIDUI+MqjlEjEw9Ydq1zcMnGstvGdov5/Fc0jLua+QrrfDcvGmBPg43/xbQ/ylUBuGExCpgyGzeeiEX4wKeGzAITeglfAelSsueLmKhf+ihUrESbIpbeaGl0E6iSASK8uY258wCvok4w5Rk+rTYiCwgjMbeIk8oWKsIHCPk4Kosz6l73FF2XOP6/Gz8NFEsMCPUNctXUQkWOzjLDykZY2dhCO2aemlvehiJf6OllW/EgYrZ8LIcCuWkY1nVC8JblfwClwB6BwM2U0Hc2rDMX7Uwc35BB3yxfvIaXng5DA5dFl5DxycVlg/1y5RQDddqZU8vwde9pId9PA9T6efzuJielOUikGrY1TCLd9/HeDZTrOzJg8ax1WZZMuE8aC0vvIv+7WJ2YZzNI2gLnFQfK/6exM2RR9jxC3q7r7Amu/FcS/fiwQIrJCxnzBPMIg1LMs4N5bOGhE',
             'content-type': 'application/json',
-            'cookie': cookie,
+            'cookie': applyCookie(cookie),
             'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
             'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="101", "Google Chrome";v="101"',
             'sec-ch-ua-mobile': '?0',
@@ -517,7 +517,7 @@ class ShopeeAPI {
             'sec-fetch-dest': 'empty',
             'referer': 'https://shopee.vn/search?keyword=' + encodeURI(keyword),
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
-            'cookie': cookie
+            'cookie': applyCookie(cookie)
         }, null, proxy).then(function (response) {
             response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             let response_items = {
@@ -840,7 +840,7 @@ class ShopeeAPI {
         const Url = `https://live.shopee.vn/api/v1/session/${session_id}/join`;
         const result = this.http_client.http_request(Url, 'POST', null, {
             'Host': 'live.shopee.vn',
-            'cookie': cookie,
+            'cookie': applyCookie(cookie),
             'User-Agent': 'ShopeeVN/2.86.21 (com.beeasy.shopee.vn; build:2.86.21; iOS 15.3.1) Alamofire/5.0.5 language=vi app_type=1',
             'content-type': 'application/json',
             'client-info': `device_id=${uuid};device_model=iPhone%2012%20Pro%20Max;os=1;os_version=15.3.1;client_version=28621;network=1;platform=2`,
@@ -1736,7 +1736,6 @@ class ShopeeAPI {
                     cookie = RSA.decrypt(cookie, 'utf8');
                 else
                     cookie = cookie.replace('[ROOT]', '');
-
                 cookie = initCookie(cookie);
             } else {
                 cookie = JSON.parse(cookie);
@@ -1762,7 +1761,7 @@ class ShopeeAPI {
             'sec-fetch-dest': 'empty',
             'referer': 'https://banhang.shopee.vn/portal/marketing/pas/assembly/',
             'accept-language': 'en-US,en;q=0.9,vi;q=0.8',
-            'cookie': cookie
+            'cookie': applyCookie(cookie)
         }, data).then(function (response) {
             response.cookie = JSON.stringify(setCookie(cookie, response.headers));
             return { code: 0, message: 'OK', status: response.status, data: response.data, cookie: response.cookie, proxy: { code: 0, message: 'OK' } };
