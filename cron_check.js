@@ -2309,7 +2309,7 @@ run = async () => {
                                         //return;
                                     }
 
-                                    let min_price = (campaign.campaign_type == 'keyword' ? (keyword.match_type == 0 ? 400 : 480) : (keyword.match_type == 0 ? 500 : 600));
+                                    let min_price = (campaign.campaign_type == 'keyword' ? (keyword.match_type == 0 ? 480 : 480) : (keyword.match_type == 0 ? 500 : 600));
                                     if (current_event.care_type == 3) {
                                         //Giảm về giá thầu tối thiểu
                                         if (keyword.price > min_price) {
