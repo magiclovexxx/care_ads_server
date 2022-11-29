@@ -313,7 +313,7 @@ async function shopee_update_keyword_list(spc_cds, proxy, user_agent, cookie, ca
 
 async function shopee_update_placement_list(spc_cds, proxy, user_agent, cookie, campaign, ads_list) {
     let result = await shopeeApi.api_dynamic_request(proxy, user_agent, cookie,
-        'https://banhang.shopee.vn/api/marketing/v3/pas/target_ads/?SPC_CDS=' + spc_cds + '&SPC_CDS_VER=2',
+        'https://banhang.shopee.vn/api/marketing/v3/pas/target/?SPC_CDS=' + spc_cds + '&SPC_CDS_VER=2',
         'PUT',
         { campaignid: campaign.campaignid, ads_list: ads_list });
     last_request_success = moment();
