@@ -770,7 +770,7 @@ class ShopeeAPI {
                 cookie = JSON.parse(cookie);
             }
         }
-        const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search_ads/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
+        const Url = 'https://banhang.shopee.vn/api/marketing/v3/pas/search/?SPC_CDS=' + SPC_CDS + '&SPC_CDS_VER=2';
         const result = this.http_client.http_request(Url, 'PUT', null, {
             cookie: applyCookie(cookie),
             'User-Agent': UserAgent,
