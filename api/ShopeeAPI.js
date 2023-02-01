@@ -429,6 +429,7 @@ class ShopeeAPI {
     }
 
     async api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
+        console.log("--> API GET SEARCH ITEMS:  -- " + keyword )
         let self = this;
         if (cookie != null) {
             if (!cookie.startsWith('{')) {
@@ -443,6 +444,7 @@ class ShopeeAPI {
             }
         }
         try {
+
             const browser = await puppeteer.launch({
                 headless: true,
                 executablePath: executablePath(),
@@ -469,6 +471,8 @@ class ShopeeAPI {
                 ],
                 ignoreDefaultArgs: ['--enable-automation']
             });
+
+            console.log("--> START PPT:  -- ")
             const page = (await browser.pages())[0];
             if (cookie) {
                 await page.setCookie(...cookie);
@@ -542,6 +546,7 @@ class ShopeeAPI {
                 }
             });
             try {
+                console.log("--> Goto search keyword page  -- ")
                 await page.goto(`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`, {
                     waitUntil: "networkidle2",
                     timeout: 30000
@@ -550,6 +555,7 @@ class ShopeeAPI {
 
             }
             const timeout_wait = setTimeout(async function () {
+                console.log("--> END PPT  -- ")
                 await browser.close();
                 searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
             }, 10000);
@@ -559,6 +565,8 @@ class ShopeeAPI {
         } catch (ex) {
             return { code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
         }
+
+        
         /*let Url = 'https://shopee.vn/api/v4/search/search_items?by=' + by;
         Url += '&keyword=' + encodeURI(keyword)
         Url += '&limit=' + limit;
