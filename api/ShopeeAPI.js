@@ -477,7 +477,7 @@ class ShopeeAPI {
             console.log(cookie)
             if (cookie) {
                 console.log("--> SET COOKIE PPT:  -- ")
-                await page.setCookie(...cookie);
+            //    await page.setCookie(...cookie);
             }
 
             var searchCallBack = null;
