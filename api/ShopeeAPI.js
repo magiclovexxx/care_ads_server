@@ -475,8 +475,7 @@ class ShopeeAPI {
             console.log("--> START PPT:  -- ")
             const page = (await browser.pages())[0];
             console.log(cookie)
-            if (cookie) {
-                console.log("--> SET COOKIE PPT:  -- ")
+            if (cookie) {             
             //    await page.setCookie(...cookie);
             }
 
@@ -541,6 +540,7 @@ class ShopeeAPI {
                         const res_data = await res.json();
                         const res_status = await res.status();
                         const res_cookies = await page.cookies();
+                        console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- ")
                         await browser.close();
                         searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: JSON.stringify(res_cookies), proxy: { code: 0, message: 'OK' } });
                     } catch (ex) {
