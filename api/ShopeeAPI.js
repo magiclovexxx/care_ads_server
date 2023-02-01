@@ -529,6 +529,7 @@ class ShopeeAPI {
                             });
                         }
                     } catch (ex) {
+                        console.log(ex)
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
                 }
@@ -552,7 +553,7 @@ class ShopeeAPI {
                     timeout: 30000
                 });
             } catch (ex) {
-
+                console.log(ex)
             }
             const timeout_wait = setTimeout(async function () {
                 console.log("--> END PPT  -- ")
@@ -563,6 +564,7 @@ class ShopeeAPI {
             clearTimeout(timeout_wait);
             return result;
         } catch (ex) {
+            console.log(ex)
             return { code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
         }
 
