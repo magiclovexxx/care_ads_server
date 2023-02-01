@@ -432,8 +432,8 @@ class ShopeeAPI {
         console.log("--> API GET SEARCH ITEMS:  -- " + keyword)
         let self = this;
         if (cookie != null) {
-            console.log(cookie);
-            cookie = JSON.parse(cookie);
+            //console.log(cookie);
+            //cookie = JSON.parse(cookie);
         }
         try {
 
@@ -467,7 +467,7 @@ class ShopeeAPI {
             console.log("--> START PPT:  -- ")
             const page = (await browser.pages())[0];
             if (cookie) {
-                await page.setCookie(...cookie);
+                //await page.setCookie(...cookie);
             }
 
             var searchCallBack = null;
