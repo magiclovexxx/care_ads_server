@@ -432,7 +432,7 @@ class ShopeeAPI {
         console.log("--> API GET SEARCH ITEMS:  -- " + keyword)
         let self = this;
         if (cookie != null) {
-            console.log(cookie);
+            //console.log(cookie);
             //cookie = JSON.parse(cookie);
         }
         try {
@@ -533,7 +533,7 @@ class ShopeeAPI {
                         const res_cookies = await page.cookies();
                         console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- ")
                         await browser.close();
-                        searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: JSON.stringify(res_cookies), proxy: { code: 0, message: 'OK' } });
+                        searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
                     } catch (ex) {
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
@@ -543,7 +543,7 @@ class ShopeeAPI {
                 console.log("--> Goto search keyword page  -- ")
                 await page.goto(`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`, {
                     waitUntil: "networkidle2",
-                    timeout: 30000
+                    timeout: 60000
                 });
             } catch (ex) {
                 console.log(ex)
