@@ -429,19 +429,10 @@ class ShopeeAPI {
     }
 
     async api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
-        console.log("--> API GET SEARCH ITEMS:  -- " + keyword )
+        console.log("--> API GET SEARCH ITEMS:  -- " + keyword)
         let self = this;
         if (cookie != null) {
-            if (!cookie.startsWith('{')) {
-                if (cookie.indexOf('[ROOT]') == -1)
-                    cookie = RSA.decrypt(cookie, 'utf8');
-                else
-                    cookie = cookie.replace('[ROOT]', '');
-
-                cookie = initCookie(cookie);
-            } else {
-                cookie = JSON.parse(cookie);
-            }
+            cookie = JSON.parse(cookie);
         }
         try {
 
@@ -474,9 +465,8 @@ class ShopeeAPI {
 
             console.log("--> START PPT:  -- ")
             const page = (await browser.pages())[0];
-            console.log(cookie)
-            if (cookie) {             
-            //    await page.setCookie(...cookie);
+            if (cookie) {
+                await page.setCookie(...cookie);
             }
 
             var searchCallBack = null;
@@ -570,7 +560,7 @@ class ShopeeAPI {
             return { code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
         }
 
-        
+
         /*let Url = 'https://shopee.vn/api/v4/search/search_items?by=' + by;
         Url += '&keyword=' + encodeURI(keyword)
         Url += '&limit=' + limit;
