@@ -474,6 +474,7 @@ class ShopeeAPI {
 
             console.log("--> START PPT:  -- ")
             const page = (await browser.pages())[0];
+            console.log(cookie)
             if (cookie) {
                 await page.setCookie(...cookie);
             }
