@@ -432,6 +432,7 @@ class ShopeeAPI {
         console.log("--> API GET SEARCH ITEMS:  -- " + keyword)
         let self = this;
         if (cookie != null) {
+            console.log(cookie);
             cookie = JSON.parse(cookie);
         }
         try {
