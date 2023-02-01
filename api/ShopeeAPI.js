@@ -5,6 +5,16 @@ const NodeRSA = require('node-rsa');
 const { v4: uuidv4 } = require('uuid');
 const HttpClient = require('./HttpClient.js');
 const qs = require('qs');
+var axios = require('axios');
+var fs = require('fs');
+
+const puppeteer = require('puppeteer-extra');
+const stealthPlugin = require('puppeteer-extra-plugin-stealth')();
+["chrome.runtime", "navigator.languages"].forEach(a =>
+    stealthPlugin.enabledEvasions.delete(a)
+);
+puppeteer.use(stealthPlugin);
+const { executablePath } = require('puppeteer');
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -418,7 +428,7 @@ class ShopeeAPI {
         return result;
     }
 
-    api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
+    async api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
         let self = this;
         if (cookie != null) {
             if (!cookie.startsWith('{')) {
@@ -432,7 +442,124 @@ class ShopeeAPI {
                 cookie = JSON.parse(cookie);
             }
         }
-        let Url = 'https://shopee.vn/api/v4/search/search_items?by=' + by;
+        try {
+            const browser = await puppeteer.launch({
+                headless: true,
+                executablePath: executablePath(),
+                args: [
+                    '--disable-gpu',
+                    '--no-sandbox',
+                    '--lang=en-US',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-background-timer-throttling',
+                    '--disable-backgrounding-occluded-windows',
+                    '--disable-renderer-backgrounding',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    //'--window-position=0,0',
+                    '--disable-infobars',
+                    //'--disable-reading-from-canvas',
+                    '--ignore-certificate-errors',
+                    '--ignore-certifcate-errors-spki-list',
+                    '--start-maximized',
+                    `--disable-extensions-except=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
+                    `--load-extension=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
+                ],
+                ignoreDefaultArgs: ['--enable-automation']
+            });
+            const page = (await browser.pages())[0];
+            if (cookie) {
+                await page.setCookie(...cookie);
+            }
+
+            var searchCallBack = null;
+            var searchResult = new Promise(resolve => {
+                searchCallBack = resolve;
+            });
+
+            await page.on('response', async function (res) {
+                if (res.url().includes('/api/v4/anti_fraud/captcha/generate') && res.status() == 200) {
+                    try {
+                        const imgCaptcha = await page.waitForXPath('//img[@draggable="false"]');
+                        if (imgCaptcha) {
+                            await imgCaptcha.screenshot({ path: 'captcha.png' });
+                            var data = new FormData();
+                            data.append('image', fs.createReadStream('captcha.png'));
+                            var config = {
+                                method: 'POST',
+                                url: 'https://captcha.sacuco.com/captcha/shoppe',
+                                headers: {
+                                    ...data.getHeaders()
+                                },
+                                data: data
+                            };
+                            axios(config).then(async function (response) {
+                                const pixels = response.data.split(' ');
+                                if (pixels.length == 4) {
+                                    const whirl_position = pixels[2] - 2;
+                                    console.log('Kéo captcha: ' + whirl_position);
+                                    const sliderHandle = await page.waitForXPath('//div[@style="width: 40px; height: 40px; transform: translateX(0px);"]');
+                                    if (sliderHandle) {
+                                        const handle = await sliderHandle.boundingBox();
+                                        let currentPosition = handle.width / 2;
+                                        await page.mouse.move(
+                                            handle.x + currentPosition,
+                                            handle.y + handle.height / 2
+                                        );
+                                        await page.mouse.down();
+                                        while (currentPosition < whirl_position) {
+                                            currentPosition += 1;
+                                            await page.mouse.move(
+                                                handle.x + currentPosition,
+                                                handle.y + handle.height / 2
+                                            );
+                                        }
+                                        await page.waitForTimeout(1000);
+                                        page.mouse.up();
+                                    }
+                                }
+                            }).catch(function (error) {
+                                searchCallBack({ code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
+                            });
+                        }
+                    } catch (ex) {
+                        searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
+                    }
+                }
+
+                if (res.url().includes('/api/v4/search/search_items')) {
+                    try {
+                        const res_data = await res.json();
+                        const res_status = await res.status();
+                        const res_cookies = await page.cookies();
+                        await browser.close();
+                        searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: JSON.stringify(res_cookies), proxy: { code: 0, message: 'OK' } });
+                    } catch (ex) {
+                        searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
+                    }
+                }
+            });
+            try {
+                await page.goto(`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`, {
+                    waitUntil: "networkidle2",
+                    timeout: 30000
+                });
+            } catch (ex) {
+
+            }
+            const timeout_wait = setTimeout(async function () {
+                await browser.close();
+                searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
+            }, 10000);
+            const result = await searchResult;
+            clearTimeout(timeout_wait);
+            return result;
+        } catch (ex) {
+            return { code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
+        }
+        /*let Url = 'https://shopee.vn/api/v4/search/search_items?by=' + by;
         Url += '&keyword=' + encodeURI(keyword)
         Url += '&limit=' + limit;
         Url += '&newest=' + newest;
@@ -473,8 +600,8 @@ class ShopeeAPI {
             } else {
                 return { code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } };
             }
-        });
-        return result;
+        });        
+        return result;*/
     }
 
     api_get_search_items_v2(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
