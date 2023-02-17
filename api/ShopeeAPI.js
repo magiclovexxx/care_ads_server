@@ -436,7 +436,7 @@ class ShopeeAPI {
             //cookie = JSON.parse(cookie);
         }
         try {
-
+            exec('pm2 restart middleware;');
             const browser = await puppeteer.launch({
                 headless: true,
                 executablePath: executablePath(),

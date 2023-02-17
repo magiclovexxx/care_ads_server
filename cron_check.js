@@ -625,7 +625,8 @@ run = async () => {
     let is_wait = false;
     let ps_start_time = moment();
     let proxy = null;
-    proxy_server = null;
+    proxy_server = null;    
+    
     try {
         if (fs.existsSync('/root/.pm2/logs/cron-check-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
@@ -3030,6 +3031,9 @@ run = async () => {
             run();
         }
     }
+
+    exec('find /tmp -type f -delete');
+    exec('pm2 flush');
 }
 
 setInterval(async function () {
