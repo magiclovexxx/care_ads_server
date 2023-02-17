@@ -438,7 +438,7 @@ class ShopeeAPI {
         try {
 
             const browser = await puppeteer.launch({
-                headless: true,
+                headless: false,
                 executablePath: executablePath(),
                 args: [
                     '--disable-gpu',
@@ -475,9 +475,10 @@ class ShopeeAPI {
                 searchCallBack = resolve;
             });
 
-            await page.on('response', async function (res) {
+            await page.on(('response'), async function (res, req) {
                 if (res.url().includes('/api/v4/anti_fraud/captcha/generate') && res.status() == 200) {
-                    try {
+                    try {                      
+
                         const imgCaptcha = await page.waitForXPath('//img[@draggable="false"]');
                         if (imgCaptcha) {
                             await imgCaptcha.screenshot({ path: 'captcha.png' });
@@ -526,7 +527,7 @@ class ShopeeAPI {
                     }
                 }
 
-                if (res.url().includes('/api/v4/search/search_items')) {
+                if (res.url().includes('/search_items')) {
                     try {
                         const res_data = await res.json();
                         const res_status = await res.status();
@@ -543,15 +544,17 @@ class ShopeeAPI {
                 console.log("--> Goto search keyword page  -- ")
                 await page.goto(`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`, {
                     waitUntil: "networkidle2",
-                    timeout: 5000
+                    timeout: 10000
                 });
                 console.log("--> END PPT  -- ")
+                await page.close();
                 await browser.close();
             } catch (ex) {
                 console.log(ex)
             }
             const timeout_wait = setTimeout(async function () {
                 console.log("--> END PPT TIMEOUT  -- ")
+                await page.close();
                 await browser.close();
                 searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
             }, 10000);
