@@ -438,7 +438,7 @@ class ShopeeAPI {
         try {
 
             const browser = await puppeteer.launch({
-                headless: false,
+                headless: true,
                 executablePath: executablePath(),
                 args: [
                     '--disable-gpu',
