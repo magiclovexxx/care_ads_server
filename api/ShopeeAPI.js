@@ -543,13 +543,15 @@ class ShopeeAPI {
                 console.log("--> Goto search keyword page  -- ")
                 await page.goto(`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`, {
                     waitUntil: "networkidle2",
-                    timeout: 20000
+                    timeout: 5000
                 });
+                console.log("--> END PPT  -- ")
+                await browser.close();
             } catch (ex) {
                 console.log(ex)
             }
             const timeout_wait = setTimeout(async function () {
-                console.log("--> END PPT  -- ")
+                console.log("--> END PPT TIMEOUT  -- ")
                 await browser.close();
                 searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
             }, 10000);
