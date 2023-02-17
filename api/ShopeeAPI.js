@@ -436,7 +436,7 @@ class ShopeeAPI {
             //cookie = JSON.parse(cookie);
         }
         try {
-            exec('pm2 restart middleware;');
+
             const browser = await puppeteer.launch({
                 headless: true,
                 executablePath: executablePath(),
@@ -531,7 +531,7 @@ class ShopeeAPI {
                         const res_data = await res.json();
                         const res_status = await res.status();
                         const res_cookies = await page.cookies();
-                        console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- " + res_data.items.length)
+                        console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- SO LUONG KET QUA: " + res_data.items.length)
                         await browser.close();
                         searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
                     } catch (ex) {
