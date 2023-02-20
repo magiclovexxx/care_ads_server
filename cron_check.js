@@ -680,9 +680,10 @@ run = async () => {
         console.log( "---> Xoa thu muc chrome <---")
         exec('find /tmp -type d -name "puppeteer*" -exec rm  -rf {} \;');
         try {
+            console.log(" ---> kill chrome <---")
             exec('pkill chrome');
         } catch (error) {
-            
+            console.log(error)
         }
        
     //exec('pm2 flush');
