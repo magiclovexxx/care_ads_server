@@ -676,6 +676,11 @@ run = async () => {
                 return;
             }
         }
+
+        console.log( "---> Xoa thu muc chrome <---")
+        exec('find /tmp -type d -name "puppeteer*" -exec rm  -rf {} \;');
+    //exec('pm2 flush');
+
         const uid = null;
         slave_ip = await publicIp.v4();
         last_request_success = moment();
@@ -3032,8 +3037,7 @@ run = async () => {
         }
     }
 
-    exec('find /tmp -type f -delete');
-    exec('pm2 flush');
+    
 }
 
 setInterval(async function () {
