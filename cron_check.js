@@ -679,6 +679,12 @@ run = async () => {
 
         console.log( "---> Xoa thu muc chrome <---")
         exec('find /tmp -type d -name "puppeteer*" -exec rm  -rf {} \;');
+        try {
+            exec('pkill chrome');
+        } catch (error) {
+            
+        }
+       
     //exec('pm2 flush');
 
         const uid = null;
