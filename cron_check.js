@@ -3062,4 +3062,10 @@ setInterval(async function () {
     }
 }, 10000);
 
+(async () => {
+
+    await run();
+
+})();
+
 //run();
