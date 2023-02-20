@@ -758,7 +758,7 @@ run = async () => {
                     last_request_success = moment();
                     console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
                     await sleep((slave_type != 'CRON' ? 60000 : 3000));
-                 //   run();
+                    run();
                  return
                 }
             }, 3000);
@@ -3035,13 +3035,13 @@ run = async () => {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
         await sleep((slave_type != 'CRON' ? 60000 : 3000));
-    //    run();
+        run();
     }
     finally {
         if (!is_wait) {
             console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
             await sleep((slave_type != 'CRON' ? 60000 : 3000));
-    //        run();
+            run();
         }
     }
 
@@ -3062,10 +3062,10 @@ setInterval(async function () {
     }
 }, 10000);
 
-(async () => {
+// (async () => {
 
-    await run();
+//     await run();
 
-})();
+// })();
 
-//run();
+run();
