@@ -489,7 +489,7 @@ class ShopeeAPI {
             }
 
             const browser = await puppeteer.launch({
-                headless: headless,
+                headless: true,
                 executablePath: executablePath(),
                 args: params,
                 ignoreDefaultArgs: ['--enable-automation'],
@@ -612,8 +612,8 @@ class ShopeeAPI {
                 });
                 console.log("--> END PPT  -- ")
               //  await page.waitForTimeout(9999)
-                await page.close();
-                await browser.close();
+                // await page.close();
+                // await browser.close();
             } catch (ex) {
                 //  console.log(ex)
             }
