@@ -557,7 +557,7 @@ class ShopeeAPI {
                             searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
                       
                     } catch (ex) {
-                        console.log(error)
+                        console.log(ex)
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
                 }
