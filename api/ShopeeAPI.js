@@ -438,6 +438,7 @@ class ShopeeAPI {
     async api_get_search_items(proxy, UserAgent, cookie, by, keyword, limit, newest, order, page_type, scenario, version) {
         console.log("--> API GET SEARCH ITEMS:  -- " + keyword)
         let self = this;
+        let res_data
         if (cookie != null) {
             //console.log(cookie);
             //cookie = JSON.parse(cookie);
@@ -547,7 +548,7 @@ class ShopeeAPI {
 
                 if (res.url().includes('/search_items')) {
                     try {
-                        const res_data = await res.json();
+                        res_data = await res.json();
                         const res_status = await res.status();
                         const res_cookies = await page.cookies();
                         console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- SO LUONG KET QUA: " + res_data.items.length)
