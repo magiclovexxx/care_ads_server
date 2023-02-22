@@ -471,9 +471,7 @@ class ShopeeAPI {
             } else {
                 profile_dir = 'C:\\profile'
             }
-
-
-            console.log("---> headless: " + headless)
+          
             const browser = await puppeteer.launch({
                 headless: headless,
                 executablePath: executablePath(),
@@ -482,7 +480,7 @@ class ShopeeAPI {
                 userDataDir: `${profile_dir}`
             });
 
-            console.log("--> START PPT:  -- ")
+            console.log("--> START PPT:  -- headless: " + headless)
             const page = (await browser.pages())[0];
             if (cookie) {
                 //await page.setCookie(...cookie);
