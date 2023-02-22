@@ -580,7 +580,7 @@ class ShopeeAPI {
                     await browser.close();
                     searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                 }, 30000);
-                let result = await searchResult;
+                const result = await searchResult;
                 clearTimeout(timeout_wait);
           
             return result;
