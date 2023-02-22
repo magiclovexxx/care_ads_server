@@ -549,6 +549,7 @@ class ShopeeAPI {
                         const res_data = await res.json();
                         const res_status = await res.status();
                         const res_cookies = await page.cookies();
+                        console.log(res_data.items)
                         console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- SO LUONG KET QUA: " + res_data.items.length)
                       
                             await page.close();
