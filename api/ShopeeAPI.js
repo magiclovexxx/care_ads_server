@@ -9,6 +9,8 @@ var axios = require('axios');
 var fs = require('fs');
 const os = require("os");
 require('dotenv').config();
+var FormData = require('form-data');
+const randomUseragent = require('random-useragent');
 
 const puppeteer = require('puppeteer-extra');
 const stealthPlugin = require('puppeteer-extra-plugin-stealth')();
@@ -27,9 +29,9 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'wD6fAHGgx/UCIFO6xWpDAJP0vzMUHqeKJ88ARB6g4kTSNCFihJLG8EjxAiEAuYcD\n' +
     'gNatFAx7DU7oXKCDHZ9DR4XlVVj0N0fcWI39Oow=\n' +
     '-----END RSA PRIVATE KEY-----');
-    headless = process.env.HEADLESS
+headless = process.env.HEADLESS
 mode = process.env.MODE
-if(headless == undefined){
+if (headless == undefined) {
     headless = true
 }
 
@@ -445,6 +447,12 @@ class ShopeeAPI {
         }
         try {
 
+            let langs = ["ar", "bg", "bn", "ca", "cs", "da", "de", "el", "en-GB", "en-US", "es", "et", "fi", "fil", "fr", "gu", "he", "hi", "hr", "hu", "id", "it", "ja", "kn", "ko", "lt", "lv", "ml", "mr", "ms", "nb", "nl", "pl", "pt-BR", "pt-PT", "ro", "ru", "sk", "sl", "sr", "sv", "ta"
+                , "te", "th", "tr", "uk", "vi", "zh-CN", "zh-TW"]
+
+            let rand = Math.floor(Math.random() * langs.length);
+            let user_lang = langs[rand]
+
             let params = [
                 '--disable-gpu',
                 '--no-sandbox',
@@ -463,6 +471,7 @@ class ShopeeAPI {
                 '--ignore-certificate-errors',
                 '--ignore-certifcate-errors-spki-list',
                 '--start-maximized',
+                '--lang=' + user_lang,
                 `--disable-extensions-except=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
                 `--load-extension=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
             ]
@@ -472,7 +481,13 @@ class ShopeeAPI {
             } else {
                 profile_dir = 'C:\\profile'
             }
-          
+           
+            if (proxy) {
+                let proxy_for_slave = "--proxy-server=" + proxy.host + ":" + proxy.port
+                params.push(proxy_for_slave)
+                params.push('--ignore-certificate-errors')
+            }
+
             const browser = await puppeteer.launch({
                 headless: headless,
                 executablePath: executablePath(),
@@ -480,9 +495,29 @@ class ShopeeAPI {
                 ignoreDefaultArgs: ['--enable-automation'],
                 userDataDir: `${profile_dir}`
             });
-
+            let user_agent
             console.log("--> START PPT:  -- headless: " + headless)
+            user_agent = randomUseragent.getRandom(function (ua) {
+
+                return (ua.osName === 'Windows' && ua.osVersion === "10");
+            });
+
+
             const page = (await browser.pages())[0];
+            await page.setUserAgent(user_agent)
+            let width = Math.floor(Math.random() * (1280 - 1000)) + 1000;;
+            let height = Math.floor(Math.random() * (800 - 600)) + 600;;
+            console.log("Kích thước màn hình: " + width + " x " + height)
+
+            await page.setViewport({
+                width: width,
+                height: height
+            });
+            if (proxy) {
+               
+
+                await page.authenticate({ username: proxy.auth.username, password:  proxy.auth.password });
+            }
             if (cookie) {
                 //await page.setCookie(...cookie);
             }
@@ -493,9 +528,10 @@ class ShopeeAPI {
             });
 
             await page.on(('response'), async function (res, req) {
-                if (res.url().includes('/api/v4/anti_fraud/captcha/generate') && res.status() == 200) {
+                if (res.url().includes('/captcha/') && res.status() == 200) {
+                    console.log(res.url())
                     try {
-
+                        console.log("----> Ăn captcha rồi")
                         const imgCaptcha = await page.waitForXPath('//img[@draggable="false"]');
                         if (imgCaptcha) {
                             await imgCaptcha.screenshot({ path: 'captcha.png' });
@@ -509,7 +545,7 @@ class ShopeeAPI {
                                 },
                                 data: data
                             };
-                            axios(config).then(async function (response) {
+                            await axios(config).then(async function (response) {
                                 const pixels = response.data.split(' ');
                                 if (pixels.length == 4) {
                                     const whirl_position = pixels[2] - 2;
@@ -535,12 +571,13 @@ class ShopeeAPI {
                                     }
                                 }
                             }).catch(function (error) {
+                                console.log(error)
                                 searchCallBack({ code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                             });
                         }
                     } catch (ex) {
                         console.log(ex)
-                        searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
+                    //    searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
                 }
 
@@ -549,41 +586,47 @@ class ShopeeAPI {
                         res_data = await res.json();
                         const res_status = await res.status();
                         const res_cookies = await page.cookies();
-                        console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- SO LUONG KET QUA: " + res_data.items.length)
-                      
+                       
+                        if(res_data.items){
+                            console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- SO LUONG KET QUA: " + res_data.items.length)
                             await page.close();
                             await browser.close();
-
+    
                             searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
-                      
+    
+                        }
+                        
                     } catch (ex) {
+                        console.log(ex)
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
                 }
             });
             try {
-                console.log("--> Goto search keyword page ")
-                await page.goto(`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`, {
+               
+                let search_url =`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`
+                console.log("--> Goto search keyword page " + search_url)
+                await page.goto(search_url, {
                     waitUntil: "networkidle2",
                     timeout: 30000
                 });
                 console.log("--> END PPT  -- ")
-               
+              //  await page.waitForTimeout(9999)
                 await page.close();
                 await browser.close();
             } catch (ex) {
                 //  console.log(ex)
             }
 
-                const timeout_wait = setTimeout(async function () {
-                    console.log("--> END PPT TIMEOUT  -- ")
-                    await page.close();
-                    await browser.close();
-                    searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
-                }, 30000);
-                const result = await searchResult;
-                clearTimeout(timeout_wait);
-          
+            const timeout_wait = setTimeout(async function () {
+                console.log("--> END PPT TIMEOUT  -- ")
+                await page.close();
+                await browser.close();
+                searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
+            }, 30000);
+            const result = await searchResult;
+            clearTimeout(timeout_wait);
+
             return result;
         } catch (ex) {
             console.log(ex)

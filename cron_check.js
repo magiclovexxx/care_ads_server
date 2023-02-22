@@ -718,7 +718,7 @@ run = async () => {
             }
             return;
         }
-
+        console.log(result.data)
         let data_accounts = result.data.accounts;
         let total_orders = result.data.total_orders;
         let data_campaigns = result.data.campaigns;
