@@ -463,7 +463,7 @@ class ShopeeAPI {
                 '--disable-backgrounding-occluded-windows',
                 '--disable-renderer-backgrounding',
                 '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
+                //'--disable-accelerated-2d-canvas',
                 '--no-first-run',
                 //'--window-position=0,0',
                 '--disable-infobars',
