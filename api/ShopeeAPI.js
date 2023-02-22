@@ -7,6 +7,7 @@ const HttpClient = require('./HttpClient.js');
 const qs = require('qs');
 var axios = require('axios');
 var fs = require('fs');
+const os = require("os");
 
 const puppeteer = require('puppeteer-extra');
 const stealthPlugin = require('puppeteer-extra-plugin-stealth')();
@@ -437,31 +438,41 @@ class ShopeeAPI {
         }
         try {
 
+            let params = [
+                '--disable-gpu',
+                '--no-sandbox',
+                '--lang=en-US',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-renderer-backgrounding',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                //'--window-position=0,0',
+                '--disable-infobars',
+                //'--disable-reading-from-canvas',
+                '--ignore-certificate-errors',
+                '--ignore-certifcate-errors-spki-list',
+                '--start-maximized',
+                `--disable-extensions-except=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
+                `--load-extension=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
+            ]
+           
+            if(os.platform() == 'linux'){
+                profile_dir = '/home/profile'
+            }else{
+                profile_dir = 'C:\\profile'
+            }
+           
+
             const browser = await puppeteer.launch({
                 headless: true,
                 executablePath: executablePath(),
-                args: [
-                    '--disable-gpu',
-                    '--no-sandbox',
-                    '--lang=en-US',
-                    '--disable-setuid-sandbox',
-                    '--disable-dev-shm-usage',
-                    '--disable-background-timer-throttling',
-                    '--disable-backgrounding-occluded-windows',
-                    '--disable-renderer-backgrounding',
-                    '--disable-dev-shm-usage',
-                    '--disable-accelerated-2d-canvas',
-                    '--no-first-run',
-                    //'--window-position=0,0',
-                    '--disable-infobars',
-                    //'--disable-reading-from-canvas',
-                    '--ignore-certificate-errors',
-                    '--ignore-certifcate-errors-spki-list',
-                    '--start-maximized',
-                    `--disable-extensions-except=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
-                    `--load-extension=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
-                ],
-                ignoreDefaultArgs: ['--enable-automation']
+                args: params,
+                ignoreDefaultArgs: ['--enable-automation'],
+                userDataDir: `${profile_dir}`
             });
 
             console.log("--> START PPT:  -- ")
@@ -545,20 +556,20 @@ class ShopeeAPI {
                 console.log("--> Goto search keyword page  -- ")
                 await page.goto(`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`, {
                     waitUntil: "networkidle2",
-                    timeout: 10000
+                    timeout: 30000
                 });
                 console.log("--> END PPT  -- ")
                 await page.close();
                 await browser.close();
             } catch (ex) {
-                console.log(ex)
+              //  console.log(ex)
             }
             const timeout_wait = setTimeout(async function () {
                 console.log("--> END PPT TIMEOUT  -- ")
                 await page.close();
                 await browser.close();
                 searchCallBack({ code: 1000, message: 'Request timeout', status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
-            }, 10000);
+            }, 30000);
             const result = await searchResult;
             clearTimeout(timeout_wait);
             return result;

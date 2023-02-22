@@ -24,8 +24,10 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     '-----END RSA PRIVATE KEY-----');
 
 const port = process.env.PORT;
+
 const use_host = process.env.USE_HOST;
 const hostname = os.hostname();
+console.log(' ---> Hostname: ' + hostname + '-- OS: ' + os.platform() + "-- USE HOST: " + use_host)
 const api_url = "http://api.sacuco.com/api_user";
 var last_request_success = moment();
 var proxy_server = null;
@@ -35,6 +37,7 @@ var change_proxy_pending = false;
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
     let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
+    
     if (uid)
         Url += '&uid=' + uid;
     //Call request get với url để lấy data
@@ -625,8 +628,8 @@ run = async () => {
     let is_wait = false;
     let ps_start_time = moment();
     let proxy = null;
-    proxy_server = null;    
-    
+    proxy_server = null;
+
     try {
         if (fs.existsSync('/root/.pm2/logs/cron-check-error.log')) {
             const { size } = fs.statSync('/root/.pm2/logs/cron-check-error.log');
@@ -677,16 +680,7 @@ run = async () => {
             }
         }
 
-        console.log( "---> Xoa thu muc chrome <---")
-        exec('find /tmp -type d -name "puppeteer*" -exec rm  -rf {} \;');
-        try {
-            console.log(" ---> kill chrome <---")
-            exec('pkill chrome');
-        } catch (error) {
-            console.log(error)
-        }
-       
-    //exec('pm2 flush');
+
 
         const uid = null;
         slave_ip = await publicIp.v4();
@@ -750,7 +744,7 @@ run = async () => {
 
         if ((data_accounts.length + data_campaigns.length) > 0) {
             is_wait = true;
-            let interval = setInterval(async function () {
+          //  let interval = setInterval(async function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
                     clearInterval(interval);
@@ -758,10 +752,10 @@ run = async () => {
                     last_request_success = moment();
                     console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
                     await sleep((slave_type != 'CRON' ? 60000 : 3000));
-                    run();
-                 return
+                 //   run();
+                    return
                 }
-            }, 3000);
+          //  }, 3000);
         } else {
             result = await last_connection(slave_ip, port);
             last_request_success = moment();
@@ -3035,37 +3029,67 @@ run = async () => {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
         await sleep((slave_type != 'CRON' ? 60000 : 3000));
-        run();
+     //   run();
+     return
     }
     finally {
         if (!is_wait) {
             console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-            await sleep((slave_type != 'CRON' ? 60000 : 3000));
-            run();
+        //    await sleep((slave_type != 'CRON' ? 60000 : 3000));    
+         //   run();
+
         }
     }
 
-    
+
 }
 
-setInterval(async function () {
-    try {
-        console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + "---");
-        if (moment(last_request_success).add(5, 'minutes') < moment()) {
-            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
-            exec('pm2 restart cron_check;');
+// setInterval(async function () {
+//     try {
+//         console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + "---");
+//         if (moment(last_request_success).add(5, 'minutes') < moment()) {
+//             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
+//             exec('pm2 restart cron_check;');
+//         }
+//     }
+//     catch (ex) {
+//         console.log(ex);
+//         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+//     }
+// }, 10000);
+
+(async () => {
+
+    await run();
+
+
+
+    if (os.platform() == 'linux') {
+        try {
+            console.log(" ---> kill chrome <---")
+            exec('pkill chrome');
+
+            console.log("---> Xoa thu muc chrome <---" + os.platform())
+            profile_dir = '/home/profile'
+            exec('rm -rf ' + profile_dir);
+            exec('rm -f core.*');
+            exec('pm2 flush');
+            exec('rm ~/.pm2/pm2.log');
+
+        } catch (error) {
+            console.log(error)
         }
+
+    } else {
+        try {
+            profile_dir = 'C:\\profile'
+            console.log("---> Xoa thu muc chrome <---"  + os.platform())
+            exec('Rmdir /S /q ' + profile_dir);
+        } catch (error) {
+            console.log(error)
+        }
+
+
     }
-    catch (ex) {
-        console.log(ex);
-        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-    }
-}, 10000);
+})();
 
-// (async () => {
-
-//     await run();
-
-// })();
-
-run();
