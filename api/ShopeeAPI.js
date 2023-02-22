@@ -534,6 +534,7 @@ class ShopeeAPI {
                                     }
                                 }
                             }).catch(function (error) {
+                                console.log(error)
                                 searchCallBack({ code: 1000, message: error.code + ' ' + error.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                             });
                         }
@@ -556,6 +557,7 @@ class ShopeeAPI {
                             searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
                       
                     } catch (ex) {
+                        console.log(error)
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
                 }
