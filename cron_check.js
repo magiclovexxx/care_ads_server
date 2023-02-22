@@ -538,7 +538,6 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
     let end_unix = moment().unix();
-    console.log("---> Result get search: " + result.code)
     
     if (result.code != 0) {
         let statusCode = result.status;

@@ -507,8 +507,7 @@ class ShopeeAPI {
             await page.setUserAgent(user_agent)
             let width = Math.floor(Math.random() * (1280 - 1000)) + 1000;;
             let height = Math.floor(Math.random() * (800 - 600)) + 600;;
-            console.log("Kích thước màn hình: " + width + " x " + height)
-
+            
             await page.setViewport({
                 width: width,
                 height: height
