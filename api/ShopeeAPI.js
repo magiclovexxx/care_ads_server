@@ -610,7 +610,7 @@ class ShopeeAPI {
                     waitUntil: "networkidle2",
                     timeout: 30000
                 });
-                console.log("--> END PPT  -- ")
+               // console.log("--> END PPT  -- ")
               //  await page.waitForTimeout(9999)
                 // await page.close();
                 // await browser.close();
