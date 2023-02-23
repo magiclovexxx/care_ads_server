@@ -682,8 +682,32 @@ run = async () => {
             }
         }
 
+     if (os.platform() == 'linux') {
+        try {
+            console.log(" ---> kill chrome <---")
+            exec('pkill chrome');
 
+            console.log("---> Xoa thu muc chrome <---" + os.platform())
+            profile_dir = '/home/profile'
+            exec('rm -rf ' + profile_dir);
+            // exec('rm -f core.*');
+            // exec('pm2 flush');
+            // exec('rm ~/.pm2/pm2.log');
+            // exec('pm2 restart cron_check.js');
 
+        } catch (error) {
+            console.log(error)
+        }
+
+    } else {
+        try {
+            profile_dir = 'C:\\profile'
+            console.log("---> Xoa thu muc chrome <---"  + os.platform())
+            exec('Rmdir /S /q ' + profile_dir);
+        } catch (error) {
+            console.log(error)
+        }
+    }
         const uid = null;
         slave_ip = await publicIp.v4();
         last_request_success = moment();
