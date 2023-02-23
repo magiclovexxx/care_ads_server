@@ -540,42 +540,42 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     let end_unix = moment().unix();
     console.log("Ket qua get search: " + result.code)
     if (result.code != 0) {
-        return 999
-        // let statusCode = result.status;
-        // //if (result.code == 1000) {
-        // //if (result.status == 429 || result.status == 403) {
-        // let is_waiting = false;
-        // let old_ip = 'N';
-        // if (proxy != null) {
-        //     old_ip = proxy.host;
-        // }
-        // while (change_proxy_pending) {
-        //     await sleep(3000);
-        //     is_waiting = true;
-        // }
-        // if (!is_waiting) {
-        //     change_proxy_pending = true;
-        //     result = await api_get_proxy_ip(slave_ip, old_ip);
-        //     if (result.code != 0) {
-        //         change_proxy_pending = false;
-        //         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
-        //         return -1;
-        //     }
-        //     proxy_server = {
-        //         host: result.data.proxy_ip,
-        //         port: parseInt(result.data.proxy_port),
-        //         auth: { username: result.data.proxy_username, password: result.data.proxy_password.replace('\r', '') }
-        //     };
-        //     change_proxy_pending = false;
-        //     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request (' + statusCode + ') -> Đổi Proxy', old_ip, ' -> ', result.data.proxy_ip);
-        // }
-        // await sleep(10000);
-        // return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
-        // /*} else {
-        //     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee Request Timeout');
-        //     await sleep(10000);
-        //     return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
-        // }*/
+       
+        let statusCode = result.status;
+        //if (result.code == 1000) {
+        //if (result.status == 429 || result.status == 403) {
+        let is_waiting = false;
+        let old_ip = 'N';
+        if (proxy != null) {
+            old_ip = proxy.host;
+        }
+        while (change_proxy_pending) {
+            await sleep(3000);
+            is_waiting = true;
+        }
+        if (!is_waiting) {
+            change_proxy_pending = true;
+            result = await api_get_proxy_ip(slave_ip, old_ip);
+            if (result.code != 0) {
+                change_proxy_pending = false;
+                console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi api_get_proxy_ip', result.message);
+                return -1;
+            }
+            proxy_server = {
+                host: result.data.proxy_ip,
+                port: parseInt(result.data.proxy_port),
+                auth: { username: result.data.proxy_username, password: result.data.proxy_password.replace('\r', '') }
+            };
+            change_proxy_pending = false;
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee chặn nhiều request (' + statusCode + ') -> Đổi Proxy', old_ip, ' -> ', result.data.proxy_ip);
+        }
+        await sleep(10000);
+        return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy_server, cookie, user_agent, by, keyword, limit, newest, order);
+        /*} else {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Shopee Request Timeout');
+            await sleep(10000);
+            return locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order);
+        }*/
     }
     last_request_success = moment();
     if (result.data.items != null) {
@@ -746,7 +746,7 @@ run = async () => {
 
         if ((data_accounts.length + data_campaigns.length) > 0) {
             is_wait = true;
-          //  let interval = setInterval(async function () {
+            let interval = setInterval(async function () {
                 if (data_accounts.length - data_accounts.filter(x => x.job_done).length == 0
                     && data_campaigns.length - data_campaigns.filter(x => x.job_done).length == 0) {
                     clearInterval(interval);
@@ -754,10 +754,10 @@ run = async () => {
                     last_request_success = moment();
                     console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
                     await sleep((slave_type != 'CRON' ? 60000 : 3000));
-                 //   run();
+                    run();
                     return
                 }
-          //  }, 3000);
+            }, 3000);
         } else {
             result = await last_connection(slave_ip, port);
             last_request_success = moment();
@@ -3031,14 +3031,14 @@ run = async () => {
         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
         await sleep((slave_type != 'CRON' ? 60000 : 3000));
-     //   run();
+        run();
      return
     }
     finally {
         if (!is_wait) {
             console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
         //    await sleep((slave_type != 'CRON' ? 60000 : 3000));    
-         //   run();
+            run();
 
         }
     }
@@ -3046,53 +3046,55 @@ run = async () => {
 
 }
 
-// setInterval(async function () {
-//     try {
-//         console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + "---");
-//         if (moment(last_request_success).add(5, 'minutes') < moment()) {
-//             console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
-//             exec('pm2 restart cron_check;');
-//         }
-//     }
-//     catch (ex) {
-//         console.log(ex);
-//         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
-//     }
-// }, 10000);
-
-(async () => {
-
-    await run();
-
-
-
-    if (os.platform() == 'linux') {
-        try {
-            console.log(" ---> kill chrome <---")
-            exec('pkill chrome');
-
-            console.log("---> Xoa thu muc chrome <---" + os.platform())
-            profile_dir = '/home/profile'
-            exec('rm -rf ' + profile_dir);
-            exec('rm -f core.*');
-            exec('pm2 flush');
-            exec('rm ~/.pm2/pm2.log');
-            exec('pm2 restart cron_check.js');
-
-        } catch (error) {
-            console.log(error)
+setInterval(async function () {
+    try {
+        console.log("---Last request success:", last_request_success.format('MM/DD/YYYY HH:mm:ss') + "---");
+        if (moment(last_request_success).add(5, 'minutes') < moment()) {
+            console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Khởi động tiến trình bị treo');
+            exec('pm2 restart cron_check;');
         }
-
-    } else {
-        try {
-            profile_dir = 'C:\\profile'
-            console.log("---> Xoa thu muc chrome <---"  + os.platform())
-            exec('Rmdir /S /q ' + profile_dir);
-        } catch (error) {
-            console.log(error)
-        }
-
-
     }
-})();
+    catch (ex) {
+        console.log(ex);
+        console.error(moment().format('MM/DD/YYYY HH:mm:ss'), 'Lỗi ngoại lệ <' + ex + '>');
+    }
+}, 10000);
+
+run();
+
+// (async () => {
+
+//     await run();
+
+
+
+//     if (os.platform() == 'linux') {
+//         try {
+//             console.log(" ---> kill chrome <---")
+//             exec('pkill chrome');
+
+//             console.log("---> Xoa thu muc chrome <---" + os.platform())
+//             profile_dir = '/home/profile'
+//             exec('rm -rf ' + profile_dir);
+//             exec('rm -f core.*');
+//             exec('pm2 flush');
+//             exec('rm ~/.pm2/pm2.log');
+//             exec('pm2 restart cron_check.js');
+
+//         } catch (error) {
+//             console.log(error)
+//         }
+
+//     } else {
+//         try {
+//             profile_dir = 'C:\\profile'
+//             console.log("---> Xoa thu muc chrome <---"  + os.platform())
+//             exec('Rmdir /S /q ' + profile_dir);
+//         } catch (error) {
+//             console.log(error)
+//         }
+
+
+//     }
+// })();
 

@@ -476,6 +476,7 @@ class ShopeeAPI {
                 `--load-extension=${__dirname}/chrome-extensions/AudioContext-Fingerprint-Defender,${__dirname}/chrome-extensions/Canvas-Fingerprint-Defender,${__dirname}/chrome-extensions/Font-Fingerprint-Defender,${__dirname}/chrome-extensions/WebGL-Fingerprint-Defender,${__dirname}/chrome-extensions/WebRTC-Control,${__dirname}/chrome-extensions/J2TEAM-Cookies`,
             ]
 
+            let profile_dir = '/home/profile'
             if (os.platform() == 'linux') {
                 profile_dir = '/home/profile'
             } else {
