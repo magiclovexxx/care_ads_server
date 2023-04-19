@@ -24,11 +24,21 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     '-----END RSA PRIVATE KEY-----');
 
 const port = process.env.PORT;
-
+var hostname
 const use_host = process.env.USE_HOST;
-const hostname = os.hostname();
+if (os.platform() == 'linux') {
+    hostname = os.hostname();
+} else {
+    hostname = process.env.HOSTNAME
+}
 console.log(' ---> Hostname: ' + hostname + '-- OS: ' + os.platform() + "-- USE HOST: " + use_host)
-const api_url = "http://api.sacuco.com/api_user";
+const mode = process.env.MODE
+var api_url = "http://api.sacuco.com/api_user";
+
+if (mode == 'DEV') {
+    api_url = "http://beta.sacuco.com/api_user";
+}
+
 var last_request_success = moment();
 var proxy_server = null;
 var slave_type = 'CRON';
@@ -36,8 +46,8 @@ var slave_ip = null;
 var change_proxy_pending = false;
 
 function api_get_shopee_campaigns(slave_ip, slave_port, uid) {
-    let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port;
-    
+    let Url = api_url + '/shopee_campaigns?slave_ip=' + slave_ip + '&slave_port=' + slave_port + '&mode=' + mode;
+
     if (uid)
         Url += '&uid=' + uid;
     //Call request get với url để lấy data
@@ -251,6 +261,48 @@ function api_put_shopee_payments(data, slave_ip, slave_port) {
             if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
                 await sleep(3000);
                 return api_put_shopee_payments(data, slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
+        }
+    });
+}
+
+
+function api_get_shopee_order_check(order_id) {
+    const Url = api_url + '/shopee_order_check?order_id=' + order_id;
+    return httpClient.http_request(Url, 'GET').then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }, async function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return last_connection(slave_ip, slave_port);
+            }
+            else {
+                return { code: 1000, message: error.code + ' ' + error.message };
+            }
+        }
+    });
+}
+function api_get_shopee_payment_check(order_id) {
+    const Url = api_url + '/shopee_payment_check?order_sn=' + order_id;
+    return httpClient.http_request(Url, 'GET').then(function (response) {
+        response.data.status = response.status;
+        return response.data;
+    }, async function (error) {
+        if (error.response) {
+            error.response.data.status = error.response.status;
+            return error.response.data;
+        } else {
+            if (error.code + ' ' + error.message == 'ECONNRESET read ECONNRESET') {
+                await sleep(3000);
+                return last_connection(slave_ip, slave_port);
             }
             else {
                 return { code: 1000, message: error.code + ' ' + error.message };
@@ -540,7 +592,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
     let end_unix = moment().unix();
     console.log("Ket qua get search: " + result.code)
     if (result.code != 0) {
-       
+
         let statusCode = result.status;
         //if (result.code == 1000) {
         //if (result.status == 429 || result.status == 403) {
@@ -682,32 +734,32 @@ run = async () => {
             }
         }
 
-     if (os.platform() == 'linux') {
-        try {
-            console.log(" ---> kill chrome <---")
-            exec('pkill chrome');
+        if (os.platform() == 'linux') {
+            try {
+                console.log(" ---> kill chrome <---")
+                exec('pkill chrome');
 
-            console.log("---> Xoa thu muc chrome <---" + os.platform())
-            profile_dir = '/home/profile'
-            exec('rm -rf ' + profile_dir);
-            // exec('rm -f core.*');
-            // exec('pm2 flush');
-            // exec('rm ~/.pm2/pm2.log');
-            // exec('pm2 restart cron_check.js');
+                console.log("---> Xoa thu muc chrome <---" + os.platform())
+                profile_dir = '/home/profile'
+                exec('rm -rf ' + profile_dir);
+                // exec('rm -f core.*');
+                // exec('pm2 flush');
+                // exec('rm ~/.pm2/pm2.log');
+                // exec('pm2 restart cron_check.js');
 
-        } catch (error) {
-            console.log(error)
+            } catch (error) {
+                console.log(error)
+            }
+
+        } else {
+            try {
+                profile_dir = 'C:\\profile'
+                console.log("---> Xoa thu muc chrome <---" + os.platform())
+                exec('Rmdir /S /q ' + profile_dir);
+            } catch (error) {
+                console.log(error)
+            }
         }
-
-    } else {
-        try {
-            profile_dir = 'C:\\profile'
-            console.log("---> Xoa thu muc chrome <---"  + os.platform())
-            exec('Rmdir /S /q ' + profile_dir);
-        } catch (error) {
-            console.log(error)
-        }
-    }
         const uid = null;
         slave_ip = await publicIp.v4();
         last_request_success = moment();
@@ -742,7 +794,7 @@ run = async () => {
             }
             return;
         }
-       // console.log(result.data)
+        // console.log(result.data)
         let data_accounts = result.data.accounts;
         let total_orders = result.data.total_orders;
         let data_campaigns = result.data.campaigns;
@@ -752,6 +804,7 @@ run = async () => {
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng đơn hàng:', total_orders);
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng quảng cáo:', data_campaigns.length);
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng từ khóa/vị trí:', total_placements);
+
 
         if (data_campaigns.length > 0 && use_host) {
             //Lấy proxy
@@ -895,9 +948,11 @@ run = async () => {
                 }
 
                 //Kiểm tra đón gói đang treo
+                console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Số lượng package ' + account.name + ':', account.packages.length);
                 for (let i = 0; i < account.packages.length; i++) {
                     let order_id = account.packages[i].order_id;
                     result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
+
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         let get_one_order = result.data.data;
@@ -1025,10 +1080,10 @@ run = async () => {
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_packages', result);
                                 continue;
                             }
-                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status OK', order_sn);
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status OK - code: ' + result.code, order_sn);
 
                         } else {
-                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status SKIP', order_sn);
+                            console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') P check order status SKIP - code: ' + result.code, order_sn);
                         }
                     } else {
                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_one_order', order_id, result.status, (result.data != null && result.data != '' ? result.data : result.message));
@@ -1323,16 +1378,22 @@ run = async () => {
                 let disable_check_cancel_time = false;
                 while (true) {
                     result = await shopeeApi.api_get_order_id_list(spc_cds, proxy, user_agent, cookie, 1, 'cancelled_complete', 40, cancel_page, 0, false);
+
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.orders.length > 0) {
                             let loop_status = 1;
                             let orders = result.data.data.orders;
+                            console.log("Check Đơn hàng hủy one order", orders.length)
+
+                            //   console.log("Đơn hàng hủy one order", orders[orders.length-1].order_sn)
+
                             let total_page = Math.ceil(result.data.data.page_info.total / result.data.data.page_info.page_size);
                             for (let i = 0; i < orders.length; i++) {
                                 let order_id = orders[i].order_id;
                                 result = await shopeeApi.api_get_one_order(spc_cds, proxy, user_agent, cookie, order_id);
                                 last_request_success = moment();
+                                console.log("Đơn hàng hủy one code: " + result.code)
                                 if (result.code == 0 && result.data.code == 0) {
                                     let get_one_order = result.data.data;
                                     let cancel_time = get_one_order.cancel_time;
@@ -1384,9 +1445,12 @@ run = async () => {
                                         }
                                         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Cập nhật last_cancel_time', last_cancel_time);
                                     }
+
                                     let order_sn = get_one_order.order_sn;
                                     let delivery_time = get_one_order.delivery_time;
                                     let cancel_reason_ext = get_one_order.cancel_reason_ext;
+
+                                    console.log("Đơn hàng hủy one order: " + cancel_reason_ext)
                                     if (cancel_reason_ext == 202 || cancel_reason_ext == 5) {
 
                                         let buyer_user_id = (get_one_order.buyer_user.user_id != null ? get_one_order.buyer_user.user_id : 0);
@@ -1421,8 +1485,10 @@ run = async () => {
                                                 result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
                                                 last_request_success = moment();
                                                 if (result.code == 0 && result.data.code == 0) {
-                                                    let income_transaction_history_detail = result.data.data;
 
+                                                    let income_transaction_history_detail = result.data.data;
+                                                    // console.log("Check Đơn hàng hủy", income_transaction_history_detail)
+                                                    // process.exit()
                                                     let last_logistics_status = 0;
                                                     let last_logistics_ctime = 0;
                                                     let last_logistics_description = null;
@@ -1492,6 +1558,9 @@ run = async () => {
                                                     if (cancel_reason_ext == 5) {
                                                         final_total = product_price - seller_voucher + product_discount_rebate_from_shopee;
                                                     }
+                                                    // console.log("Check Đơn hàng hủy", get_package)
+                                                    // console.log("last_logistics_status", last_logistics_status)
+                                                    // console.log("refund_time", refund_time)
 
                                                     result = await api_put_shopee_orders([{
                                                         uid: account.uid,
@@ -1532,16 +1601,19 @@ run = async () => {
                                                         status: status
                                                     }], slave_ip, port);
                                                     last_request_success = moment();
+
                                                     if (result.code != 0) {
                                                         console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ') Lỗi api_put_shopee_orders', result);
                                                         return;
                                                     }
                                                     console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ' -> ' + order_id + ' [' + cancel_page + ']) order cancel OK', order_sn, moment.unix(cancel_time).format('YYYY-MM-DD HH:mm:ss'));
+
                                                 } else {
                                                     console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                                     loop_status = 0;
                                                     break;
                                                 }
+
                                             } else {
                                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_package', result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                                 loop_status = 0;
@@ -1618,8 +1690,18 @@ run = async () => {
                     last_request_success = moment();
                     if (result.code == 0 && result.data.code == 0) {
                         if (result.data.data.orders.length > 0) {
+
+
                             let loop_status = 1;
                             let orders = result.data.data.orders;
+
+                            let check_oder_sn = await api_get_shopee_order_check(orders[0].order_id)
+
+                            if (check_oder_sn.data == 1) {
+                                console.log("Đơn hàng đã giao đã có trên hệ thống: ")
+                                break;
+                            }
+
                             let total_page = Math.ceil(result.data.data.page_info.total / result.data.data.page_info.page_size);
                             for (let i = 0; i < orders.length; i++) {
                                 let order_id = orders[i].order_id;
@@ -1905,10 +1987,18 @@ run = async () => {
                             let loop_status = 1;
                             let list = result.data.data.list;
                             let total_page = Math.ceil(result.data.data.page_info.total / result.data.data.page_info.page_size);
+
+                            let payment_check = await api_get_shopee_payment_check(list[0].order_sn)
+                            if (payment_check.data == 1) {
+                                console.log("payment đã có trong data: ")
+                                break;
+                            }
                             for (let i = 0; i < list.length; i++) {
                                 let get_wallet_transaction = list[i];
                                 let transaction_id = get_wallet_transaction.transaction_id;
                                 let pay_time = get_wallet_transaction.ctime;
+
+
                                 if (first_pay_time == 0) {
                                     first_pay_time = pay_time;
                                 }
@@ -3056,12 +3146,12 @@ run = async () => {
         console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
         await sleep((slave_type != 'CRON' ? 60000 : 3000));
         run();
-     return
+        return
     }
     finally {
         if (!is_wait) {
             console.log(`---Hoàn thành tiến trình: ${moment().diff(ps_start_time, 'seconds')}s---`);
-        //    await sleep((slave_type != 'CRON' ? 60000 : 3000));    
+            //    await sleep((slave_type != 'CRON' ? 60000 : 3000));    
             run();
 
         }
