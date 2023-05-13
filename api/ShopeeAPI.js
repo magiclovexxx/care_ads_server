@@ -11,14 +11,11 @@ const os = require("os");
 require('dotenv').config();
 var FormData = require('form-data');
 const randomUseragent = require('random-useragent');
+const { firefox } = require('playwright');
 
-const puppeteer = require('puppeteer-extra');
-const stealthPlugin = require('puppeteer-extra-plugin-stealth')();
-["chrome.runtime", "navigator.languages"].forEach(a =>
-    stealthPlugin.enabledEvasions.delete(a)
-);
-puppeteer.use(stealthPlugin);
-const { executablePath } = require('puppeteer');
+
+// puppeteer.use(stealthPlugin);
+// const { executablePath } = require('puppeteer');
 
 const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'MIIBOQIBAAJAbnfALiSjiV3U/5b1vIq7e/jXdzy2mPPOQa/7kT75ljhRZW0Y+pj5\n' +
@@ -29,11 +26,22 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'wD6fAHGgx/UCIFO6xWpDAJP0vzMUHqeKJ88ARB6g4kTSNCFihJLG8EjxAiEAuYcD\n' +
     'gNatFAx7DU7oXKCDHZ9DR4XlVVj0N0fcWI39Oow=\n' +
     '-----END RSA PRIVATE KEY-----');
-headless = process.env.HEADLESS
+
+headless_mode = true
 mode = process.env.MODE
-if (headless == undefined) {
-    headless = true
+
+if (process.env.HEADLESS == false) {
+    headless_mode = false
 }
+
+
+console.log("headless_mode", headless_mode)
+//process.exit()
+function randomInt(min, max) {
+    // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 
 function cookieParse(cookie, cookie_array) {
     let result = [];
@@ -482,42 +490,45 @@ class ShopeeAPI {
             } else {
                 profile_dir = 'C:\\profile'
             }
-           
+
             if (proxy) {
                 let proxy_for_slave = "--proxy-server=" + proxy.host + ":" + proxy.port
                 params.push(proxy_for_slave)
                 params.push('--ignore-certificate-errors')
             }
 
-            const browser = await puppeteer.launch({
-                headless: true,
-                executablePath: executablePath(),
-                args: params,
-                ignoreDefaultArgs: ['--enable-automation'],
-                userDataDir: `${profile_dir}`
-            });
+            var browser = await firefox.launchPersistentContext(
+                `${profile_dir}`,
+                {
+                    headless: true,
+                    viewport: { width: randomInt(900, 1200), height: randomInt(600, 900) },
+
+                    //   args: args,
+                  //  proxy: network == "proxy" ? proxy_2 : "",
+                    //   userAgent,
+                    //   locale,
+                    javaScriptEnabled: true,
+                }
+            );
+
             let user_agent
-            console.log("--> START PPT:  -- headless: " + headless)
-            user_agent = randomUseragent.getRandom(function (ua) {
+            console.log("--> START PPT:  -- headless: " + headless_mode)
 
-                return (ua.osName === 'Windows' && ua.osVersion === "10");
-            });
+            const page = await browser.pages()[0];
 
-
-            const page = (await browser.pages())[0];
-            await page.setUserAgent(user_agent)
+            //  await page.setUserAgent(user_agent)
             let width = Math.floor(Math.random() * (1280 - 1000)) + 1000;;
             let height = Math.floor(Math.random() * (800 - 600)) + 600;;
-            
-            await page.setViewport({
-                width: width,
-                height: height
-            });
-            if (proxy) {
-               
 
-                await page.authenticate({ username: proxy.auth.username, password:  proxy.auth.password });
-            }
+            // await page.setViewport({
+            //     width: width,
+            //     height: height
+            // });
+            // if (proxy) {
+
+
+            //     await page.authenticate({ username: proxy.auth.username, password: proxy.auth.password });
+            // }
             if (cookie) {
                 //await page.setCookie(...cookie);
             }
@@ -532,7 +543,7 @@ class ShopeeAPI {
                     console.log(res.url())
                     try {
                         console.log("----> Ăn captcha rồi")
-                        const imgCaptcha = await page.waitForXPath('//img[@draggable="false"]');
+                        const imgCaptcha = await page.waitForSelector('//img[@draggable="false"]');
                         if (imgCaptcha) {
                             await imgCaptcha.screenshot({ path: 'captcha.png' });
                             var data = new FormData();
@@ -577,7 +588,7 @@ class ShopeeAPI {
                         }
                     } catch (ex) {
                         console.log(ex)
-                    //    searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
+                        //    searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
                 }
 
@@ -585,17 +596,17 @@ class ShopeeAPI {
                     try {
                         res_data = await res.json();
                         const res_status = await res.status();
-                        const res_cookies = await page.cookies();
-                       
-                        if(res_data.items){
+                     //   const res_cookies = await page.cookies();
+
+                        if (res_data.items) {
                             console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- SO LUONG KET QUA: " + res_data.items.length)
                             await page.close();
                             await browser.close();
-    
+
                             searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
-    
+
                         }
-                        
+
                     } catch (ex) {
                         console.log(ex)
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
@@ -603,15 +614,12 @@ class ShopeeAPI {
                 }
             });
             try {
-               
-                let search_url =`https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`
+
+                let search_url = `https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`
                 console.log("--> Goto search keyword page " + search_url)
-                await page.goto(search_url, {
-                    waitUntil: "networkidle2",
-                    timeout: 30000
-                });
-               // console.log("--> END PPT  -- ")
-              //  await page.waitForTimeout(9999)
+                await page.goto(search_url);
+                // console.log("--> END PPT  -- ")
+                //  await page.waitForTimeout(9999)
                 // await page.close();
                 // await browser.close();
             } catch (ex) {

@@ -780,6 +780,7 @@ run = async () => {
         //check version từ local
         let checkVersion = fs.readFileSync("version.txt", { flag: "as+" });
         console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Phiên bản hiện tại:', checkVersion.toString());
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Phiên bản server:', version.toString());
 
         //Kiểm tra version và tự động update nếu có version mới
         if (checkVersion.toString() != version) {
