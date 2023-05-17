@@ -504,7 +504,7 @@ class ShopeeAPI {
                     viewport: { width: randomInt(900, 1200), height: randomInt(600, 900) },
 
                     //   args: args,
-                  //  proxy: network == "proxy" ? proxy_2 : "",
+                    //  proxy: network == "proxy" ? proxy_2 : "",
                     //   userAgent,
                     //   locale,
                     javaScriptEnabled: true,
@@ -596,7 +596,7 @@ class ShopeeAPI {
                     try {
                         res_data = await res.json();
                         const res_status = await res.status();
-                     //   const res_cookies = await page.cookies();
+                        //   const res_cookies = await page.cookies();
 
                         if (res_data.items) {
                             console.log("--> CLOSE BROWSER SAU KHI LAY KET QUA  -- SO LUONG KET QUA: " + res_data.items.length)
@@ -606,11 +606,14 @@ class ShopeeAPI {
                             searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
 
                         }
-
+                        await page.close();
+                        await browser.close();
+                        console.log("Close khi lấy được dữ liệu")
                     } catch (ex) {
                         console.log(ex)
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
                     }
+
                 }
             });
             try {
