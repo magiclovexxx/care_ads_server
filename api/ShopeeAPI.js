@@ -618,11 +618,11 @@ class ShopeeAPI {
             });
             try {
 
-                let search_url = `https://shopee.vn/search?keyword=${encodeURI(keyword)}&page=${(newest / limit)}`
+                let search_url = `https://shopee.vn/search?keyword=${keyword}`
                 console.log("--> Goto search keyword page " + search_url)
-                await page.goto(search_url);
+                await page.goto(search_url, {referer:"https://shopee.vn"});
                 // console.log("--> END PPT  -- ")
-                //  await page.waitForTimeout(9999)
+               //  await page.waitForTimeout(999999)
                 // await page.close();
                 // await browser.close();
             } catch (ex) {
