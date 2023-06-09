@@ -8,7 +8,7 @@ const qs = require('qs');
 var axios = require('axios');
 var fs = require('fs');
 const os = require("os");
-require('dotenv').config({path: '../.env'})
+require('dotenv').config({ path: '../.env' })
 var FormData = require('form-data');
 const randomUseragent = require('random-useragent');
 const { firefox } = require('playwright');
@@ -30,11 +30,11 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
 mode = process.env.MODE
 
 console.log("process.env.HEADLESS", process.env.HEADLESS)
-headless_mode= true
-if(process.env.HEADLESS == 1){
-    headless_mode= false
-}else{
-    headless_mode= true
+headless_mode = true
+if (process.env.HEADLESS == 1) {
+    headless_mode = false
+} else {
+    headless_mode = true
 }
 console.log("headless_mode -- ", headless_mode)
 //process.exit()
@@ -511,6 +511,16 @@ class ShopeeAPI {
                     javaScriptEnabled: true,
                 }
             );
+            try {
+                let cookie = '[{ "name": "IDE", "value": "AHWqTUnsocjBowRtY53DWicD-GBPMwD2jkoa9Hy3f-SwPY66-kOIIuMX_wAd61N9", "domain": ".doubleclick.net", "path": "\/", "expires": -1, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SC_DFP", "value": "jifNhPLstCONAZJMVSZHYdddnennhzAQ", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "_hjIncludedInSessionSample", "value": "0", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "SPC_IA", "value": "1", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "SPC_F", "value": "2rSTL3UZCkGsxi0sz48YXoz5vi4o9J6V", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "AMP_TOKEN", "value": "%24NOT_FOUND", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "SPC_CLIENTID", "value": "MnJTVEwzVVpDa0dzukptxcrjfkzhnjha", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "_dc_gtm_UA-61914164-6", "value": "1", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "__LOCALE__null", "value": "VN", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "G_ENABLED_IDPS", "value": "google", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "shopee_webUnique_ccd", "value": "2%2BGxprkYObLwolYaZLgwzg%3D%3D%7CzxA5Ii8BBmf0n%2B0mdmVvhjzfeq8m6QJiwksbw0ak0Rroq0GJlE5XWOO9XGkI%2FMpMlmdzXso4%2FgPe97w5HQeyWqmMMPvYqM9AZBRfcA%3D%3D%7CU4NvQTKwcMabtURe%7C06%7C3", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "AC_CERT_D", "value": "U2FsdGVkX1\/OGnKplEQBqa5DS1JUoVx7Voj9dtH8C\/1gdzyPP5J6inSXun+eikGww1FdqTU04qsqHYtfFGiZwlmP5yKykKY76vOHzPayNsEYTSiDbUV7mmbywRfIH4\/Nz15P5HGbMQl1vxp37ZEFoI5y6WiwwQQQ2oygc4+iTVYGiad0iC90VyvdZq2FtGRMCGSM3rbJ377MyiX0tQ8hWUEss\/s61RyA053OzmBfEm8=", "domain": "shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "REC_T_ID", "value": "252f05ee-1f68-11ed-9ba2-48df37dec7f0", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "ds", "value": "1ba59879b3e0e2d279c3ca45596351fa", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "csrftoken", "value": "7OUqILvfoCYICLA53o55zKxdzQWSmRFK", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "_QPWSDCXHZQA", "value": "5a91ca5d-5a57-4161-8044-98e8a5c77cfa", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "SPC_CDS", "value": "923eb465-8d59-4d2e-b700-ca4bc4ef09f7", "domain": "banhang.shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "SPC_SC_SA_TK", "value": "", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_SC_SA_UD", "value": "", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_SC_TK", "value": "b9435dd6262107375104110d4c273ce1", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_SC_UD", "value": "690416019", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_STK", "value": "WmnnVw0DtUSpSD1uZeGzEcnW150mpbmtw2t\/t5Gy+sGjLHIj\/VzeNauIMH0LYc3Rnqbh0s5cpFcAp\/ojQFutZ+nU2UJSKMqGLZRoeOU328y4qnX7t4YCtz9moLhBFlx7a9TflyPvwXWevkeC09\/WoamDIrt\/e3ufVfE5o5iRUxmGqYNL8gIrxL+sb0xrIXFC", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "shopee_webUnique_ccd", "value": "2UELbLAFTohwlFzEY2Icqg%3D%3D%7CzRI%2BKTEWAmTym%2BwldWVvhzvbfKcm4glr1FhKl0OihETl%2BBSMxh5RDrOxVGBS%2FJ5DnGEjCc00pwHcsKs%2BHA6%2BX6mIM%2Fjdqc5ecQEPaF4%3D%7CU4NvQTKwcMabtURe%7C06%7C3", "domain": "banhang.shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "ds", "value": "8ba14768b8aa3df020f536a09013b028", "domain": "banhang.shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "_hjSessionUser_868286", "value": "eyJpZCI6IjBhZmQzNjZhLTMxNDctNTIxMC05M2RlLTQxYzhjMGNjNmQzYSIsImNyZWF0ZWQiOjE2NjA4NzY3NzM2OTMsImV4aXN0aW5nIjp0cnVlfQ==", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "_hjIncludedInSessionSample_868286", "value": "0", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "_hjAbsoluteSessionInProgress", "value": "0", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "_hjSession_868286", "value": "eyJpZCI6IjM3MWRjNGU5LWI2OWUtNDFjNy05ZjQ4LTUzZTlhMjEwMzA5MiIsImNyZWF0ZWQiOjE2ODI0MzkxMTIyNjUsImluU2FtcGxlIjpmYWxzZX0=", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "_gid", "value": "GA1.2.1402182677.1681370936", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "_ga_M32T05RVZT", "value": "GS1.1.1686235985.2315.1.1686236381.34.0.0", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "_ga", "value": "GA1.1.325763543.1660876773", "domain": ".shopee.vn", "path": "\/", "expires": -1, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "_gcl_au", "value": "1.1.1912749862.1686204595", "domain": ".shopee.vn", "path": "\/", "expires": 1693980595, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "_fbp", "value": "fb.1.1660876768947.2024130610", "domain": ".shopee.vn", "path": "\/", "expires": 1694052280, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "shopee_webUnique_ccd", "value": "Xvayl4AyZHT7WK8CZv42Sw%3D%3D%7CzRI6JD4WAmTym%2BwldWVvhzvbfKcm4glr1FhKl0OihETl%2BBSMxh5RDrOxVGBS%2FJ5DnGEjCc00pwHcsKs%2BHA68XK%2BINv%2FapsZWcQEPaF4%3D%7CU4NvQTKwcMabtURe%7C06%7C3", "domain": "shopee.vn", "path": "\/", "expires": 1686307829, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "ds", "value": "d5db372a135f866c887b87ba2280eddc", "domain": "shopee.vn", "path": "\/", "expires": 1686307829, "httpOnly": false, "secure": false, "sameSite": "None" }, { "name": "SPC_T_IV", "value": "cVFjNVZNVm1uNjFrV1A0OA==", "domain": ".shopee.vn", "path": "\/", "expires": 2316996303, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_SI", "value": "GAA1ZAAAAABnRHpROU85a\/XGqQAAAAAAZEZGcjhFSUU=", "domain": ".shopee.vn", "path": "\/", "expires": 1686362703, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_ST", "value": ".MnNzejNrcFQ5alZiZFZuaEZAvbVeEaM01LiGMIwOiPf9GaMzOZDb6iQ7IIzPs0WBGw08Mxrl7Y11BrSFEGb79lDT358bLw\/my1QMwjf+s3myGcQA1RUteEaezR2dag742wY8FInRhLQgGrLNPFiOL3U9aGMWSrS1EjY8QLRrYTuAIfSWw91vVQG4H+GtO0z69Iw\/l8xqU4Z1z4kkxU6DIA==", "domain": ".shopee.vn", "path": "\/", "expires": 2316996303, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_U", "value": "690416019", "domain": ".shopee.vn", "path": "\/", "expires": 2316996303, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "SPC_EC", "value": "V2xYMjRoSDdVdE1YNzdHdjGqoG9lTtQnf1TXvPZ8hpZYAaFrEjmKubQ1wWgLW9q6k3ZbCuttdAOnF7yjiSJ4fcYDbx6EfNTB+m8h++9fLa8tCD+qdw+poi7\/PV9DNR88I+Wd6wu6CHk9rHVnlqk1l0+XB5gBSDtZvL\/ceRJMdyY=", "domain": ".shopee.vn", "path": "\/", "expires": 2316996303, "httpOnly": true, "secure": true, "sameSite": "None" }, { "name": "SPC_R_T_ID", "value": "8AfWjdfDu6xQ8DrsmvdgctSEzvAi7d0u9eCFZ2PQdNkEKXFXTAWfUQJd5zwQtngw3\/ISEg7sWyBUkHj52avQQnhdIH9iPkdMPl6tNdZ5XuZh9ouabWtQ04pdEiOi\/Kq1O9dZeqXol6fVO3Yryi31meU1wZI1aFnTvkXKzi48Rm8=", "domain": ".shopee.vn", "path": "\/", "expires": 2316996303, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "SPC_R_T_IV", "value": "cVFjNVZNVm1uNjFrV1A0OA==", "domain": ".shopee.vn", "path": "\/", "expires": 2316996303, "httpOnly": false, "secure": true, "sameSite": "None" }, { "name": "SPC_T_ID", "value": "8AfWjdfDu6xQ8DrsmvdgctSEzvAi7d0u9eCFZ2PQdNkEKXFXTAWfUQJd5zwQtngw3\/ISEg7sWyBUkHj52avQQnhdIH9iPkdMPl6tNdZ5XuZh9ouabWtQ04pdEiOi\/Kq1O9dZeqXol6fVO3Yryi31meU1wZI1aFnTvkXKzi48Rm8=", "domain": ".shopee.vn", "path": "\/", "expires": 2316996303, "httpOnly": true, "secure": true, "sameSite": "None" }]'
+                cookie = JSON.parse(cookie)
+                cookie.forEach(elm => delete elm.expires);
+                await browser.addCookies(cookie);
+                console.log(moment().format("hh:mm:ss") + " - Setcookie thành công")
+            } catch (error) {
+                console.log(error)
+            }
+
 
             let user_agent
             console.log("--> START PPT:  -- headless: " + headless_mode)
@@ -619,13 +629,30 @@ class ShopeeAPI {
             });
             try {
 
-                let search_url = `https://shopee.vn/search?keyword=${keyword}`
+                let search_url = `https://shopee.vn/search?keyword=` + keyword
                 console.log("--> Goto search keyword page " + search_url)
-                await page.goto(search_url, {referer:"https://shopee.vn"});
+                await page.goto(search_url);
                 // console.log("--> END PPT  -- ")
-               //  await page.waitForTimeout(999999)
-                // await page.close();
-                // await browser.close();
+                //  await page.waitForTimeout(999999)
+                timeout = Math.floor(Math.random() * (4000 - 3000)) + 3000;
+                await page.waitForTimeout(timeout);
+                let ax = Math.floor(Math.random() * (40 - 0)) + 0;
+                let by = Math.floor(Math.random() * (100 - 0)) + 0;
+                console.log("hhhhhhhhaaaaaaaaaaaaaaaaaa")
+                console.log(moment().format("hh:mm:ss") + " - Click pixel: " + ax + "x" + by)
+
+                await page.mouse.click(ax, by)
+
+                timeout = Math.floor(Math.random() * (2000 - 1000)) + 1000;
+                await page.waitForTimeout(timeout);
+                await page.type('.shopee-searchbar-input__input', keyword, { delay: 100 })
+                timeout = Math.floor(Math.random() * (1000 - 500)) + 500;
+                await page.waitForTimeout(timeout);
+                await page.keyboard.press('Enter')
+                timeout = Math.floor(Math.random() * (30000 - 20000)) + 20000;
+                await page.waitForTimeout(timeout);
+                await page.close();
+                await browser.close();
             } catch (ex) {
                 //  console.log(ex)
             }
