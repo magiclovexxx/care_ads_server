@@ -8,7 +8,7 @@ const qs = require('qs');
 var axios = require('axios');
 var fs = require('fs');
 const os = require("os");
-require('dotenv').config();
+require('dotenv').config({path: '../.env'})
 var FormData = require('form-data');
 const randomUseragent = require('random-useragent');
 const { firefox } = require('playwright');
@@ -27,15 +27,15 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
     'gNatFAx7DU7oXKCDHZ9DR4XlVVj0N0fcWI39Oow=\n' +
     '-----END RSA PRIVATE KEY-----');
 
-headless_mode = true
 mode = process.env.MODE
 
-if (process.env.HEADLESS == false) {
-    headless_mode = false
+console.log("process.env.HEADLESS", process.env.HEADLESS)
+if(process.env.HEADLESS == 1){
+    headless_mode= true
+}else{
+    headless_mode= false
 }
-
-
-console.log("headless_mode", headless_mode)
+console.log("headless_mode -- ", headless_mode)
 //process.exit()
 function randomInt(min, max) {
     // min and max included
@@ -500,7 +500,7 @@ class ShopeeAPI {
             var browser = await firefox.launchPersistentContext(
                 `${profile_dir}`,
                 {
-                    headless: true,
+                    headless: headless_mode,
                     viewport: { width: randomInt(900, 1200), height: randomInt(600, 900) },
 
                     //   args: args,

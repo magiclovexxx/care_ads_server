@@ -29,7 +29,7 @@ const use_host = process.env.USE_HOST;
 if (os.platform() == 'linux') {
     hostname = os.hostname();
 } else {
-    hostname = process.env.HOSTNAME
+    hostname = process.env.HOST_NAME
 }
 console.log(' ---> Hostname: ' + hostname + '-- OS: ' + os.platform() + "-- USE HOST: " + use_host)
 const mode = process.env.MODE
