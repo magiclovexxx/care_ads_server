@@ -787,7 +787,7 @@ run = async () => {
             is_wait = true;
             console.log(moment().format('MM/DD/YYYY HH:mm:ss'), 'Cập nhật phiên bản:', version);
             try {
-                exec('git stash; git pull origin master; npm install; pm2 update; pm2 start cron_check.js; pm2 startup; pm2 save;');
+                exec('git stash; git pull origin master; npm install; pm2 update; pm2 start cron_check.js; pm2 startup; pm2 save; pm2 log');
             }
             catch (ex) {
                 console.log(ex);

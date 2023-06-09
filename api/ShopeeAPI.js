@@ -606,9 +606,9 @@ class ShopeeAPI {
                             searchCallBack({ code: 0, message: 'OK', status: res_status, data: res_data, cookie: null, proxy: { code: 0, message: 'OK' } });
 
                         }
-                        await page.close();
-                        await browser.close();
-                        console.log("Close khi lấy được dữ liệu")
+                        // await page.close();
+                        // await browser.close();
+                        // console.log("Close khi lấy được dữ liệu")
                     } catch (ex) {
                         console.log(ex)
                         searchCallBack({ code: 1000, message: ex.message, status: 1000, data: null, cookie: null, proxy: { code: 0, message: 'OK' } });
