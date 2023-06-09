@@ -30,10 +30,11 @@ const RSA = new NodeRSA('-----BEGIN RSA PRIVATE KEY-----\n' +
 mode = process.env.MODE
 
 console.log("process.env.HEADLESS", process.env.HEADLESS)
+headless_mode= true
 if(process.env.HEADLESS == 1){
-    headless_mode= true
-}else{
     headless_mode= false
+}else{
+    headless_mode= true
 }
 console.log("headless_mode -- ", headless_mode)
 //process.exit()
