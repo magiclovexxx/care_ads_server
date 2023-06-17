@@ -1682,7 +1682,7 @@ class ShopeeAPI {
                   if (pixels.length == 4) {
                     const whirl_position = pixels[2] - 2;
                     console.log("Kéo captcha: " + whirl_position);
-                    const sliderHandle = await page.waitForXPath(
+                    const sliderHandle = await page.waitForSelector(
                       '//div[@style="width: 40px; height: 40px; transform: translateX(0px);"]'
                     );
                     if (sliderHandle) {
