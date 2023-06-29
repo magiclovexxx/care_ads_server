@@ -871,6 +871,7 @@ class ShopeeAPI {
     version
   ) {
     console.log("--> API GET SEARCH ITEMS:  -- " + keyword);
+    console.log("--> API GET SEARCH ITEMS ----> proxyyyyyyyyy:  -- " , proxy);
     let self = this;
     let res_data;
     if (cookie != null) {
@@ -986,6 +987,11 @@ class ShopeeAPI {
 
       var browser = await firefox.launchPersistentContext(`${profile_dir}`, {
         headless: headless_mode,
+        proxy: {
+          server: proxy.host+":"+proxy.port,
+          username: proxy.auth.username,
+          password: proxy.auth.password
+      },
         viewport: { width: randomInt(900, 1200), height: randomInt(600, 900) },
 
         //   args: args,
@@ -995,12 +1001,15 @@ class ShopeeAPI {
         javaScriptEnabled: true,
       });
       try {
-        cookie = getCookie.data;
+        if(getCookie.data.length){
+          cookie = getCookie.data;
         
-      //  cookie = JSON.parse(cookie)
-        cookie.forEach((elm) => delete elm.expires);
-        await browser.addCookies(cookie);
-        console.log(moment().format("hh:mm:ss") + " - Setcookie thành công");
+          //  cookie = JSON.parse(cookie)
+            cookie.forEach((elm) => delete elm.expires);
+            await browser.addCookies(cookie);
+            console.log(moment().format("hh:mm:ss") + " - Setcookie thành công");
+        }
+       
       } catch (error) {
         console.log(error);
       }
