@@ -1147,7 +1147,9 @@ class ShopeeAPI {
         }
       });
       try {
-        let search_url = `https://shopee.vn/search?keyword=` + keyword;
+        let timeout = 2000
+       // let search_url = `https://shopee.vn/search?keyword=` + keyword;
+        let search_url = `https://shopee.vn/`
         console.log("--> Goto search keyword page " + search_url);
         await page.goto(search_url);
         // console.log("--> END PPT  -- ")
@@ -1176,7 +1178,8 @@ class ShopeeAPI {
         await page.close();
         await browser.close();
       } catch (ex) {
-        //  console.log(ex)
+         console.log(ex)
+         await browser.close();
       }
 
       const timeout_wait = setTimeout(async function () {
