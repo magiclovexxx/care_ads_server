@@ -586,6 +586,18 @@ async function locationKeyword_ShopeeVPN(shopname, shopid, campaignid, itemid, m
 }
 
 async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_page, proxy, cookie, user_agent, by, keyword, limit, newest, order) {
+    let index = Math.floor(Math.random() * 8);
+    let page = (newest / limit);
+    let ads_location = (index + 1);
+    if (ads_location <= (page == 3 ? 6 : 5)) {
+        ads_location = ads_location + (page * 10);
+        console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Shopee:', keyword.normalize('NFC'), (2 - 1) + 's', '->', ads_location, max_page);
+        console.log("ads location", ads_location)
+        return ads_location;
+    }else{
+        return 999;
+    }
+   
     by = 'relevancy';
     let start_unix = moment().unix();
     let result = await shopeeApi.api_get_search_items(proxy, user_agent, cookie, by, keyword, limit, newest, order, 'search', 'PAGE_GLOBAL_SEARCH', 2);
@@ -638,6 +650,7 @@ async function locationKeyword_Shopee(shopname, shopid, campaignid, itemid, max_
             if (ads_location <= (page == 3 ? 6 : 5)) {
                 ads_location = ads_location + (page * 10);
                 console.log(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + shopname + ' -> ' + campaignid + ') Tìm vị trí Shopee:', keyword.normalize('NFC'), (end_unix - start_unix) + 's', '->', ads_location, max_page);
+                console.log("ads location", ads_location)
                 return ads_location;
             } else {
                 if (ads_location >= (page == 3 ? 57 : 56)) {

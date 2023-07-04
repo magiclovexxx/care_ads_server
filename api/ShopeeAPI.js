@@ -987,11 +987,11 @@ class ShopeeAPI {
 
       var browser = await firefox.launchPersistentContext(`${profile_dir}`, {
         headless: headless_mode,
-        proxy: {
-          server: proxy.host+":"+proxy.port,
-          username: proxy.auth.username,
-          password: proxy.auth.password
-      },
+      //   proxy: {
+      //     server: proxy.host+":"+proxy.port,
+      //     username: proxy.auth.username,
+      //     password: proxy.auth.password
+      // },
         viewport: { width: randomInt(900, 1200), height: randomInt(600, 900) },
 
         //   args: args,
