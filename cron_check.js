@@ -1061,7 +1061,7 @@ run = async () => {
                             result = await shopeeApi.api_get_income_transaction_history_detail(spc_cds, proxy, user_agent, cookie, order_id);
                             last_request_success = moment();
                             let is_skip_get_income_transaction_history_detail = false;
-                            if (!(result.code == 0 && result.data.code == 0)) {
+                            if (!(result.code == 0 && result.data.data.order_id)) {
                                 request_data.checksum = 'ERROR:transaction';
                                 console.error(moment().format('MM/DD/YYYY HH:mm:ss'), '(' + account.name + ') Lỗi api_get_income_transaction_history_detail', order_id, result.status, (result.data != null && result.data != '' ? result.data : result.message));
                                 if (status == 4 || status == 5) {
